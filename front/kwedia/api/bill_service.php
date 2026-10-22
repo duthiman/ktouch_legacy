@@ -1857,6 +1857,8 @@ if (!function_exists('bill_service_finalize_each_round')) {
 
 if (!function_exists('bill_service_open_fresh_each')) {
     function bill_service_open_fresh_each($context, $params = []) {
+        global $connection;
+
         $params = is_array($params) ? $params : [];
         $user_id = (int)($context['user_id'] ?? 0);
         $sale_id = (int)($context['sale_id'] ?? 0);
@@ -1869,10 +1871,30 @@ if (!function_exists('bill_service_open_fresh_each')) {
         $queued_jobs = bill_service_queue_open_prints($context, $params, 'fresh_open_each');
         $result = bill_service_finalize_sale_steps($context, $params, [
             'parent_sale_id' => 0,
+            // fresh_open_each has already moved the live rows into the
+            // shift-open snapshot. The print rows are therefore no longer a
+            // valid source for the bill amount/items.
+            'source_open_items' => true,
             'clear_print' => true,
             'clear_status' => true,
             'reset_thesion' => true,
         ]);
+
+        // The EACH portion is now a finalized sale. Do not leave its copied
+        // snapshot behind, otherwise a later continuation can print/count it
+        // a second time. This is deliberately limited to fresh EACH; LAST and
+        // all existing close flows retain their current open-item lifecycle.
+        $snapshot_sale_id = (int)$sale_id;
+        if (!mysqli_query(
+            $connection,
+            "DELETE FROM kp_shift_sale_open_items WHERE sale_id='" . $snapshot_sale_id . "'"
+        )) {
+            throw new RuntimeException('Could not clear fresh EACH open items.');
+        }
+        bill_log(
+            'OPEN_FRESH_EACH_FINALIZED_SOURCE_OPEN',
+            'sale_id=' . $snapshot_sale_id . '|user_id=' . $user_id
+        );
 
         if (!repo_register_parent_closed_opened($sale_id, 'each', $identifier, $user_id)) {
             throw new RuntimeException('Could not register open EACH parent.');
