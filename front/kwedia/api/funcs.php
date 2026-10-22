@@ -143,6 +143,8 @@ if (!function_exists('kw_ensure_sale_status_schema')) {
         mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sale_items_live LIKE kp_sale_items");
         kw_schema_ensure_column('kp_sale_items_live', 'accompaniment_json', "LONGTEXT NULL AFTER attr_id");
         kw_schema_ensure_column('kp_sale_items_live', 'session_flag', "TINYINT(1) NOT NULL DEFAULT 2 AFTER accompaniment_json");
+        kw_schema_ensure_column('kp_sale_items', 'hour', "VARCHAR(20) NOT NULL DEFAULT '' AFTER counter");
+        kw_schema_ensure_column('kp_sale_items_live', 'hour', "VARCHAR(20) NOT NULL DEFAULT '' AFTER counter");
         $checked = true;
     }
 }
@@ -281,6 +283,7 @@ if (!function_exists('kw_ensure_bill_schema')) {
             KEY idx_open_dpt (sale_id, dpt)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
         kw_schema_ensure_column('kp_shift_sale_open_items', 'source_live_id', "INT NOT NULL DEFAULT 0 AFTER id");
+        kw_schema_ensure_column('kp_shift_sale_open_items', 'hour', "VARCHAR(20) NOT NULL DEFAULT '' AFTER counter");
 
         // Keep the older registry name compatible with the shift-scoped
         // registry used by the open-order code.

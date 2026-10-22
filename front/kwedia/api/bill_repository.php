@@ -1379,6 +1379,7 @@ if (!function_exists('repo_insert_sale_items_from_shift_open')) {
         if (function_exists('kw_schema_ensure_column')) {
             kw_schema_ensure_column('kp_sale_items', 'accompaniment_json', "LONGTEXT NULL AFTER attr_id");
             kw_schema_ensure_column('kp_sale_items', 'session_flag', "TINYINT(1) NOT NULL DEFAULT 2 AFTER accompaniment_json");
+            kw_schema_ensure_column('kp_sale_items', 'hour', "VARCHAR(20) NOT NULL DEFAULT '' AFTER counter");
         }
         mysqli_query($connection, "DELETE FROM kp_sale_items WHERE sale_id='$sale_id'");
         return mysqli_query($connection,
