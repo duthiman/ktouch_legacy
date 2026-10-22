@@ -368,8 +368,50 @@ function showActiveSaleChoice(conflict, params) {
     });
     return true;
   }
-  if (window.confirm('Sale #' + saleId + ' is already in progress. Continue it?')) continueSale();
-  else cancelSale();
+  var modal = document.getElementById('modal');
+  var load = document.getElementById('load');
+  if (!modal || !load) {
+    // Keep the page usable if the modal shell itself is unavailable.
+    alert('Sale #' + saleId + ' is already in progress. Continue or cancel it first.');
+    return true;
+  }
+  load.innerHTML = '<div class="modal-content shadow-lg border-0">' +
+    '<div class="modal-header bg-warning text-dark"><h4 class="modal-title mb-0">Order already in progress</h4>' +
+    '<button type="button" class="close" id="kw-choice-close" aria-label="Close"><span>&times;</span></button></div>' +
+    '<div class="modal-body text-center p-4"><div class="text-muted small mb-2">SALE #' + saleId + '</div>' +
+    '<p class="lead mb-3">Choose what you want to do with the active order.</p>' + list + '</div>' +
+    '<div class="modal-footer justify-content-center"><button type="button" class="btn btn-outline-danger px-4" id="kw-choice-cancel">Cancel order</button>' +
+    '<button type="button" class="btn btn-primary px-4" id="kw-choice-continue">Continue order</button></div></div>';
+  modal.style.display = 'block';
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  var closeChoice = function() {
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+  };
+  document.getElementById('kw-choice-close').onclick = closeChoice;
+  document.getElementById('kw-choice-continue').onclick = function() {
+    closeChoice();
+    continueSale();
+  };
+  document.getElementById('kw-choice-cancel').onclick = function() {
+    var button = this;
+    button.disabled = true;
+    button.textContent = 'Cancelling...';
+    $.post(window.KWEDIA_API_URL, { action: 'sales.cancel' }).done(function(cancel) {
+      if (cancel && cancel.ok) {
+        closeChoice();
+        submitPlaceSale(params);
+      } else {
+        button.disabled = false;
+        button.textContent = 'Cancel order';
+        alert(cancel && cancel.message ? cancel.message : 'Could not cancel the active order.');
+      }
+    });
+  };
   return true;
 }
 
