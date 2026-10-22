@@ -274,7 +274,7 @@ $print_final = (int)($_POST['print_final'] ?? $_GET['print_final'] ?? 0) === 1 ?
 
         var redirect = (res.data && res.data.redirect) ? res.data.redirect : '';
         if (apiAction === 'open_order') {
-          window.location.replace('../log_out.php');
+          window.location.replace('../open/index.php');
           return;
         }
         if (redirect) {

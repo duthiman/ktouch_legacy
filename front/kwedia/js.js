@@ -336,7 +336,7 @@ function submitPlaceSale(params) {
   .done(function(res) {
     var payload = res && res.data ? res.data : {};
     if (res && res.ok && payload.redirect) {
-      window.location = payload.redirect;
+      window.location = params.action === 'sale.open_order' ? '../open/index.php' : payload.redirect;
       return;
     }
     var message = (res && res.message) ? res.message : 'Unable to send order right now.';
