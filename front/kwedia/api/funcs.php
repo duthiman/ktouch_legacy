@@ -256,6 +256,29 @@ if (!function_exists('kw_ensure_bill_schema')) {
         kw_schema_ensure_column('kp_shift_sales_open', 'order_stage', "VARCHAR(20) NOT NULL DEFAULT 'FRESH' AFTER sale_mode");
         kw_schema_ensure_column('kp_shift_sales_open', 'updated_at', "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER created_at");
 
+        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_shift_sale_open_items (
+            id INT NOT NULL AUTO_INCREMENT,
+            sale_id INT NOT NULL DEFAULT 0,
+            open_id INT NOT NULL DEFAULT 0,
+            item_id INT NOT NULL DEFAULT 0,
+            user_id INT NOT NULL DEFAULT 0,
+            qty DECIMAL(14,4) NOT NULL DEFAULT 0,
+            price DECIMAL(14,4) NOT NULL DEFAULT 0,
+            total DECIMAL(14,4) NOT NULL DEFAULT 0,
+            dpt INT NOT NULL DEFAULT 0,
+            shift VARCHAR(60) NOT NULL DEFAULT '',
+            counter INT NOT NULL DEFAULT 0,
+            stock_counter INT NOT NULL DEFAULT 0,
+            attr_id INT NOT NULL DEFAULT 0,
+            accompaniment_json LONGTEXT NULL,
+            session_flag TINYINT(1) NOT NULL DEFAULT 2,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY idx_open_sale (sale_id, open_id),
+            KEY idx_open_pending (sale_id, session_flag),
+            KEY idx_open_dpt (sale_id, dpt)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
         // Keep the older registry name compatible with the shift-scoped
         // registry used by the open-order code.
         mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sales_open LIKE kp_shift_sales_open");
