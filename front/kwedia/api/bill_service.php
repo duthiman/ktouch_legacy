@@ -707,6 +707,17 @@ if (!function_exists('bill_service_open_list_sales')) {
             $query = mysqli_query($connection, $sql);
             if ($query) {
                 while ($row = mysqli_fetch_assoc($query)) {
+                    $child_bills = [];
+                    $childQuery = mysqli_query($connection, "SELECT sale_id, amount, counter FROM kp_sales WHERE parent='" . (int)$row['sale_id'] . "' AND sale_id<>" . (int)$row['sale_id'] . " ORDER BY sale_id DESC");
+                    if ($childQuery) while ($child = mysqli_fetch_assoc($childQuery)) {
+                        $childCounter = (int)($child['counter'] ?? 0);
+                        $child_bills[] = [
+                            'sale_id' => (int)($child['sale_id'] ?? 0),
+                            'amount' => (float)($child['amount'] ?? 0),
+                            'counter_id' => $childCounter,
+                            'counter_name' => function_exists('get_counter') ? (string)get_counter($childCounter) : '',
+                        ];
+                    }
                     $sales[] = [
                         'sale_id' => (int)$row['sale_id'],
                         'identifier_label' => (string)($row['identifier_label'] ?? ''),
@@ -719,6 +730,7 @@ if (!function_exists('bill_service_open_list_sales')) {
                         'parent_amount' => (float)($row['parent_amount'] ?? 0),
                         'family_total' => (float)($row['parent_amount'] ?? 0) + (float)($row['child_total'] ?? 0),
                         'child_ids' => trim((string)($row['child_ids'] ?? '')),
+                        'child_bills' => $child_bills,
                         'current_open_child' => (int)($row['current_open_child'] ?? 0),
                         'need_identifier' => trim((string)($row['identifier_label'] ?? '')) === '',
                     ];
@@ -772,6 +784,7 @@ if (!function_exists('bill_service_open_list_sales')) {
                         'parent_amount' => (float)$parent_amount,
                         'family_total' => (float)$parent_amount,
                         'child_ids' => '',
+                        'child_bills' => [],
                         'current_open_child' => 0,
                         'need_identifier' => trim((string)($row['identifier_label'] ?? '')) === '',
                     ];

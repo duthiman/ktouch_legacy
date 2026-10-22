@@ -474,6 +474,8 @@ include("../clude/head.php");
     letter-spacing: 0.06em;
     color: #7a5424;
   }
+  .open-child-list { margin-top: 6px; padding-top: 5px; border-top: 1px dashed rgba(0,0,0,.35); display: flex; flex-direction: column; gap: 2px; font-size: 12px; text-align: left; }
+  .open-child-list > b { font-size: 11px; letter-spacing: .04em; }
   .open-id-dot {
     width: 12px;
     height: 12px;
@@ -847,7 +849,13 @@ include("../clude/head.php");
               html += '<div class="open-id-chip-row"><span class="open-id-chip">' + label + '</span><span class="open-id-chip">Children ' + sale.child_count + '</span>';
               if (sale.current_open_child > 0) html += '<span class="open-id-chip">Open Child #' + sale.current_open_child + '</span>';
               html += '</div><div class="open-sale-meta">';
-              html += '<span><b>Parent</b><i>' + Number(sale.parent_amount || 0).toFixed(2) + '</i></span><span><b>Children</b><i>' + Number(sale.children_total || 0).toFixed(2) + '</i></span><span><b>Family</b><i>' + Number(sale.family_total || 0).toFixed(2) + '</i></span><span><b>Counter</b><i>' + (sale.counter_name || '') + '</i></span><span><b>Type</b><i>' + typeLabel + '</i></span></div></button>';
+              html += '<span><b>Parent</b><i>' + Number(sale.parent_amount || 0).toFixed(2) + '</i></span><span><b>Children</b><i>' + Number(sale.children_total || 0).toFixed(2) + '</i></span><span><b>Family</b><i>' + Number(sale.family_total || 0).toFixed(2) + '</i></span><span><b>Counter</b><i>' + (sale.counter_name || '') + '</i></span><span><b>Type</b><i>' + typeLabel + '</i></span></div>';
+              if (Array.isArray(sale.child_bills) && sale.child_bills.length) {
+                html += '<div class="open-child-list"><b>CHILD BILLS</b>';
+                sale.child_bills.forEach(function(child) { html += '<span>#' + child.sale_id + ' · ' + Number(child.amount || 0).toFixed(2) + ' · ' + (child.counter_name || 'Counter') + '</span>'; });
+                html += '</div>';
+              }
+              html += '</button>';
             }
             resultsWrap.innerHTML = html + '</div>';
           } else {
@@ -904,6 +912,7 @@ include("../clude/head.php");
               html += '<span><b>Children</b><i>' + Number(sale.children_total || 0).toFixed(2) + '</i></span>';
               html += '<span><b>Family</b><i>' + Number(sale.family_total || 0).toFixed(2) + '</i></span>';
               html += '<span><b>Counter</b><i>' + (sale.counter_name || '') + '</i></span>';
+              if (Array.isArray(sale.child_bills) && sale.child_bills.length) { html += '<span><b>Child bills</b><i>' + sale.child_bills.map(function(child) { return '#' + child.sale_id + ' ' + Number(child.amount || 0).toFixed(2) + ' ' + (child.counter_name || ''); }).join(' · ') + '</i></span>'; }
               html += '<span><b>Type</b><i>' + typeLabel + '</i></span>';
               html += '</div></button>';
             }
