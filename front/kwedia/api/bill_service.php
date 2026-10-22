@@ -1341,16 +1341,19 @@ if (!function_exists('bill_service_queue_open_prints')) {
             return false;
         }
 
-        $existing = mysqli_query($connection, "SELECT 1 FROM kp_sale_print WHERE sale_id='$sale_id' LIMIT 1");
-        if ($existing && mysqli_num_rows($existing) > 0) {
-            return true;
-        }
-
         $sql = "INSERT INTO kp_sale_print
             (sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,session_flag)
             SELECT sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,2
             FROM kp_sale_items_live
-            WHERE sale_id='$sale_id' AND session_flag=2";
+            WHERE sale_id='$sale_id' AND session_flag=2
+              AND NOT EXISTS (
+                  SELECT 1 FROM kp_sale_print p
+                  WHERE p.sale_id=kp_sale_items_live.sale_id
+                    AND p.item_id=kp_sale_items_live.item_id
+                    AND p.qty=kp_sale_items_live.qty
+                    AND p.total=kp_sale_items_live.total
+                    AND p.session_flag=2
+              )";
         return mysqli_query($connection, $sql) !== false;
     }
 
@@ -1359,10 +1362,9 @@ if (!function_exists('bill_service_queue_open_prints')) {
         $sale_id = (int)($context['sale_id'] ?? 0);
         $user_id = (int)($context['user_id'] ?? 0);
         $counter_id = bill_service_resolve_counter_id($context, $params);
-        $is_active_last = $scenario === 'open_active_last';
-        // A fresh LAST order is the first snapshot and may not yet have
-        // session_flag=2. Continuation LAST orders use the delta flag.
-        $session_flag = $is_active_last ? 2 : null;
+        // Both fresh and continued LAST orders queue only the current
+        // session-flagged delta rows. Previously sent rows are session_flag=1.
+        $session_flag = 2;
 
         if ($scenario === 'fresh_open_last' && !bill_service_snapshot_fresh_open_items($sale_id)) {
             throw new RuntimeException('Could not create the fresh open-order print snapshot.');
@@ -1370,7 +1372,7 @@ if (!function_exists('bill_service_queue_open_prints')) {
 
         $queued_jobs = bill_service_queue_unprinted_tickets($sale_id, $user_id, $counter_id, [
             'include_cashier_order' => false,
-            'delta_only' => $is_active_last,
+            'delta_only' => true,
             'session_flag' => $session_flag,
             'sale_counter_id' => (int)($context['counter_id'] ?? 0),
         ]);
