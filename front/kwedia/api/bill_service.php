@@ -1412,8 +1412,8 @@ if (!function_exists('bill_service_queue_open_prints')) {
         if (!bill_service_snapshot_shift_open_items($sale_id, $user_id)) {
             throw new RuntimeException('Could not move live items to shift open items.');
         }
-        if (!mysqli_query($connection, "UPDATE kp_sale_items_live SET session_flag=1 WHERE sale_id='" . (int)$sale_id . "' AND session_flag=2")) {
-            throw new RuntimeException('Could not mark live open items as moved.');
+        if (!mysqli_query($connection, "DELETE FROM kp_sale_items_live WHERE sale_id='" . (int)$sale_id . "' AND session_flag=2")) {
+            throw new RuntimeException('Could not remove moved live open items.');
         }
 
         if (in_array($scenario, ['fresh_open_each', 'open_active_each'], true)) {
