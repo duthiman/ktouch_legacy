@@ -242,7 +242,8 @@ window.confirmSubmitBill = function(openState, counterId, openMode, billMode, id
         var rows = (payload.items || []).map(function(item) {
           return '<li><strong>' + String(item.item_name || item.name || 'Item').replace(/[&<>"']/g, '') + '</strong> &times; ' + (item.qty || item.quantity || 0) + '</li>';
         }).join('');
-        var html = '<p>Items already added to sale <strong>#' + (payload.sale_id || '') + '</strong>:</p><ul style="text-align:left;padding-left:22px">' + rows + '</ul>';
+        var html = '<p>Items already added to sale <strong>#' + (payload.sale_id || '') + '</strong>:</p>' +
+          (rows ? '<ul style="text-align:left;padding-left:22px">' + rows + '</ul>' : '<p class="text-muted">The sale is active, but its item details are unavailable.</p>');
         if (window.Swal && typeof Swal.fire === 'function') {
           Swal.fire({ icon: 'warning', title: 'Draft sale #' + (payload.sale_id || ''), html: html, showDenyButton: true, confirmButtonText: 'Continue sale', denyButtonText: 'Cancel sale', allowOutsideClick: false }).then(function(result) {
             if (result.isConfirmed) {
@@ -254,6 +255,50 @@ window.confirmSubmitBill = function(openState, counterId, openMode, billMode, id
               });
             }
           });
+        } else {
+          var modal = document.getElementById('modal');
+          var load = document.getElementById('load');
+          if (!modal || !load) {
+            alert('Sale #' + (payload.sale_id || '') + ' is already active. Continue or cancel it first.');
+            return;
+          }
+          load.innerHTML = '<div class="modal-content shadow-lg border-0">' +
+            '<div class="modal-header bg-warning text-dark"><h4 class="modal-title mb-0">Order already in progress</h4>' +
+            '<button type="button" class="close" id="kw-active-close" aria-label="Close"><span>&times;</span></button></div>' +
+            '<div class="modal-body text-center p-4"><div class="text-muted small mb-2">SALE #' + (payload.sale_id || '') + '</div>' +
+            '<p class="lead mb-3">Choose what you want to do with the active order.</p>' + html + '</div>' +
+            '<div class="modal-footer justify-content-center"><button type="button" class="btn btn-outline-danger px-4" id="kw-active-cancel">Cancel order</button>' +
+            '<button type="button" class="btn btn-primary px-4" id="kw-active-continue">Continue order</button></div></div>';
+          modal.style.display = 'block';
+          modal.classList.add('show');
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.classList.add('modal-open');
+          var closeActiveModal = function() {
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+          };
+          document.getElementById('kw-active-close').onclick = closeActiveModal;
+          document.getElementById('kw-active-continue').onclick = function() {
+            closeActiveModal();
+            window.location.href = 'index.php';
+          };
+          document.getElementById('kw-active-cancel').onclick = function() {
+            var button = this;
+            button.disabled = true;
+            button.textContent = 'Cancelling...';
+            jQuery.post(kwApiUrl(), { action: 'sales.cancel' }).done(function(cancel) {
+              if (cancel && cancel.ok) {
+                closeActiveModal();
+                window.confirmSubmitBill(openState, counterId, openMode, billMode, identifierData);
+              } else {
+                button.disabled = false;
+                button.textContent = 'Cancel order';
+                alert(cancel && cancel.message ? cancel.message : 'Could not cancel the active order.');
+              }
+            });
+          };
         }
         return;
       }
