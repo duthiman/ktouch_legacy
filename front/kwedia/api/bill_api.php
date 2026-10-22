@@ -396,7 +396,14 @@ switch ($action) {
         break;
 
     case 'place_closed_order':
-        $result = bill_service_place_closed_order($user_id, $_REQUEST);
+        // A parent ID identifies the current open-bill family. Its status is
+        // intentionally cleared after handoff, so use the open registry
+        // close flow instead of the legacy status=2 placement flow.
+        if ((int)($_REQUEST['close_parent_sale_id'] ?? 0) > 0) {
+            $result = bill_service_close_order($user_id, $_REQUEST);
+        } else {
+            $result = bill_service_place_closed_order($user_id, $_REQUEST);
+        }
         bill_json_response($result['ok'], $result['message'], [
             'sale_id' => (int)($result['sale_id'] ?? 0),
             'queued_jobs' => is_array($result['queued_jobs'] ?? null) ? $result['queued_jobs'] : [],
