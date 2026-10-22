@@ -1248,6 +1248,7 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
         $session_flag = array_key_exists('session_flag', $options) ? $options['session_flag'] : null;
         $live_source = !empty($options['live_source']);
         $open_source = !empty($options['open_source']);
+        $fallback_bot = !empty($options['fallback_bot']);
         $delta_rows = $delta_only
             ? ($live_source ? repo_fetch_sale_print_grouped($sale_id, $session_flag, 'kp_sale_items_live') : ($open_source ? bill_service_fetch_shift_open_items($sale_id, $session_flag) : repo_fetch_sale_print($sale_id, $session_flag)))
             : [];
@@ -1327,7 +1328,12 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
             if ($delta_only && $type !== 'cashier_order' && $delta_rows) {
                 $queue_items = [];
                 foreach ($delta_rows as $row) {
-                    if ((int)($row['dpt'] ?? 0) !== (int)($type === 'bot' ? 1 : ($type === 'kot' ? 2 : 3))) continue;
+                    $row_dpt = (int)($row['dpt'] ?? 0);
+                    $expected_dpt = (int)($type === 'bot' ? 1 : ($type === 'kot' ? 2 : 3));
+                    if (!($fallback_bot && $type === 'bot' && $row_dpt === 0) && $row_dpt !== $expected_dpt) continue;
+                    if ($fallback_bot && $type === 'bot' && $row_dpt === 0) {
+                        $row['dpt'] = 1;
+                    }
                     $queue_items[] = $row;
                 }
                 $queue_id = bill_service_queue_snapshot_job($sale_id, $user_id, $counter_id, strtoupper($type), $queue_items, $sale_counter_id);
@@ -1467,15 +1473,20 @@ if (!function_exists('bill_service_queue_open_prints')) {
             throw new RuntimeException('Could not create the shift open-order item snapshot.');
         }
 
+        $live_items = repo_fetch_sale_print_grouped($sale_id, 2, 'kp_sale_items_live');
+        $departments = bill_service_detect_print_departments_from_items($live_items);
+        if ($scenario === 'fresh_open_each' && !$departments['bot'] && !$departments['kot'] && !$departments['got'] && $live_items) {
+            $departments['bot'] = true;
+        }
+
         $queued_jobs = bill_service_queue_unprinted_tickets($sale_id, $user_id, $counter_id, [
             'include_cashier_order' => false,
             'delta_only' => true,
             'session_flag' => $session_flag,
             'sale_counter_id' => (int)($context['counter_id'] ?? 0),
             'live_source' => true,
-            'departments' => bill_service_detect_print_departments_from_items(
-                repo_fetch_sale_print_grouped($sale_id, 2, 'kp_sale_items_live')
-            ),
+            'departments' => $departments,
+            'fallback_bot' => $scenario === 'fresh_open_each',
         ]);
 
         if ($scenario !== 'fresh_open_each') {
