@@ -1178,6 +1178,42 @@ if (!function_exists('bill_service_create_print_ticket_batch')) {
 }
 
 if (!function_exists('bill_service_queue_unprinted_tickets')) {
+    function bill_service_queue_snapshot_job($sale_id, $user_id, $counter_id, $type, $items, $sale_counter_id = 0) {
+        global $connection;
+        $sale_id = (int)$sale_id;
+        $user_id = (int)$user_id;
+        $counter_id = (int)$counter_id;
+        $type = strtoupper(trim((string)$type));
+        $items = is_array($items) ? array_values($items) : [];
+        if ($sale_id < 1 || $user_id < 1 || $counter_id < 1 || !$items) return 0;
+        $amount = 0.0;
+        foreach ($items as &$item) {
+            $item = is_array($item) ? $item : [];
+            $item['name'] = (string)($item['name'] ?? $item['item_name'] ?? ('Item ' . (int)($item['item_id'] ?? 0)));
+            $item['qty'] = (float)($item['qty'] ?? $item['quantity'] ?? 0);
+            $item['price'] = (float)($item['price'] ?? $item['unit_price'] ?? 0);
+            $item['total'] = (float)($item['total'] ?? $item['amount'] ?? ($item['qty'] * $item['price']));
+            $amount += $item['total'];
+        }
+        unset($item);
+        $payload = json_encode([
+            'payload_version' => 1,
+            'document_type' => $type,
+            'title' => $type,
+            'items' => $items,
+            'summary' => ['item_count' => count($items), 'amount' => $amount, 'total' => $amount],
+            'header' => ['sale_id' => $sale_id, 'counter_id' => $sale_counter_id > 0 ? $sale_counter_id : $counter_id],
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($payload === false) return 0;
+        $shift = mysqli_real_escape_string($connection, (string)repo_get_shift());
+        $payload = mysqli_real_escape_string($connection, $payload);
+        $label = mysqli_real_escape_string($connection, $type);
+        $sql = "INSERT INTO kp_print_queue
+            (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json)
+            VALUES ('$sale_id','$sale_id','$type','$label','$counter_id','', '', '$user_id',0,0,0,'','$shift','$payload','')";
+        return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+    }
+
     function bill_service_queue_unprinted_tickets($sale_id, $user_id, $print_counter_id, $options = []) {
         $options = is_array($options) ? $options : [];
 
@@ -1210,18 +1246,9 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
             return [];
         }
 
-        $batch_id = 0;
-        if ($delta_only) {
-            $batchSource = $live_source ? 'kp_sale_items_live' : ($open_source ? 'kp_shift_sale_open_items' : 'kp_sale_print');
-            $batch_id = bill_service_create_print_ticket_batch($sale_id, $session_flag, $batchSource);
-            bill_log(
-                'PRINT_QUEUE_DELTA_BATCH',
-                'sale_id=' . $sale_id
-                . '|user_id=' . $user_id
-                . '|session_flag=' . (string)$session_flag
-                . '|batch_id=' . $batch_id
-            );
-        }
+        // V1 ticket jobs carry their complete immutable item snapshot in
+        // kp_print_queue.payload_json. No secondary ticket-batch table is
+        // needed by Chaba.
 
         $jobs_to_queue = [];
         if ($include_cashier_order) {
@@ -1272,20 +1299,27 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
             $route_params = ['sale_id' => $sale_id];
             if ($delta_only && $type !== 'bill') {
                 $route_params['delta_only'] = 1;
-                if ($batch_id > 0) {
-                    $route_params['batch_id'] = $batch_id;
-                }
             }
 
-            $queue_id = bill_service_queue_print_job(
-                $sale_id,
-                $user_id,
-                $counter_id,
-                $type,
-                strtoupper(str_replace('_', ' ', $type)),
-                $route_path,
-                $route_params
-            );
+            $queue_id = 0;
+            if ($delta_only && $type !== 'cashier_order' && $delta_rows) {
+                $queue_items = [];
+                foreach ($delta_rows as $row) {
+                    if ((int)($row['dpt'] ?? 0) !== (int)($type === 'bot' ? 1 : ($type === 'kot' ? 2 : 3))) continue;
+                    $queue_items[] = $row;
+                }
+                $queue_id = bill_service_queue_snapshot_job($sale_id, $user_id, $counter_id, strtoupper($type), $queue_items, $sale_counter_id);
+            } else {
+                $queue_id = bill_service_queue_print_job(
+                    $sale_id,
+                    $user_id,
+                    $counter_id,
+                    $type,
+                    strtoupper(str_replace('_', ' ', $type)),
+                    $route_path,
+                    $route_params
+                );
+            }
 
             if ($queue_id > 0) {
                 $queued_jobs[] = [
