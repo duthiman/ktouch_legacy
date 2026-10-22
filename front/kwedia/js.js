@@ -330,11 +330,58 @@ window.openOpenBillModeModal = function() {
     '<div class="modal-content"><div class="modal-body" style="padding:20px; text-align:center; font-weight:bold;">Loading open bill options...</div></div>'
   );
 };
+function showActiveSaleChoice(conflict, params) {
+  conflict = conflict || {};
+  params = params || {};
+  var saleId = conflict.sale_id || '';
+  var items = Array.isArray(conflict.items) ? conflict.items : [];
+  var list = items.length
+    ? '<ul class="kw-active-sale-items">' + items.map(function(item) {
+        return '<li><span>' + $('<div>').text(item.item_name || item.name || 'Item').html() + '</span><strong>&times; ' + (item.qty || item.quantity || 0) + '</strong></li>';
+      }).join('') + '</ul>'
+    : '<p class="kw-active-sale-empty">This sale is already open, but its item details are not available here.</p>';
+  var continueSale = function() { window.location.href = 'index.php'; };
+  var cancelSale = function() {
+    $.post(window.KWEDIA_API_URL, { action: 'sales.cancel' }).done(function(cancel) {
+      if (cancel && cancel.ok) {
+        submitPlaceSale(params);
+      } else if (window.Swal) {
+        Swal.fire({ icon: 'error', title: 'Could not cancel sale', text: cancel && cancel.message ? cancel.message : 'Please try again.' });
+      }
+    });
+  };
+  if (window.Swal && typeof window.Swal.fire === 'function') {
+    Swal.fire({
+      icon: 'info',
+      title: 'An order is already in progress',
+      html: '<div class="kw-active-sale-dialog"><div class="kw-active-sale-number">SALE #' + saleId + '</div>' +
+        '<p>Choose whether to continue this order or cancel it before starting a new one.</p>' + list + '</div>',
+      showDenyButton: true,
+      confirmButtonText: 'Continue order',
+      denyButtonText: 'Cancel order',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      customClass: { popup: 'kw-active-sale-popup', confirmButton: 'kw-active-sale-continue', denyButton: 'kw-active-sale-cancel' }
+    }).then(function(result) {
+      if (result.isConfirmed) continueSale();
+      if (result.isDenied) cancelSale();
+    });
+    return true;
+  }
+  if (window.confirm('Sale #' + saleId + ' is already in progress. Continue it?')) continueSale();
+  else cancelSale();
+  return true;
+}
+
 function submitPlaceSale(params) {
   params = params || {};
   $.post(window.KWEDIA_API_URL, $.extend({ action: params.action || 'open_order' }, params))
   .done(function(res) {
     var payload = res && res.data ? res.data : {};
+    if (payload && payload.ongoing_sale) {
+      showActiveSaleChoice(payload, params);
+      return;
+    }
     if (res && res.ok && payload.redirect) {
       window.location = params.action === 'sale.open_order' ? '../open/index.php' : payload.redirect;
       return;
@@ -356,40 +403,7 @@ function submitPlaceSale(params) {
   .fail(function(jqXHR) {
     var conflict = jqXHR.responseJSON && jqXHR.responseJSON.data;
     if (jqXHR.status === 409 && conflict && conflict.ongoing_sale) {
-      var items = Array.isArray(conflict.items) ? conflict.items : [];
-      var list = '<ul style="text-align:left;padding-left:22px">' + items.map(function(item) {
-        return '<li><strong>' + $('<div>').text(item.item_name || item.name || 'Item').html() + '</strong> &times; ' + (item.qty || item.quantity || 0) + '</li>';
-      }).join('') + '</ul>';
-      var continueSale = function() {
-        // The draft is already saved. Continuing must only reopen it;
-        // it must not call open_order and queue the items again.
-        window.location.href = 'index.php';
-      };
-      var cancelSale = function() {
-        $.post(window.KWEDIA_API_URL, { action: 'sales.cancel' }).done(function(cancel) {
-          if (cancel && cancel.ok) {
-            submitPlaceSale(params);
-          } else if (window.Swal) {
-            Swal.fire('Could not cancel sale', cancel && cancel.message ? cancel.message : 'Please try again.', 'error');
-          }
-        });
-      };
-      if (window.Swal && typeof Swal.fire === 'function') {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Draft sale #' + (conflict.sale_id || ''),
-          html: '<p>Items already added to this sale:</p>' + list,
-          showDenyButton: true,
-          confirmButtonText: 'Continue sale',
-          denyButtonText: 'Cancel sale',
-          allowOutsideClick: false
-        }).then(function(result) {
-          if (result.isConfirmed) continueSale();
-          if (result.isDenied) cancelSale();
-        });
-      } else {
-        window.alert('Draft sale #' + (conflict.sale_id || '') + ' already has items.');
-      }
+      showActiveSaleChoice(conflict, params);
       return;
     }
     var message = jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : 'Unable to send order right now.';
