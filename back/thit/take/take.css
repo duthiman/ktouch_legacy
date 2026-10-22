@@ -1,0 +1,16 @@
+.take-page-fixed { min-height:100vh; overflow:hidden; }
+.take-page-fixed #sidebar, .take-page-fixed .sidebar, .take-page-fixed #top-menu { display:none !important; }
+.take-page-fixed #content { margin-left:0 !important; padding:10px 14px 14px; min-height:calc(100vh - 55px); overflow:hidden; }
+.take-page-fixed .take-card { margin-top:10px; height:auto; display:flex; flex-direction:column; }
+.take-page-fixed .col-md-8 .take-card { height:calc(100vh - 85px); }
+.take-page-fixed .take-card .panel-body { overflow:auto; }
+.take-page-fixed .take-card .panel-footer { margin-top:auto; }
+.take-page-fixed .take-card .panel-heading { background:#07968e; color:#fff; }.take-page-fixed .take-card .panel-heading .panel-title { font-weight:700; }.take-page-fixed .take-card .panel-footer { background:#f7fafb; }.take-page-fixed .take-card label { font-size:11px; font-weight:700; }.take-page-fixed .take-results { min-height:0; max-height:none; flex:1; overflow:hidden; display:flex; flex-direction:column; }.take-page-fixed .take-results #d1 { min-height:0; flex:1; overflow:auto; }.take-page-fixed .take-table th { background:#087f78; color:#fff; font-size:11px; }.take-page-fixed .take-table td { vertical-align:middle; }
+.take-summary-cards { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; margin-bottom:14px; }
+.take-variance-cards { grid-template-columns:repeat(5, minmax(0, 1fr)); }
+.take-stat { min-height:66px; padding:10px 12px; border-radius:8px; border:1px solid #dce8e8; background:#f8fbfb; display:flex; flex-direction:column; justify-content:center; }
+.take-stat span { color:#607777; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.take-stat strong { color:#183b3a; font-size:22px; line-height:1.15; }
+.take-stat.total { border-left:4px solid #087f78; }.take-stat.taken { border-left:4px solid #2e8b57; }.take-stat.remaining { border-left:4px solid #d89116; }.take-stat.ok { border-left:4px solid #28a745; }.take-stat.excess { border-left:4px solid #f39c12; }.take-stat.less { border-left:4px solid #e53935; }.take-stat.variance { border-left:4px solid #6c5ce7; }
+.take-action-btn { min-width:150px; min-height:48px; margin-left:6px; font-size:16px; font-weight:700; border-radius:6px; }
+@media (max-width:767px) { .take-page-fixed { overflow:auto; }.take-page-fixed #content { overflow:visible; }.take-page-fixed .take-card, .take-page-fixed .col-md-8 .take-card { height:auto; min-height:0; }.take-page-fixed .take-results { max-height:55vh; min-height:260px; } }

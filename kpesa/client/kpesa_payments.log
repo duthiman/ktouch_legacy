@@ -1,0 +1,560 @@
+[2025-06-15 13:43:26.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_684ecdfe3b380_1749995006",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-15 13:43:26.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-15 13:43:32.000] STK push initiated successfully
+Context: {
+    "request_id": "req_684ecdfe3b380_1749995006",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "59a1-49d3-89f9-20e27e64db343017113",
+            "CheckoutRequestID": "ws_CO_15062025164332974716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-15 15:13:38.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_684ee3225272b_1750000418",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-15 15:13:38.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-15 15:13:41.000] STK push initiated successfully
+Context: {
+    "request_id": "req_684ee3225272b_1750000418",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "398b-4db5-bc79-7b782f1eacfc6978709",
+            "CheckoutRequestID": "ws_CO_15062025181342571716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-15 15:31:41.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_684ee75d1fa05_1750001501",
+        "data": {
+            "amount": 800,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-15 15:31:41.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-15 15:31:44.000] STK push initiated successfully
+Context: {
+    "request_id": "req_684ee75d1fa05_1750001501",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "59a1-49d3-89f9-20e27e64db343349864",
+            "CheckoutRequestID": "ws_CO_15062025183145447716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-16 06:52:05.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_684fbf15717c6_1750056725",
+        "data": {
+            "amount": 700,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-16 06:52:05.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-16 06:52:09.000] STK push initiated successfully
+Context: {
+    "request_id": "req_684fbf15717c6_1750056725",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "343e-42ca-b7b3-a9e11194809c4738775",
+            "CheckoutRequestID": "ws_CO_16062025095210418716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-16 06:56:14.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_684fc00eb245b_1750056974",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-16 06:56:14.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-16 06:56:18.000] STK push initiated successfully
+Context: {
+    "request_id": "req_684fc00eb245b_1750056974",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "59a1-49d3-89f9-20e27e64db345126080",
+            "CheckoutRequestID": "ws_CO_16062025095617437716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-18 13:58:16.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_6852c5f8adf9a_1750255096",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-18 13:58:16.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-18 13:58:21.000] STK push initiated successfully
+Context: {
+    "request_id": "req_6852c5f8adf9a_1750255096",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "edec-4de3-9521-858fd0391067934483",
+            "CheckoutRequestID": "ws_CO_18062025165822155716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-23 16:12:14.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_68597cde0a345_1750695134",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-23 16:12:14.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-23 16:12:19.000] STK push initiated successfully
+Context: {
+    "request_id": "req_68597cde0a345_1750695134",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "00da-45db-83d3-79ea4c31a42e3991413",
+            "CheckoutRequestID": "ws_CO_23062025191220159716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-23 16:18:53.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_68597e6dd5a1c_1750695533",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-23 16:18:53.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-23 16:18:57.000] STK push initiated successfully
+Context: {
+    "request_id": "req_68597e6dd5a1c_1750695533",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "5098-4069-bb73-2233ca16717d1291168",
+            "CheckoutRequestID": "ws_CO_23062025191857883716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-23 16:21:48.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_68597f1c94a26_1750695708",
+        "data": {
+            "amount": 1,
+            "phone": "254****648",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-23 16:21:48.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-23 16:21:51.000] STK push initiated successfully
+Context: {
+    "request_id": "req_68597f1c94a26_1750695708",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "94c4-4d19-b372-c30a558bc7c11804815",
+            "CheckoutRequestID": "ws_CO_23062025192152508710387648",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-24 07:06:45.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_685a4e84d2bd4_1750748804",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-24 07:06:46.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-24 07:06:57.000] API request failed
+Context: {
+    "error": "SSL connection timeout",
+    "request_id": "req_685a4e84d2bd4_1750748804"
+}
+[2025-06-24 07:06:57.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_685a4e91ca7c6_1750748817",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-24 07:06:58.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-24 07:07:03.000] STK push initiated successfully
+Context: {
+    "request_id": "req_685a4e91ca7c6_1750748817",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "a03b-4ebc-9bef-5b6f91c9aea47010788",
+            "CheckoutRequestID": "ws_CO_24062025100703403716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-24 07:10:16.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_685a4f58ceaaf_1750749016",
+        "data": {
+            "amount": 1,
+            "phone": "254****267",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-24 07:10:16.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-24 07:10:19.000] STK push initiated successfully
+Context: {
+    "request_id": "req_685a4f58ceaaf_1750749016",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "8f86-4175-bd1b-e1fc2ec3361f922023",
+            "CheckoutRequestID": "ws_CO_24062025101020319708938267",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-06-27 19:00:52.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_685eea64bba5c_1751050852",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-06-27 19:00:52.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-06-27 19:00:57.000] STK push initiated successfully
+Context: {
+    "request_id": "req_685eea64bba5c_1751050852",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "a03b-4ebc-9bef-5b6f91c9aea412028080",
+            "CheckoutRequestID": "ws_CO_27062025220056880716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-07-02 16:36:32.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_68656010e9b11_1751474192",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-07-02 16:36:32.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-07-02 16:36:37.000] STK push initiated successfully
+Context: {
+    "request_id": "req_68656010e9b11_1751474192",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "43df-4750-9b6b-3a96d54971797741269",
+            "CheckoutRequestID": "ws_CO_02072025193638088716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-07-09 07:16:54.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_686e17667cd6a_1752045414",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-07-09 07:16:54.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-07-09 07:16:58.000] STK push initiated successfully
+Context: {
+    "request_id": "req_686e17667cd6a_1752045414",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "5dd8-49cb-887a-c87a551b3232317813",
+            "CheckoutRequestID": "ws_CO_09072025101659185716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-07-09 07:22:38.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_686e18bebbe03_1752045758",
+        "data": {
+            "amount": 2,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-07-09 07:22:38.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-07-09 07:22:41.000] STK push initiated successfully
+Context: {
+    "request_id": "req_686e18bebbe03_1752045758",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "871a-42d1-9208-61d44e994412323883",
+            "CheckoutRequestID": "ws_CO_09072025102242273716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-07-09 07:24:08.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_686e1918bd8bd_1752045848",
+        "data": {
+            "amount": 2,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-07-09 07:24:08.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-07-09 07:24:23.000] STK push initiated successfully
+Context: {
+    "request_id": "req_686e1918bd8bd_1752045848",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "4d53-4637-b95b-3273aae945922366343",
+            "CheckoutRequestID": "ws_CO_09072025102421671716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-07-21 12:30:20.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_687e32dc9b83d_1753101020",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-07-21 12:30:20.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-07-21 12:30:24.000] STK push initiated successfully
+Context: {
+    "request_id": "req_687e32dc9b83d_1753101020",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "d743-426e-9fdd-f29a85bfab495039486",
+            "CheckoutRequestID": "ws_CO_1753101026230716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}
+[2025-08-17 16:49:37.000] Initiating STK push request
+Context: {
+    "request": {
+        "request_id": "req_68a208212d86b_1755449377",
+        "data": {
+            "amount": 1,
+            "phone": "254****335",
+            "short_code": "7411652"
+        }
+    }
+}
+[2025-08-17 16:49:37.000] SSL verification disabled - CA cert not found
+Context: {
+    "expected_path": "\/path\/to\/cacert.pem"
+}
+[2025-08-17 16:49:41.000] STK push initiated successfully
+Context: {
+    "request_id": "req_68a208212d86b_1755449377",
+    "gateway_response": {
+        "status": 1,
+        "message": "Payment in progress. Please wait to enter pin",
+        "result": {
+            "MerchantRequestID": "d169-4629-a468-25f12645af606246923",
+            "CheckoutRequestID": "ws_CO_170820251949431716100335",
+            "ResponseCode": "0",
+            "ResponseDescription": "Success. Request accepted for processing",
+            "CustomerMessage": "Success. Request accepted for processing"
+        }
+    }
+}

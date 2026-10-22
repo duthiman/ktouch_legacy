@@ -1,0 +1,2 @@
+01-Jul-2026 09:47:17am|KTOUCH_ADMIN|EDITED|-|-|ITEM DETAILS FOR |WHITE CAP CAN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/back/menu/API|URI=/clients/ktouch/mvure/back/menu/API/menu_api.php|IP=192.168.100.6
+01-Jul-2026 09:47:18am|KTOUCH_ADMIN|EDITED|-|-|ITEM DETAILS FOR |WHITE CAP CAN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/back/menu/API|URI=/clients/ktouch/mvure/back/menu/API/menu_api.php|IP=192.168.100.6

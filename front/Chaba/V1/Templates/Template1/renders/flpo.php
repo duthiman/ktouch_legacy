@@ -1,0 +1,1 @@
+<?php $templateType='FLPO';$defaultSections=['title','header','items','summary','advertising'];$document['document_type']=$document['document_type']??$templateType;$document['title']=$document['title']??'FRONT PURCHASE ORDER';require __DIR__.'/../template.php';

@@ -1,0 +1,4 @@
+07-Jul-2026 01:05:28pm|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|15|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot/API|URI=/clients/ktouch/mvure/front/tot/API/tots_api.php|IP=::1
+07-Jul-2026 01:05:31pm|KTOUCH_ADMIN|ADDED|25|TEQUILLA GOLD|TO UNIT GENERATOR NO|15|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot/API|URI=/clients/ktouch/mvure/front/tot/API/tots_api.php|IP=::1
+07-Jul-2026 01:05:32pm|KTOUCH_ADMIN|ADDED|33|4TH STREET WHITE 1.5LTRS|TO UNIT GENERATOR NO|15|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot/API|URI=/clients/ktouch/mvure/front/tot/API/tots_api.php|IP=::1
+07-Jul-2026 01:05:37pm|KTOUCH_ADMIN|PLACED|-|-| TOT NO|15|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot/API|URI=/clients/ktouch/mvure/front/tot/API/tots_api.php|IP=::1

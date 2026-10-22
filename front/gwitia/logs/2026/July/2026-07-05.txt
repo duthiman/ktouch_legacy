@@ -1,0 +1,1 @@
+05-Jul-2026 03:27:37pm|KTOUCH_ADMIN|STARTED|-|-|REQUISTIO NO|366FORBAR COUNTER |SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia/API|URI=/clients/ktouch/mvure/front/gwitia/API/gwit_api.php|IP=192.168.2.107

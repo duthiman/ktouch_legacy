@@ -1,0 +1,76 @@
+.chaba-ticket-shell #receipt,
+.chaba-ticket-shell #bord,
+.chaba-ticket-shell #receipt-header,
+.chaba-ticket-shell #receipt-body,
+.chaba-ticket-shell #receipt-footer,
+.chaba-ticket-shell table {
+  background: #fff !important;
+}
+
+.chaba-ticket-shell table {
+  width: 100% !important;
+  margin: 0 !important;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.chaba-ticket-shell td,
+.chaba-ticket-shell th {
+  font-size: 12px;
+  border: 1px solid #000 !important;
+  padding: 2px;
+}
+
+.chaba-ticket-shell .items-tbl th:nth-child(1),
+.chaba-ticket-shell .items-tbl td:nth-child(1) {
+  width: 46%;
+}
+
+.chaba-ticket-shell .items-tbl th:nth-child(2),
+.chaba-ticket-shell .items-tbl td:nth-child(2) {
+  width: 12%;
+}
+
+.chaba-ticket-shell .items-tbl th:nth-child(3),
+.chaba-ticket-shell .items-tbl td:nth-child(3),
+.chaba-ticket-shell .items-tbl th:nth-child(4),
+.chaba-ticket-shell .items-tbl td:nth-child(4) {
+  width: 21%;
+}
+
+.chaba-ticket-shell #deSo th:nth-child(1),
+.chaba-ticket-shell #deSo td:nth-child(1) {
+  width: 12%;
+}
+
+.chaba-ticket-shell #deSo th:nth-child(2),
+.chaba-ticket-shell #deSo td:nth-child(2) {
+  width: 46%;
+}
+
+.chaba-ticket-shell #deSo th:nth-child(3),
+.chaba-ticket-shell #deSo td:nth-child(3),
+.chaba-ticket-shell #deSo th:nth-child(4),
+.chaba-ticket-shell #deSo td:nth-child(4) {
+  width: 21%;
+}
+
+.chaba-ticket-shell .text-center {
+  text-align: center !important;
+}
+
+.chaba-ticket-shell .receipt-divider {
+  margin: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.chaba-ticket-shell .section-row td {
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: left;
+}

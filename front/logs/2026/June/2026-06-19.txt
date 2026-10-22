@@ -1,0 +1,2 @@
+19-Jun-2026 06:47:32am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+19-Jun-2026 06:47:40am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1

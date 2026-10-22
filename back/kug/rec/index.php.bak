@@ -1,0 +1,1142 @@
+<?php
+include('funcs.php');
+if (session_status() === PHP_SESSION_NONE) session_start();
+$user_id = $_SESSION['mwene'];
+$folder  = "back/#prods/1.php";
+thesion_page($folder);
+?>
+
+<style>
+/* ── KPI cards ────────────────────────────────────────────────────────────── */
+.rec-kpi {
+  border-radius:10px; padding:.85rem 1rem;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.rec-kpi-label { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+.rec-kpi-value { font-size:1.6rem; font-weight:800; line-height:1.1; }
+.rec-kpi-sub   { font-size:.65rem; margin-top:.15rem; }
+.rec-kpi-icon  {
+  width:40px; height:40px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+          <div style="overflow-x:auto;">
+            <div id="recv-items-loader" class="text-center py-3 text-muted small">
+              <i class="fa fa-spinner fa-spin me-1"></i>Loading items…
+            </div>
+            <div id="recv-items-wrap" class="d-none">
+              <div class="mb-2">
+                <button class="btn btn-outline-primary btn-sm mb-2" onclick="recAddExtraItem()">
+                  <i class="fa fa-plus"></i> Add New Item Not In PO
+                </button>
+              </div>
+              <!-- Modal for selecting/requesting variant -->
+              <div class="modal fade" id="extraItemModal" tabindex="-1" aria-labelledby="extraItemModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="extraItemModalLabel">Add Extra Item Variant</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label for="extraItemSearch" class="form-label">Search Stock Variant</label>
+                        <input type="text" class="form-control" id="extraItemSearch" placeholder="Type to search stock...">
+                        <div id="extraItemSearchResults" class="mt-2"></div>
+                        <div id="extraItemSelectArea" class="mt-2 d-none">
+                          <div class="mb-2"><strong>Selected Variant:</strong> <span id="extraItemSelectedName"></span></div>
+                          <input type="number" class="form-control mb-1" id="extraItemQty" placeholder="Quantity" min="0">
+                          <input type="number" class="form-control mb-1" id="extraItemPrice" placeholder="Unit Price" min="0" step="0.01">
+                        </div>
+                        <button type="button" class="btn btn-warning btn-sm mt-2 d-none" id="extraItemRequestBtn">Request Entry</button>
+                      </div>
+                      <hr>
+                      <div class="mb-3" id="extraItemRequestArea">
+                        <label class="form-label">Request New Variant</label>
+                        <input type="text" class="form-control mb-1" id="extraItemName" placeholder="Item Name">
+                        <input type="text" class="form-control mb-1" id="extraItemBrand" placeholder="Brand">
+                        <input type="text" class="form-control mb-1" id="extraItemSize" placeholder="Size">
+                        <input type="text" class="form-control mb-1" id="extraItemColor" placeholder="Color">
+                        <input type="text" class="form-control mb-1" id="extraItemUom" placeholder="UOM">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-primary" id="extraItemConfirmBtn">Add Item</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="max-height:420px;overflow-y:auto;">
+                <table class="table table-sm table-hover rec-tbl mb-2">
+                  <thead><tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Brand</th>
+                    <th>Size</th>
+                    <th>Color</th>
+                    <th>UOM</th>
+                    <th class="text-center">Ordered Qty</th>
+                    <th class="text-center" style="color:#008080;">Received Qty</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Edit Price</th>
+                    <th class="text-end">Total</th>
+                    <th>Extras</th>
+                  </tr></thead>
+                  <tbody id="recv-items-tbody"></tbody>
+                  <tbody id="recv-extra-tbody"></tbody>
+                  <tfoot>
+                    <tr style="background:#f8f9fa;">
+                      <td colspan="10" class="text-end fw-bold" style="font-size:.75rem;">ESTIMATED TOTAL:</td>
+                      <td colspan="2" class="text-end fw-bold text-success" id="recv-total" style="font-size:.85rem;">–</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              <div id="recv-msg" class="mb-2"></div>
+              <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-secondary btn-sm" onclick="recShowPos()">
+                  <i class="fa fa-times me-1"></i>Cancel
+                </button>
+                <button class="btn btn-success btn-sm" id="btn-create-grn" onclick="recCreateGrn()">
+                  <i class="fa fa-check-circle me-1"></i>Create GRN &amp; Send to Store
+                </button>
+              </div>
+            </div>
+          </div>
+    <div class="rec-kpi" style="background:linear-gradient(135deg,#eff6ff,#fff);border-left:4px solid #2563eb;">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="rec-kpi-label text-muted">Pending Receiving</div>
+          <div class="rec-kpi-value text-primary" id="kpi-pending">–</div>
+          <div class="rec-kpi-sub text-muted">Approved POs awaiting delivery</div>
+        </div>
+        <div class="rec-kpi-icon" style="background:#dbeafe;color:#2563eb;">
+          <i class="fa fa-clock"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-6">
+    <div class="rec-kpi" style="background:linear-gradient(135deg,#ecfdf5,#fff);border-left:4px solid #16a34a;">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="rec-kpi-label text-muted">GRNs Today</div>
+          <div class="rec-kpi-value text-success" id="kpi-today">–</div>
+          <div class="rec-kpi-sub text-muted">Delivered today</div>
+        </div>
+        <div class="rec-kpi-icon" style="background:#bbf7d0;color:#16a34a;">
+          <i class="fa fa-check-circle"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-12">
+    <div class="rec-kpi" style="background:linear-gradient(135deg,#f0fdf9,#fff);border-left:4px solid #008080;">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="rec-kpi-label text-muted">Total GRNs</div>
+          <div class="rec-kpi-value" style="color:#008080;" id="kpi-total">–</div>
+          <div class="rec-kpi-sub text-muted">All received deliveries</div>
+        </div>
+        <div class="rec-kpi-icon" style="background:#ccfbf1;color:#008080;">
+          <i class="fa fa-clipboard-list"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+
+  <!-- ═══ BREADCRUMB (full width, above sidebar+main) ══ -->
+  <div class="col-12 mb-2">
+    <div class="d-flex align-items-center gap-1" style="font-size:.72rem;">
+      <span class="rec-bc-step active" id="bc-pos">
+        <span class="rec-bc-num">1</span> PO List
+      </span>
+      <i class="fa fa-chevron-right text-muted mx-1" style="font-size:.6rem;"></i>
+      <span class="rec-bc-step" id="bc-receive">
+        <span class="rec-bc-num">2</span> Enter Quantities
+      </span>
+      <i class="fa fa-chevron-right text-muted mx-1" style="font-size:.6rem;"></i>
+      <span class="rec-bc-step" id="bc-success">
+        <span class="rec-bc-num">3</span> GRN Created
+      </span>
+    </div>
+  </div>
+
+  <!-- ══════════════ LEFT SIDEBAR ══ -->
+  <div class="col-md-2 col-12">
+    <div class="widget">
+      <div class="widget-header p-2">
+        <h4 class="my-0 text-cyan" style="font-size:.76rem;"><i class="fa fa-cogs me-1"></i> OPERATIONS</h4>
+      </div>
+      <div class="p-2">
+        <button class="rec-nav-btn active" id="nav-pos" onclick="recShowPos()">
+          <i class="fa fa-list-alt text-primary"></i> Approved POs
+          <span class="badge bg-warning text-dark ms-auto d-none" id="nav-pos-badge" style="font-size:.6rem;"></span>
+        </button>
+        <button class="rec-nav-btn" id="nav-grns" onclick="recShowGrns()">
+          <i class="fa fa-clipboard-list text-success"></i> GRN History
+        </button>
+        <hr class="my-1">
+        <button class="rec-nav-btn ajax-loader" data-folder="kug" data-file="index"
+            data-target="#content" data-target-type="div" data-method="GET" data-id="0">
+          <i class="fa fa-shopping-cart text-secondary"></i> Purchase Dashboard
+        </button>
+      </div>
+    </div>
+  </div><!-- /sidebar -->
+
+  <!-- ═══════════════════ MAIN CONTENT ══ -->
+  <div class="col-md-10 col-12" id="rec-main">
+
+    <!-- ── STEP 1: Approved PO List ──────────────────────────────────── -->
+    <div class="rec-step active" id="step-pos">
+      <div class="widget">
+        <div class="widget-header p-2 d-flex justify-content-between align-items-center"
+             style="background:linear-gradient(90deg,#f0fdf9,#fff);border-bottom:2px solid #ccfbf1;">
+          <h4 class="my-0 fw-bold" style="font-size:.82rem;color:#008080;">
+            <i class="fa fa-list me-1"></i> APPROVED PURCHASE ORDERS — PENDING RECEIVING
+          </h4>
+          <button class="btn btn-xs btn-outline-success" onclick="recLoadPos()">
+            <i class="fa fa-refresh me-1"></i>Refresh
+          </button>
+        </div>
+        <div id="pos-content" style="overflow-x:auto;">
+          <div id="pos-loader" class="text-center py-4 text-muted small">
+            <i class="fa fa-spinner fa-spin me-1"></i>Loading purchase orders…
+          </div>
+          <div id="pos-empty" class="d-none text-center py-5 text-muted">
+            <i class="fa fa-check-circle d-block fa-3x mb-3" style="color:#008080;opacity:.3;"></i>
+            <div class="fw-bold">No approved POs pending receiving.</div>
+            <div class="small mt-1">All purchase orders have been received.</div>
+          </div>
+          <div id="pos-wrap" class="d-none">
+            <table class="table table-sm table-hover mb-0 rec-tbl">
+              <thead><tr>
+                <th>PO #</th>
+                <th>Supplier</th>
+                <th>Raised By</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Items</th>
+                <th>Type</th>
+                <th class="text-center">Action</th>
+              </tr></thead>
+              <tbody id="pos-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /step-pos -->
+
+    <!-- ── STEP 2: Receive a PO (Enter received quantities) ──────────── -->
+    <div class="rec-step" id="step-receive">
+      <div class="widget mb-2">
+        <div class="widget-header p-2 d-flex justify-content-between align-items-center"
+             style="background:linear-gradient(90deg,#f0fdf9,#fff);border-bottom:2px solid #ccfbf1;">
+          <h4 class="my-0 fw-bold" style="font-size:.82rem;color:#008080;">
+            <i class="fa fa-inbox me-1"></i> RECEIVE GOODS — PO <span id="recv-po-num" class="text-primary fw-bold"></span>
+          </h4>
+          <button class="btn btn-xs btn-outline-secondary" onclick="recShowPos()">
+            <i class="fa fa-arrow-left me-1"></i>Back to PO List
+          </button>
+        </div>
+        <div class="p-3">
+          <!-- PO summary -->
+          <div class="row g-2 mb-3" id="recv-po-info"></div>
+
+          <!-- GRN form fields -->
+          <div class="p-2 rounded-2 mb-3" style="background:#f8f9fa;border:1px solid #e5e7eb;">
+            <div class="row g-2">
+              <div class="col-md-4 col-12">
+                <label class="form-label" style="font-size:.72rem;font-weight:700;">INVOICE #</label>
+                <input type="text" class="form-control form-control-sm" id="recv-inv"
+                       placeholder="Supplier invoice number">
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label" style="font-size:.72rem;font-weight:700;">TAX APPLIES?</label>
+                <select class="form-control form-control-sm" id="recv-tax">
+                  <option value="0">No Tax</option>
+                  <option value="1">Tax Applies</option>
+                </select>
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label" style="font-size:.72rem;font-weight:700;">DELIVERY NOTE #</label>
+                <input type="text" class="form-control form-control-sm" id="recv-dnote"
+                       placeholder="Delivery note / waybill">
+              </div>
+              <div class="col-md-4 col-12">
+                <label class="form-label" style="font-size:.72rem;font-weight:700;">RECEIVED DATE</label>
+                <input type="date" class="form-control form-control-sm" id="recv-day"
+                       value="<?php echo date('Y-m-d'); ?>">
+              </div>
+            </div>
+          </div>
+
+          <!-- Items to receive -->
+          <div style="overflow-x:auto;">
+            <div id="recv-items-loader" class="text-center py-3 text-muted small">
+              <i class="fa fa-spinner fa-spin me-1"></i>Loading items…
+            </div>
+            <div id="recv-items-wrap" class="d-none">
+              <div class="mb-2">
+                <button class="btn btn-outline-primary btn-sm mb-2" onclick="recAddExtraItem()">
+                  <i class="fa fa-plus"></i> Add New Item Not In PO
+                </button>
+              </div>
+              <!-- Modal for selecting/requesting variant -->
+              <div class="modal fade" id="extraItemModal" tabindex="-1" aria-labelledby="extraItemModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="extraItemModalLabel">Add Extra Item Variant</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label for="extraItemSearch" class="form-label">Search Existing Variant</label>
+                        <input type="text" class="form-control" id="extraItemSearch" placeholder="Type to search...">
+                        <div id="extraItemSearchResults" class="mt-2"></div>
+                        <div id="extraItemSelectArea" class="mt-2 d-none">
+                          <div class="mb-2"><strong>Selected Variant:</strong> <span id="extraItemSelectedName"></span></div>
+                          <input type="number" class="form-control mb-1" id="extraItemQty" placeholder="Quantity" min="0">
+                          <input type="number" class="form-control mb-1" id="extraItemPrice" placeholder="Unit Price" min="0" step="0.01">
+                        </div>
+                        <button type="button" class="btn btn-warning btn-sm mt-2 d-none" id="extraItemRequestBtn">Request Entry</button>
+                      </div>
+                      <hr>
+                      <div class="mb-3" id="extraItemRequestArea">
+                        <label class="form-label">Request New Variant</label>
+                        <input type="text" class="form-control mb-1" id="extraItemName" placeholder="Item Name">
+                        <input type="text" class="form-control mb-1" id="extraItemBrand" placeholder="Brand">
+                        <input type="text" class="form-control mb-1" id="extraItemSize" placeholder="Size">
+                        <input type="text" class="form-control mb-1" id="extraItemColor" placeholder="Color">
+                        <input type="text" class="form-control mb-1" id="extraItemUom" placeholder="UOM">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-primary" id="extraItemConfirmBtn">Add Item</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <table class="table table-sm table-hover rec-tbl mb-2">
+                <thead><tr>
+                  <th>#</th>
+                  <th>Item</th>
+                  <th>Brand</th>
+                  <th>Size</th>
+                  <th>Color</th>
+                  <th>UOM</th>
+                  <th class="text-center">Ordered Qty</th>
+                  <th class="text-center" style="color:#008080;">Received Qty</th>
+                  <th class="text-end">Unit Price</th>
+                  <th class="text-end">Edit Price</th>
+                  <th class="text-end">Total</th>
+                  <th>Extras</th>
+                </tr></thead>
+                <tbody id="recv-items-tbody"></tbody>
+                <tbody id="recv-extra-tbody"></tbody>
+                <tfoot>
+                  <tr style="background:#f8f9fa;">
+                    <td colspan="10" class="text-end fw-bold" style="font-size:.75rem;">ESTIMATED TOTAL:</td>
+                    <td colspan="2" class="text-end fw-bold text-success" id="recv-total" style="font-size:.85rem;">–</td>
+                  </tr>
+                </tfoot>
+              </table>
+
+              <div id="recv-msg" class="mb-2"></div>
+
+              <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-secondary btn-sm" onclick="recShowPos()">
+                  <i class="fa fa-times me-1"></i>Cancel
+                </button>
+                <button class="btn btn-success btn-sm" id="btn-create-grn" onclick="recCreateGrn()">
+                  <i class="fa fa-check-circle me-1"></i>Create GRN &amp; Send to Store
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /step-receive -->
+
+    <!-- ── STEP 3: GRN Created Success ───────────────────────────────── -->
+    <div class="rec-step" id="step-success">
+      <div class="grn-success-card mb-3">
+        <div class="text-center mb-3">
+          <i class="fa fa-check-circle fa-4x" style="color:#16a34a;opacity:.8;"></i>
+          <h3 class="mt-2 fw-bold text-success">GRN Created Successfully!</h3>
+          <p class="text-muted mb-0" style="font-size:.85rem;">The goods receiving note has been created and forwarded to the store team for stock confirmation.</p>
+        </div>
+        <div class="row g-2 mb-3" id="success-info"></div>
+        <div class="alert alert-info py-2 mb-3" style="font-size:.78rem;">
+          <i class="fa fa-info-circle me-1"></i>
+          The store team can now view this GRN in the <strong>Store Receiving Module</strong> and confirm each item into stock.
+        </div>
+        <div class="d-flex gap-2 justify-content-center mb-3">
+          <button class="btn btn-outline-success btn-sm" onclick="recShowGrns()">
+            <i class="fa fa-clipboard-list me-1"></i>View GRN History
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="recShowPos()">
+            <i class="fa fa-list me-1"></i>Back to PO List
+          </button>
+        </div>
+      </div>
+
+      <!-- Received Items Table -->
+      <div class="widget mt-2">
+        <div class="widget-header p-2 d-flex justify-content-between align-items-center"
+             style="background:linear-gradient(90deg,#f0fdf9,#fff);border-bottom:2px solid #ccfbf1;">
+          <h4 class="my-0 fw-bold" style="font-size:.82rem;color:#008080;">
+            <i class="fa fa-list me-1"></i> RECEIVED ITEMS — FORWARDED TO STORE
+          </h4>
+          <span class="badge bg-warning text-dark" style="font-size:.65rem;">
+            <i class="fa fa-clock me-1"></i>Pending store confirmation
+          </span>
+        </div>
+        <div id="success-items" style="overflow-x:auto;">
+          <div class="text-center py-3 text-muted small">
+            <i class="fa fa-spinner fa-spin me-1"></i>Loading items…
+          </div>
+        </div>
+      </div>
+    </div><!-- /step-success -->
+
+    <!-- ── GRN History Panel ──────────────────────────────────────────── -->
+    <div class="rec-step" id="step-grns">
+      <div class="widget">
+        <div class="widget-header p-2 d-flex justify-content-between align-items-center"
+             style="background:linear-gradient(90deg,#f0fdf9,#fff);border-bottom:2px solid #ccfbf1;">
+          <h4 class="my-0 fw-bold" style="font-size:.82rem;color:#008080;">
+            <i class="fa fa-clipboard-list me-1"></i> GRN HISTORY
+          </h4>
+          <button class="btn btn-xs btn-outline-success" onclick="recLoadGrns()">
+            <i class="fa fa-refresh me-1"></i>Refresh
+          </button>
+        </div>
+        <div id="grns-content" style="overflow-x:auto;">
+          <div id="grns-loader" class="text-center py-4 text-muted small">
+            <i class="fa fa-spinner fa-spin me-1"></i>Loading GRNs…
+          </div>
+          <div id="grns-empty" class="d-none text-center py-5 text-muted">
+            <i class="fa fa-clipboard d-block fa-3x mb-3" style="opacity:.3;"></i>
+            No GRNs found.
+          </div>
+          <div id="grns-wrap" class="d-none">
+            <table class="table table-sm table-hover mb-0 rec-tbl">
+              <thead><tr>
+                <th>GRN #</th><th>PO #</th><th>Supplier</th>
+                <th>Invoice</th><th>Date</th>
+                <th class="text-center">Items</th><th class="text-center">Stored</th>
+                <th>Amount</th><th>Status</th><th>Received By</th>
+                <th></th>
+              </tr></thead>
+              <tbody id="grns-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /step-grns -->
+
+  </div><!-- /#rec-main -->
+</div><!-- /row -->
+
+<script>
+(function () {
+'use strict';
+
+var _currentPoId = 0;
+var _poItems     = [];
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function _e(s) {
+  var d = document.createElement('div');
+  d.textContent = String(s == null ? '' : s);
+  return d.innerHTML;
+}
+function _fmt(n) {
+  n = parseFloat(n) || 0;
+  if (n >= 1e6) return 'KSh\u00a0' + (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return 'KSh\u00a0' + (n / 1e3).toFixed(1) + 'K';
+  return 'KSh\u00a0' + n.toLocaleString('en-KE', {minimumFractionDigits:2});
+}
+function _d(s) { return s ? String(s).split(' ')[0] : '–'; }
+function _poType(t) {
+  return t == 1
+    ? '<span class="badge bg-info">Intl</span>'
+    : '<span class="badge bg-secondary">Local</span>';
+}
+function _grnStatus(s) {
+  s = parseInt(s);
+  if (s === 1) return '<span class="badge grn-status-1" style="font-size:.62rem;">Complete</span>';
+  if (s === 3) return '<span class="badge grn-status-3" style="font-size:.62rem;">Ongoing</span>';
+  return '<span class="badge bg-secondary" style="font-size:.62rem;">Unknown</span>';
+}
+
+// ── Step navigation ────────────────────────────────────────────────────────────
+function _showStep(name) {
+  document.querySelectorAll('.rec-step').forEach(function (el) {
+    el.classList.remove('active');
+  });
+  var el = document.getElementById('step-' + name);
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('.rec-nav-btn').forEach(function (b) { b.classList.remove('active'); });
+  if (name === 'pos')  document.getElementById('nav-pos').classList.add('active');
+  if (name === 'grns') document.getElementById('nav-grns').classList.add('active');
+
+  // Breadcrumb
+  document.querySelectorAll('.rec-bc-step').forEach(function (s) { s.classList.remove('active'); });
+  if (name === 'pos')     document.getElementById('bc-pos').classList.add('active');
+  if (name === 'receive') document.getElementById('bc-receive').classList.add('active');
+  if (name === 'success') document.getElementById('bc-success').classList.add('active');
+}
+
+// ── Step 1: PO List ────────────────────────────────────────────────────────────
+function recShowPos() {
+  _showStep('pos');
+  recLoadPos();
+}
+function recLoadPos() {
+  $('#pos-loader').removeClass('d-none');
+  $('#pos-empty').addClass('d-none');
+  $('#pos-wrap').addClass('d-none');
+
+  $.get('kug/rec/api/rec_api.php', {action:'list_pos'}, function (r) {
+    $('#pos-loader').addClass('d-none');
+    if (!r.success) {
+      $('#pos-loader').removeClass('d-none').html(
+        '<span class="text-danger small"><i class="fa fa-exclamation-triangle me-1"></i>' + _e(r.message) + '</span>');
+      return;
+    }
+    var list = r.pos || [];
+
+    // Update KPI + badge
+    $('#kpi-pending').text(list.length);
+    if (list.length > 0) {
+      $('#nav-pos-badge').text(list.length).removeClass('d-none');
+    } else {
+      $('#nav-pos-badge').addClass('d-none');
+    }
+
+    if (!list.length) {
+      $('#pos-empty').removeClass('d-none');
+      return;
+    }
+    var h = '';
+    list.forEach(function (row) {
+      h += '<tr>' +
+        '<td><strong class="text-primary">#' + _e(row.po_id) + '</strong></td>' +
+        '<td><span class="fw-medium">' + _e(row.sup_name) + '</span></td>' +
+        '<td class="text-muted">' + _e(row.raised_by) + '</td>' +
+        '<td class="text-muted">' + _d(row.po_date) + '</td>' +
+        '<td class="fw-medium">' + _fmt(row.amount) + '</td>' +
+        '<td class="text-center"><span class="badge bg-secondary">' + _e(row.item_count) + '</span></td>' +
+        '<td>' + _poType(row.potype) + '</td>' +
+        '<td class="text-center">' +
+          '<button class="btn btn-xs btn-success" onclick="recOpenPo(' + _e(row.po_id) + ')">' +
+          '<i class="fa fa-inbox me-1"></i>Start Receiving</button>' +
+        '</td>' +
+        '</tr>';
+    });
+    $('#pos-tbody').html(h);
+    $('#pos-wrap').removeClass('d-none');
+  }, 'json').fail(function () {
+    $('#pos-loader').removeClass('d-none').html(
+      '<span class="text-danger small"><i class="fa fa-exclamation-triangle me-1"></i>Failed to load POs.</span>');
+  });
+}
+window.recShowPos  = recShowPos;
+window.recLoadPos  = recLoadPos;
+
+// ── Step 2: Open PO for receiving ─────────────────────────────────────────────
+function recOpenPo(po_id) {
+
+  _currentPoId = po_id;
+  window._extraItems = [];
+  _showStep('receive');
+  $('#recv-po-num').text('#' + po_id);
+  $('#recv-po-info').html('');
+  $('#recv-items-loader').removeClass('d-none');
+  $('#recv-items-wrap').addClass('d-none');
+  $('#recv-msg').html('');
+
+  $.get('kug/rec/api/rec_api.php', {action:'get_po_detail', po_id: po_id}, function (r) {
+    $('#recv-items-loader').addClass('d-none');
+    if (!r || typeof r !== 'object' || !r.success) {
+      console.error('Malformed or failed PO detail response:', r);
+      $('#recv-items-loader').removeClass('d-none').html(
+        '<div class="alert alert-danger py-2 small"><i class="fa fa-exclamation-triangle me-1"></i>Could not load PO details. Please check your connection or try again.</div>');
+      $('#recv-items-wrap').addClass('d-none');
+      let msg = (r && r.message ? _e(r.message) : 'Unknown error. Please check your internet connection or contact support.');
+      if (msg.toLowerCase().includes('unauthorized')) {
+        msg = '<strong>Session expired or not logged in.</strong><br>Please log in to continue.';
+      }
+      $('#recv-msg').html('<div class="alert alert-danger mt-3">' + msg + '</div>');
+      document.getElementById('recv-msg').scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+    var po = r.po || {};
+    // PO info cards
+    var iHtml =
+      '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+        '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">Supplier</div>' +
+        '<div class="fw-bold" style="font-size:.85rem;">' + _e(po.sup_name || '–') + '</div>' +
+      '</div></div>' +
+      '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+        '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">PO Date</div>' +
+        '<div class="fw-bold" style="font-size:.85rem;">' + _d(po.po_date || '') + '</div>' +
+      '</div></div>' +
+      '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+        '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">PO Amount</div>' +
+        '<div class="fw-bold text-success" style="font-size:.85rem;">' + _fmt(po.amount || 0) + '</div>' +
+      '</div></div>' +
+      '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+        '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">Raised By</div>' +
+        '<div class="fw-bold" style="font-size:.85rem;">' + _e(po.raised_by || '–') + '</div>' +
+      '</div></div>';
+    $('#recv-po-info').html(iHtml);
+
+    // Items table
+    _poItems = Array.isArray(r.items) ? r.items : [];
+    var h = '';
+    if (_poItems.length === 0) {
+      h = '<tr><td colspan="12" class="text-center text-muted">No items found for this PO.</td></tr>';
+    } else {
+      _poItems.forEach(function (it, idx) {
+        h += '<tr id="recv-row-' + _e(it.id) + '">' +
+          '<td class="text-muted">' + (idx + 1) + '</td>' +
+          '<td><span class="fw-medium">' + _e(it.item_name) + '</span>' +
+            (it.product_code ? '<br><small class="text-muted">' + _e(it.product_code) + '</small>' : '') +
+          '</td>' +
+          '<td class="text-muted">' + _e(it.brand || '–') + '</td>' +
+          '<td class="text-muted">' + _e(it.size  || '–') + '</td>' +
+          '<td class="text-muted">' + _e(it.color || '–') + '</td>' +
+          '<td class="text-muted">' + _e(it.uom   || '–') + '</td>' +
+          '<td class="text-center"><strong>' + _e(it.qty) + '</strong></td>' +
+          '<td class="text-center">' +
+            '<input type="number" class="recv-qty-input qty-exact" min="0" step="0.01"' +
+            ' id="rqty-' + _e(it.id) + '" data-item-id="' + _e(it.id) + '"' +
+            ' data-ordered="' + _e(it.qty) + '" data-price="' + _e(it.price) + '"' +
+            ' value="' + _e(it.qty) + '"' +
+            ' oninput="recQtyChanged(this)">' +
+          '</td>' +
+          '<td class="text-end">' + _fmt(it.price) + '</td>' +
+          '<td class="text-end">' +
+            '<input type="number" class="recv-qty-input" min="0" step="0.01"' +
+            ' id="rprice-' + _e(it.id) + '" data-item-id="' + _e(it.id) + '"' +
+            ' value="' + _e(it.price) + '"' +
+            ' oninput="recPriceChanged(this)">' +
+          '</td>' +
+          '<td class="text-end" id="rtotal-' + _e(it.id) + '">' + _fmt((parseFloat(it.qty) || 0) * (parseFloat(it.price) || 0)) + '</td>' +
+          '<td>' +
+            '<input type="text" class="form-control form-control-sm" id="rextra-' + _e(it.id) + '" placeholder="Extras (optional)">' +
+          '</td>' +
+          '</tr>';
+      });
+    }
+    $('#recv-items-tbody').html(h);
+    // Render extra items
+    recRenderExtraItems();
+    recUpdateTotal();
+    $('#recv-items-wrap').removeClass('d-none');
+  }, 'json').fail(function (xhr, status, error) {
+    console.error('AJAX error loading PO details:', status, error, xhr);
+    $('#recv-items-loader').removeClass('d-none').html(
+      '<div class="alert alert-danger py-2 small"><i class="fa fa-exclamation-triangle me-1"></i>AJAX error loading PO details: ' + _e(error) + '</div>');
+    $('#recv-items-wrap').addClass('d-none');
+    $('#recv-msg').html('<div class="alert alert-danger mt-3"><strong>AJAX error loading PO details.</strong><br>' + _e(error) + '<br>Please check your internet connection or contact support.</div>');
+    document.getElementById('recv-msg').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+// ── Extra items not in PO ─────────────────────────────────────────────
+window._extraItems = window._extraItems || [];
+window.recAddExtraItem = function() {
+  // Show modal for variant selection/request
+  var modal = new bootstrap.Modal(document.getElementById('extraItemModal'));
+  document.getElementById('extraItemSearch').value = '';
+  document.getElementById('extraItemSearchResults').innerHTML = '';
+  document.getElementById('extraItemSelectArea').classList.add('d-none');
+  document.getElementById('extraItemRequestBtn').classList.add('d-none');
+  document.getElementById('extraItemSelectedName').textContent = '';
+  document.getElementById('extraItemQty').value = '';
+  document.getElementById('extraItemPrice').value = '';
+  document.getElementById('extraItemName').value = '';
+  document.getElementById('extraItemBrand').value = '';
+  document.getElementById('extraItemSize').value = '';
+  document.getElementById('extraItemColor').value = '';
+  document.getElementById('extraItemUom').value = '';
+  document.getElementById('extraItemRequestArea').style.display = '';
+  modal.show();
+};
+
+// Modal logic: AJAX search, select, request entry
+document.addEventListener('DOMContentLoaded', function() {
+  var searchInput = document.getElementById('extraItemSearch');
+  var resultsDiv = document.getElementById('extraItemSearchResults');
+  var selectArea = document.getElementById('extraItemSelectArea');
+  var requestBtn = document.getElementById('extraItemRequestBtn');
+  var requestArea = document.getElementById('extraItemRequestArea');
+  var confirmBtn = document.getElementById('extraItemConfirmBtn');
+  var selectedVariant = null;
+
+  // Search handler
+  if (searchInput) {
+    searchInput.oninput = function() {
+      var q = searchInput.value.trim();
+      resultsDiv.innerHTML = '';
+      selectArea.classList.add('d-none');
+      requestBtn.classList.add('d-none');
+      selectedVariant = null;
+      if (!q) return;
+      // AJAX search kp_inventory_stock_variant
+      $.get('kug/rec/api/rec_api.php', {action:'search_variant', q:q}, function(r) {
+        if (!r.success || !r.variants || !r.variants.length) {
+          resultsDiv.innerHTML = '<div class="text-muted">No variant found.</div>';
+          requestBtn.classList.remove('d-none');
+          requestArea.style.display = '';
+          return;
+        }
+        var h = '<ul class="list-group">';
+        r.variants.forEach(function(v) {
+          h += '<li class="list-group-item list-group-item-action" style="cursor:pointer" data-id="' + v.id + '">' +
+            _e(v.item_name) + ' | ' + _e(v.brand) + ' | ' + _e(v.size) + ' | ' + _e(v.color) + ' | ' + _e(v.uom) + '</li>';
+        });
+        h += '</ul>';
+        resultsDiv.innerHTML = h;
+        requestArea.style.display = 'none';
+        // Click handler for selection
+        $(resultsDiv).find('li').on('click', function() {
+          var idx = $(this).index();
+          selectedVariant = r.variants[idx];
+          document.getElementById('extraItemSelectedName').textContent = selectedVariant.item_name + ' | ' + selectedVariant.brand + ' | ' + selectedVariant.size + ' | ' + selectedVariant.color + ' | ' + selectedVariant.uom;
+          selectArea.classList.remove('d-none');
+        });
+      }, 'json');
+    };
+  }
+
+  // Request Entry button
+  if (requestBtn) {
+    requestBtn.onclick = function() {
+      requestArea.style.display = '';
+      selectArea.classList.add('d-none');
+    };
+  }
+
+  // Confirm button
+  if (confirmBtn) {
+    confirmBtn.onclick = function() {
+      var modal = bootstrap.Modal.getInstance(document.getElementById('extraItemModal'));
+      if (selectedVariant) {
+        var qty = parseFloat(document.getElementById('extraItemQty').value) || 0;
+        var price = parseFloat(document.getElementById('extraItemPrice').value) || 0;
+        window._extraItems.push({
+          item_name: selectedVariant.item_name,
+          brand: selectedVariant.brand,
+          size: selectedVariant.size,
+          color: selectedVariant.color,
+          uom: selectedVariant.uom,
+          product_code: selectedVariant.product_code,
+          barcode: selectedVariant.barcode,
+          recv_qty: qty,
+          recv_price: price,
+          extra: ''
+        });
+        window.recRenderExtraItems();
+        recUpdateTotal();
+        if (modal) modal.hide();
+      } else {
+        // Request new entry
+        var name = document.getElementById('extraItemName').value.trim();
+        var brand = document.getElementById('extraItemBrand').value.trim();
+        var size = document.getElementById('extraItemSize').value.trim();
+        var color = document.getElementById('extraItemColor').value.trim();
+        var uom = document.getElementById('extraItemUom').value.trim();
+        window._extraItems.push({item_name: name, brand: brand, size: size, color: color, uom: uom, recv_qty: 0, recv_price: 0, extra: ''});
+        window.recRenderExtraItems();
+        recUpdateTotal();
+        // Optionally, send request to backend to add variant
+        $.post('kug/rec/api/rec_api.php', {
+          action: 'request_variant',
+          item_name: name,
+          brand: brand,
+          size: size,
+          color: color,
+          uom: uom
+        }, function(r) {
+          // Optionally show confirmation
+        }, 'json');
+        if (modal) modal.hide();
+      }
+    };
+  }
+});
+window.recRenderExtraItems = function() {
+  var h = '';
+  window._extraItems.forEach(function(it, idx) {
+    h += '<tr>' +
+      '<td class="text-muted">Extra</td>' +
+      '<td><input type="text" class="form-control form-control-sm" placeholder="Item Name" value="' + _e(it.item_name) + '" onchange="recSetExtraItem(' + idx + ',\'item_name\',this.value)"></td>' +
+      '<td><input type="text" class="form-control form-control-sm" placeholder="Brand" value="' + _e(it.brand || '') + '" onchange="recSetExtraItem(' + idx + ',\'brand\',this.value)"></td>' +
+      '<td><input type="text" class="form-control form-control-sm" placeholder="Size" value="' + _e(it.size || '') + '" onchange="recSetExtraItem(' + idx + ',\'size\',this.value)"></td>' +
+      '<td><input type="text" class="form-control form-control-sm" placeholder="Color" value="' + _e(it.color || '') + '" onchange="recSetExtraItem(' + idx + ',\'color\',this.value)"></td>' +
+      '<td><input type="text" class="form-control form-control-sm" placeholder="UOM" value="' + _e(it.uom || '') + '" onchange="recSetExtraItem(' + idx + ',\'uom\',this.value)"></td>' +
+      '<td class="text-center">–</td>' +
+      '<td class="text-center"><input type="number" class="recv-qty-input" min="0" step="0.01" value="' + it.recv_qty + '" onchange="recSetExtraItem(' + idx + ',\'recv_qty\',this.value)"></td>' +
+      '<td class="text-end">–</td>' +
+      '<td class="text-end"><input type="number" class="recv-qty-input" min="0" step="0.01" value="' + it.recv_price + '" onchange="recSetExtraItem(' + idx + ',\'recv_price\',this.value)"></td>' +
+      '<td class="text-end" id="rextra-total-' + idx + '">' + _fmt((it.recv_qty || 0) * (it.recv_price || 0)) + '</td>' +
+      '<td><input type="text" class="form-control form-control-sm" placeholder="Extras (optional)" value="' + _e(it.extra) + '" onchange="recSetExtraItem(' + idx + ',\'extra\',this.value)"></td>' +
+      '<td><button class="btn btn-xs btn-danger" onclick="recRemoveExtraItem(' + idx + ')"><i class="fa fa-trash"></i></button></td>' +
+    '</tr>';
+  });
+  $('#recv-extra-tbody').html(h);
+};
+window.recSetExtraItem = function(idx, key, val) {
+  if (!window._extraItems[idx]) return;
+  window._extraItems[idx][key] = val;
+  window.recRenderExtraItems();
+  recUpdateTotal();
+};
+window.recRemoveExtraItem = function(idx) {
+  window._extraItems.splice(idx, 1);
+  window.recRenderExtraItems();
+  recUpdateTotal();
+};
+}
+window.recOpenPo = recOpenPo;
+
+// ── Qty input colouring + total recalc ────────────────────────────────────────
+function recQtyChanged(el) {
+  var ordered = parseFloat(el.getAttribute('data-ordered')) || 0;
+  var itemId  = el.getAttribute('data-item-id');
+  var entered = parseFloat(el.value) || 0;
+  var priceEl = document.getElementById('rprice-' + itemId);
+  var price   = priceEl ? parseFloat(priceEl.value) || 0 : 0;
+
+  el.classList.remove('qty-exact', 'qty-short', 'qty-over');
+  if (entered === ordered) el.classList.add('qty-exact');
+  else if (entered < ordered) el.classList.add('qty-short');
+  else el.classList.add('qty-over');
+
+  $('#rtotal-' + itemId).text(_fmt(entered * price));
+  recUpdateTotal();
+}
+window.recQtyChanged = recQtyChanged;
+
+function recPriceChanged(el) {
+  var itemId = el.getAttribute('data-item-id');
+  var qtyEl = document.getElementById('rqty-' + itemId);
+  var qty = qtyEl ? parseFloat(qtyEl.value) || 0 : 0;
+  var price = parseFloat(el.value) || 0;
+  $('#rtotal-' + itemId).text(_fmt(qty * price));
+  recUpdateTotal();
+}
+window.recPriceChanged = recPriceChanged;
+
+function recUpdateTotal() {
+  var total = 0;
+  _poItems.forEach(function (it) {
+    var qtyEl = document.getElementById('rqty-' + it.id);
+    var priceEl = document.getElementById('rprice-' + it.id);
+    var qty = qtyEl ? parseFloat(qtyEl.value) || 0 : 0;
+    var price = priceEl ? parseFloat(priceEl.value) || 0 : it.price;
+    total += qty * price;
+  });
+  _extraItems.forEach(function (it, idx) {
+    var qty = parseFloat(it.recv_qty) || 0;
+    var price = parseFloat(it.recv_price) || 0;
+    total += qty * price;
+    $('#rextra-total-' + idx).text(_fmt(qty * price));
+  });
+  $('#recv-total').text(_fmt(total));
+}
+
+// ── Step 2 → 3: Create GRN ────────────────────────────────────────────────────
+function recCreateGrn() {
+  var inv   = $('#recv-inv').val().trim();
+  var dnote = $('#recv-dnote').val().trim();
+  var day   = $('#recv-day').val();
+  var tax   = $('#recv-tax').val();
+
+  if (!day) {
+    $('#recv-msg').html('<div class="alert alert-danger py-2 small"><i class="fa fa-exclamation-triangle me-1"></i>Please enter the received date.</div>');
+    return;
+  }
+
+  // Collect items
+  var items = [];
+  var hasQty = false;
+  _poItems.forEach(function (it) {
+    var qtyEl  = document.getElementById('rqty-' + it.id);
+    var priceEl = document.getElementById('rprice-' + it.id);
+    var extraEl = document.getElementById('rextra-' + it.id);
+    var qty = qtyEl ? Math.max(0, parseFloat(qtyEl.value) || 0) : 0;
+    var price = priceEl ? Math.max(0, parseFloat(priceEl.value) || 0) : it.price;
+    var extra = extraEl ? extraEl.value.trim() : '';
+    items.push({po_item_id: it.id, recv_qty: qty, recv_price: price, extra: extra});
+    if (qty > 0) hasQty = true;
+  });
+  // Add extra items
+  _extraItems.forEach(function(it) {
+    var qty = Math.max(0, parseFloat(it.recv_qty) || 0);
+    var price = Math.max(0, parseFloat(it.recv_price) || 0);
+    var extra = it.extra ? it.extra.trim() : '';
+    if (qty > 0 && price > 0 && it.item_name) {
+      items.push({item_name: it.item_name, product_code: it.product_code, barcode: it.barcode, uom: it.uom, recv_qty: qty, recv_price: price, extra: extra});
+      hasQty = true;
+    }
+  });
+
+  if (!hasQty) {
+    $('#recv-msg').html('<div class="alert alert-danger py-2 small"><i class="fa fa-exclamation-triangle me-1"></i>Please enter at least one received quantity.</div>');
+    return;
+  }
+
+  $('#recv-msg').html('<div class="text-muted small"><i class="fa fa-spinner fa-spin me-1"></i>Creating GRN…</div>');
+  $('#btn-create-grn').prop('disabled', true);
+
+  $.post('kug/rec/api/rec_api.php', {
+    action  : 'create_grn',
+    po_id   : _currentPoId,
+    inv     : inv,
+    dnote   : dnote,
+    day     : day,
+    tax     : tax,
+    items   : JSON.stringify(items)
+  }, function (r) {
+    $('#btn-create-grn').prop('disabled', false);
+    if (!r.success) {
+      $('#recv-msg').html('<div class="alert alert-danger py-2 small"><i class="fa fa-exclamation-triangle me-1"></i>' + _e(r.message) + '</div>');
+      return;
+    }
+    recShowSuccess(r.grn_id, inv, dnote, day);
+  }, 'json').fail(function () {
+    $('#btn-create-grn').prop('disabled', false);
+    $('#recv-msg').html('<div class="alert alert-danger py-2 small"><i class="fa fa-exclamation-triangle me-1"></i>Server error. Please try again.</div>');
+  });
+}
+window.recCreateGrn = recCreateGrn;
+
+// ── Step 3: Success screen ────────────────────────────────────────────────────
+function recShowSuccess(grn_id, inv, dnote, day) {
+  _showStep('success');
+  var html =
+    '<div class="col-md-3 col-6"><div class="card p-2 border-success">' +
+      '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">GRN #</div>' +
+      '<div class="fw-bold text-success" style="font-size:1.2rem;">#' + _e(grn_id) + '</div>' +
+    '</div></div>' +
+    '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+      '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">PO #</div>' +
+      '<div class="fw-bold" style="font-size:.85rem;">#' + _e(_currentPoId) + '</div>' +
+    '</div></div>' +
+    '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+      '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">Invoice #</div>' +
+      '<div class="fw-bold" style="font-size:.85rem;">' + (inv ? _e(inv) : '<em class="text-muted">Not provided</em>') + '</div>' +
+    '</div></div>' +
+    '<div class="col-md-3 col-6"><div class="card p-2" style="border-color:#e5e7eb;">' +
+      '<div style="font-size:.6rem;font-weight:700;text-transform:uppercase;color:#6c757d;">Received Date</div>' +
+      '<div class="fw-bold" style="font-size:.85rem;">' + _e(day) + '</div>' +
+    '</div></div>';
+  $('#success-info').html(html);
+  // Update KPI today count
+  var cur = parseInt($('#kpi-today').text()) || 0;
+  $('#kpi-today').text(cur + 1);
+  // Load received items table
+  recViewGrn(grn_id);
+}
+
+// ── GRN History ───────────────────────────────────────────────────────────────
+function recShowGrns() {
+  _showStep('grns');
+  recLoadGrns();
+}
+function recLoadGrns() {
+  $('#grns-loader').removeClass('d-none');
+  $('#grns-empty').addClass('d-none');
+  $('#grns-wrap').addClass('d-none');
+
+  $.get('kug/rec/api/rec_api.php', {action:'list_grns'}, function (r) {
+    $('#grns-loader').addClass('d-none');
+    if (!r.success) {
+      $('#grns-loader').removeClass('d-none').html(
+        '<span class="text-danger small"><i class="fa fa-exclamation-triangle me-1"></i>' + _e(r.message) + '</span>');
+      return;
+    }
+    var list = r.grns || [];
+
+    // Update total KPI
+    $('#kpi-total').text(list.length);
+
+    if (!list.length) { $('#grns-empty').removeClass('d-none'); return; }
+
+    var h = '';
+    list.forEach(function (row) {
+      var stored_pct = row.item_count > 0
+        ? Math.round(row.items_stored / row.item_count * 100) : 0;
+      var barColor = stored_pct >= 100 ? '#16a34a' : '#f59c1a';
+      h += '<tr id="grn-row-' + _e(row.grn_id) + '">' +
+        '<td><strong class="text-info">#' + _e(row.grn_id) + '</strong></td>' +
+        '<td class="text-muted">#' + _e(row.po_id) + '</td>' +
+        '<td><span class="fw-medium">' + _e(row.sup_name) + '</span></td>' +
+        '<td class="text-muted">' + _e(row.inv || '–') + '</td>' +
+        '<td class="text-muted">' + _d(row.day) + '</td>' +
+        '<td class="text-center"><span class="badge bg-secondary">' + _e(row.item_count) + '</span></td>' +
+        '<td>' +
+          '<div style="min-width:80px;">' +
+            '<div class="d-flex justify-content-between mb-1" style="font-size:.65rem;">' +
+              '<span>' + _e(row.items_stored) + '/' + _e(row.item_count) + '</span>' +
+              '<span>' + stored_pct + '%</span>' +
+            '</div>' +
+            '<div style="height:4px;background:#e5e7eb;border-radius:2px;">' +
+              '<div style="width:' + stored_pct + '%;height:4px;border-radius:2px;background:' + barColor + ';"></div>' +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td class="fw-medium">' + _fmt(row.amount) + '</td>' +
+        '<td>' + _grnStatus(row.status) + '</td>' +
+        '<td class="text-muted">' + _e(row.received_by) + '</td>' +
+        '<td class="text-center">' +
+          '<button class="btn btn-xs btn-outline-info" title="View items"' +
+          ' onclick="recToggleGrnDetail(' + _e(row.grn_id) + ', this)">' +
+          '<i class="fa fa-eye"></i></button>' +
+        '</td>' +
+        '</tr>';
+    });
+    $('#grns-tbody').html(h);
+    $('#grns-wrap').removeClass('d-none');
+  }, 'json').fail(function () {
+    $('#grns-loader').removeClass('d-none').html(
+      '<span class="text-danger small"><i class="fa fa-exclamation-triangle me-1"></i>Failed to load GRNs.</span>');
+  });
+}
+window.recShowGrns = recShowGrns;
+window.recLoadGrns = recLoadGrns;
+
+// ── GRN Detail: load items for success screen ──────────────────────────────────
+function recViewGrn(grn_id) {
+  $('#success-items').html(
+    '<div class="text-center py-3 text-muted small">' +
+    '<i class="fa fa-spinner fa-spin me-1"></i>Loading items…</div>');
+  $.get('kug/rec/api/rec_api.php', {action:'view_grn', grn_id:grn_id}, function (r) {
+    if (!r.success || !r.items || !r.items.length) {
+      $('#success-items').html(
+        '<div class="text-muted text-center py-3 small">No items found.</div>');
+      return;
+    }
+    var h = '<table class="table table-sm table-hover mb-0 rec-tbl">' +
+      '<thead><tr>' +
+      '<th>#</th><th>Item / Description</th><th>Code</th>' +
+      '<th class="text-center">Ordered</th><th class="text-center">Received</th>' +
+      '<th class="text-end">Price</th><th class="text-end">Total</th>' +
+      '<th>Store Status</th>' +
+      '</tr></thead><tbody>';
+    r.items.forEach(function (it, i) {
+      var storeLabel = it.tostore_status == 1
+        ? '<span class="badge bg-success" style="font-size:.6rem;"><i class="fa fa-check me-1"></i>In Store</span>'
+        : '<span class="badge bg-warning text-dark" style="font-size:.6rem;"><i class="fa fa-clock me-1"></i>Pending</span>';
+      h += '<tr>' +
+        '<td class="text-muted">' + (i + 1) + '</td>' +
+        '<td><span class="fw-medium">' + _e(it.receipt_desc || it.item_name || '–') + '</span></td>' +
+        '<td class="text-muted" style="font-size:.72rem;">' + _e(it.product_code || '–') + '</td>' +
+        '<td class="text-center text-muted">' + _e(it.qty) + '</td>' +
+        '<td class="text-center"><strong class="text-success">' + _e(it.confirm_qty) + '</strong></td>' +
+        '<td class="text-end">' + _fmt(it.price) + '</td>' +
+        '<td class="text-end fw-medium">' + _fmt(it.total) + '</td>' +
+        '<td>' + storeLabel + '</td>' +
+        '</tr>';
+    });
+    h += '</tbody></table>';
+    $('#success-items').html(h);
+  }, 'json').fail(function () {
+    $('#success-items').html(
+      '<div class="text-danger text-center py-2 small">' +
+      '<i class="fa fa-exclamation-triangle me-1"></i>Failed to load items.</div>');
+  });
+}
+window.recViewGrn = recViewGrn;
+
+// ── GRN History: expandable inline row detail ─────────────────────────────────
+function recToggleGrnDetail(grn_id, btn) {
+  var detailId = 'grn-detail-' + grn_id;
+  var existing = document.getElementById(detailId);
+  if (existing) {
+    $(existing).toggle();
+    return;
+  }
+  var $parentTr = $(btn).closest('tr');
+  var colCount = $parentTr.find('td').length;
+  var $detailTr = $('<tr id="' + detailId + '"><td colspan="' + colCount +
+    '" class="p-0" style="background:#f8f9fa;"></td></tr>');
+  var $cell = $detailTr.find('td');
+  $cell.html('<div class="p-2 text-center text-muted small">' +
+    '<i class="fa fa-spinner fa-spin me-1"></i>Loading…</div>');
+  $parentTr.after($detailTr);
+
+  $.get('kug/rec/api/rec_api.php', {action:'view_grn', grn_id:grn_id}, function (r) {
+    if (!r.success) {
+      $cell.html('<div class="text-danger p-2 small">' +
+        '<i class="fa fa-exclamation-triangle me-1"></i>Failed to load items.</div>');
+      return;
+    }
+    var h = '<div style="padding:.4rem;">' +
+      '<table class="table table-sm mb-0" style="font-size:.74rem;">' +
+      '<thead><tr style="background:#e8f4f1;">' +
+      '<th>#</th><th>Item / Description</th><th>Code</th>' +
+      '<th class="text-center">Ordered</th><th class="text-center">Received</th>' +
+      '<th class="text-end">Price</th><th class="text-end">Total</th>' +
+      '<th>Store Status</th></tr></thead><tbody>';
+    (r.items || []).forEach(function (it, i) {
+      var badge = it.tostore_status == 1
+        ? '<span class="badge bg-success" style="font-size:.58rem;">In Store</span>'
+        : '<span class="badge bg-warning text-dark" style="font-size:.58rem;">Pending</span>';
+      h += '<tr>' +
+        '<td class="text-muted">' + (i + 1) + '</td>' +
+        '<td>' + _e(it.receipt_desc || it.item_name || '–') + '</td>' +
+        '<td class="text-muted">' + _e(it.product_code || '–') + '</td>' +
+        '<td class="text-center text-muted">' + _e(it.qty) + '</td>' +
+        '<td class="text-center text-success fw-bold">' + _e(it.confirm_qty) + '</td>' +
+        '<td class="text-end">' + _fmt(it.price) + '</td>' +
+        '<td class="text-end">' + _fmt(it.total) + '</td>' +
+        '<td>' + badge + '</td>' +
+        '</tr>';
+    });
+    if (!r.items || !r.items.length) {
+      h += '<tr><td colspan="8" class="text-center text-muted py-2">No items.</td></tr>';
+    }
+    h += '</tbody></table></div>';
+    $cell.html(h);
+  }, 'json');
+}
+window.recToggleGrnDetail = recToggleGrnDetail;
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+App.setPageTitle('KSOFT | GRN Receiving');
+App.restartGlobalFunction();
+
+// Load PO list on init
+recLoadPos();
+
+// Pre-set today's GRN count + total GRN count
+$.get('kug/rec/api/rec_api.php', {action:'list_grns'}, function (r) {
+  if (r.success) {
+    var today = '<?php echo date("Y-m-d"); ?>';
+    var grns  = r.grns || [];
+    var cnt   = grns.filter(function (g) {
+      return String(g.day).split(' ')[0] === today;
+    }).length;
+    $('#kpi-today').text(cnt);
+    $('#kpi-total').text(grns.length);
+  }
+}, 'json');
+
+})();
+</script>
+// Add a button to index.php that opens the standalone GRN dashboard
+// Place this in the main navigation or wherever "Receive" is appropriate
+<button class="btn btn-primary" onclick="window.location.href='kug/rec/grn_dashboard.html'">
+  <i class="fa fa-inbox me-1"></i> Receive Goods
+</button>

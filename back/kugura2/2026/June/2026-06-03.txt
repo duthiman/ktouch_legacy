@@ -1,0 +1,5 @@
+03-Jun-2026 10:10:58am|Superadmin|LOADED PENDING POS PAGE FOR | |SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/back/kugura/appr|URI=/clients/ktouch/gpints/back/kugura/appr/|IP=::1
+03-Jun-2026 10:13:10am|Superadmin|LOADED PENDING POS PAGE FOR | |SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/back/kugura/appr|URI=/clients/ktouch/gpints/back/kugura/appr/|IP=::1
+03-Jun-2026 10:14:10am|Superadmin|LOADED PENDING POS PAGE FOR | |SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/back/kugura/appr|URI=/clients/ktouch/gpints/back/kugura/appr/|IP=::1
+03-Jun-2026 10:14:38am|Superadmin|LOADED PENDING POS PAGE FOR | |SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/back/kugura/appr|URI=/clients/ktouch/gpints/back/kugura/appr/|IP=::1
+03-Jun-2026 10:16:44am|Superadmin|LOADED PENDING POS PAGE FOR | |SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/back/kugura/appr|URI=/clients/ktouch/gpints/back/kugura/appr/|IP=::1

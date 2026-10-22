@@ -1,0 +1,1 @@
+29-Jun-2026 03:38:28pm|KTOUCH_ADMIN|ISSUED|-|-|REQUISITION NO|364| FOR BAR COUNTER|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/BACK/inventory|URI=/clients/ktouch/mvure/BACK/inventory/issallact.php|IP=127.0.0.1

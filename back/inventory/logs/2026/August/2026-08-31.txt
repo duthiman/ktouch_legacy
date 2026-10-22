@@ -1,0 +1,1 @@
+31-Aug-2026 06:52:32pm|KTOUCH_ADMIN|ISSUED|-|-|REQUISITION NO|372| FOR BAR COUNTER|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/back/inventory/API|URI=/clients/ktouch/muigai/back/inventory/API/inventory_api.php|IP=127.0.0.1

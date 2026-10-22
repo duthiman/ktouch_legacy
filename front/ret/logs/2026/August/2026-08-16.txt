@@ -1,0 +1,5 @@
+16-Aug-2026 05:24:08pm|KTOUCH_ADMIN|RETURNED|1|CUCUMBER GIMLET|FROM ORDER NO|70|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1
+16-Aug-2026 05:24:10pm|KTOUCH_ADMIN|FINISHED RETURN|-|-|ORDER NO|70|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1
+16-Aug-2026 05:30:46pm|KTOUCH_ADMIN|RETURNED|1|MANYATTA BEER|FROM ORDER NO|72|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1
+16-Aug-2026 05:30:50pm|KTOUCH_ADMIN|RETURNED|1|TUSKER CIDER|FROM ORDER NO|72|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1
+16-Aug-2026 05:30:53pm|KTOUCH_ADMIN|FINISHED RETURN|-|-|ORDER NO|72|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1

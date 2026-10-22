@@ -1,0 +1,127 @@
+.kt-vk {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 2500;
+  width: min(980px, calc(100vw - 24px));
+  max-width: 980px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fff8e7 0%, #f3e2b8 100%);
+  border: 1px solid rgba(123, 85, 16, 0.18);
+  box-shadow: 0 18px 36px rgba(64, 42, 10, 0.22);
+  padding: 12px;
+}
+.kt-vk[hidden] {
+  display: none !important;
+}
+.kt-vk.kt-vk-numeric {
+  width: min(360px, calc(100vw - 24px));
+  max-width: 360px;
+}
+.kt-vk-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.kt-vk-preview {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(123, 85, 16, 0.12);
+}
+.kt-vk-preview-label {
+  font-size: 11px;
+  font-weight: 900;
+  color: #8a5717;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.kt-vk-preview-value {
+  margin-top: 6px;
+  min-height: 24px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #4f2d0f;
+  word-break: break-word;
+}
+.kt-vk-title {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: #7a4309;
+  text-transform: uppercase;
+}
+.kt-vk-meta {
+  font-size: 12px;
+  font-weight: 700;
+  color: #9c6b28;
+}
+.kt-vk-body {
+  display: grid;
+  gap: 8px;
+}
+.kt-vk-row {
+  display: grid;
+  gap: 8px;
+}
+.kt-vk-row.alpha-10 {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
+.kt-vk-row.alpha-9 {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+.kt-vk-row.alpha-7 {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.kt-vk-row.numeric-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.kt-vk-key {
+  min-height: 52px;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+  color: #5d3211;
+  font-size: 20px;
+  font-weight: 900;
+  box-shadow: 0 8px 16px rgba(93, 50, 17, 0.12);
+}
+.kt-vk-key.wide-2 {
+  grid-column: span 2;
+}
+.kt-vk-key.wide-3 {
+  grid-column: span 3;
+}
+.kt-vk-key.space {
+  grid-column: span 4;
+}
+.kt-vk-key.action {
+  background: #8f1735;
+  color: #fff;
+}
+.kt-vk-key.soft {
+  background: #e7d7c2;
+  color: #7a4309;
+}
+.kt-vk-key.active-layout {
+  background: linear-gradient(135deg, #1a4a7a 0%, #4a90d9 100%);
+  color: #fff;
+}
+@media (max-width: 991px) {
+  .kt-vk {
+    width: calc(100vw - 16px);
+    bottom: 8px;
+    padding: 8px;
+  }
+  .kt-vk.kt-vk-numeric {
+    width: min(340px, calc(100vw - 16px));
+  }
+  .kt-vk-key {
+    min-height: 48px;
+    font-size: 18px;
+  }
+}

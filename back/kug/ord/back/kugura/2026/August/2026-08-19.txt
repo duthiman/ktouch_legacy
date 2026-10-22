@@ -1,0 +1,6 @@
+19-Aug-2026 02:04:38pm|KTOUCH_ADMIN|../../|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=100.116.231.49
+19-Aug-2026 02:04:38pm|KTOUCH_ADMIN|../|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=100.116.231.49
+19-Aug-2026 02:34:51pm|KTOUCH_ADMIN|../../|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=100.116.231.49
+19-Aug-2026 02:34:51pm|KTOUCH_ADMIN|../|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=100.116.231.49
+19-Aug-2026 02:48:13pm|KTOUCH_ADMIN|../../|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=100.116.231.49
+19-Aug-2026 02:48:13pm|KTOUCH_ADMIN|../|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=100.116.231.49

@@ -1,0 +1,166 @@
+@page {
+  size: 79mm auto;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 79mm;
+  max-width: 79mm;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #fff !important;
+  color: #000;
+  font-family: "Courier New", Courier, monospace;
+}
+
+body {
+  font-size: 13px;
+}
+
+#receipt {
+  width: 79mm !important;
+  max-width: 79mm !important;
+  margin: 0 auto !important;
+  padding: 1.5mm 0 !important;
+  background: #fff !important;
+}
+
+#bord {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  border: 2px solid #000 !important;
+}
+
+table {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 2px 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+td,
+th {
+  padding: 2px 1px;
+  vertical-align: top;
+  font-size: 12px;
+  border: none;
+}
+
+th {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.text-left,
+.left,
+[align="left"] {
+  text-align: left !important;
+}
+
+.text-center,
+.center,
+[align="center"] {
+  text-align: center !important;
+}
+
+.text-right,
+.right,
+[align="right"] {
+  text-align: right !important;
+}
+
+.pull-left {
+  float: left !important;
+}
+
+.pull-right {
+  float: right !important;
+}
+
+h1.title {
+  margin: 4px 0 2px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.receipt-divider {
+  clear: both;
+  display: block;
+  margin: 3px 0 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.sep-eq {
+  border: 0;
+  border-top: 2px solid #000;
+  margin: 3px 0;
+}
+
+.sep-dot {
+  border: 0;
+  border-top: 1px dashed #555;
+  margin: 3px 0;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 1px 0;
+  font-size: 11px;
+}
+
+.meta span {
+  white-space: nowrap;
+}
+
+.meta.center {
+  justify-content: center;
+  text-align: center;
+}
+
+.items-tbl,
+.totals-tbl,
+.open-demo-summary {
+  width: 100% !important;
+  max-width: 100% !important;
+  border-collapse: collapse;
+  margin: 2px 0;
+  table-layout: fixed;
+}
+
+.items-tbl th {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  text-transform: uppercase;
+}
+
+@media print {
+  html,
+  body {
+    width: 79mm !important;
+    max-width: 79mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #receipt {
+    width: 79mm !important;
+    max-width: 79mm !important;
+    margin: 0 !important;
+    padding: 1.5mm 0 !important;
+  }
+}

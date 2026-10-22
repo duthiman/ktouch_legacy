@@ -1,0 +1,92 @@
+@media (max-width: 991px) {
+  body {
+    min-height: 100vh;
+    background:
+      url("../assets/img/bg/33.jpg") no-repeat center center fixed,
+      radial-gradient(circle at top, rgba(246, 208, 137, 0.18), transparent 32%),
+      linear-gradient(180deg, rgba(246, 240, 215, 0.94) 0%, rgba(239, 227, 191, 0.94) 36%, rgba(211, 182, 125, 0.94) 100%);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #2b2418;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+    overflow: hidden;
+  }
+  html,
+  body,
+  #page-container {
+    height: 100vh;
+  }
+  #page-container.page-header-fixed {
+    padding-top: 0 !important;
+  }
+  #page-container > #header {
+    display: none !important;
+  }
+  #content.content {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  .desktop-shell {
+    display: none;
+  }
+  .mobile-shell {
+    display: block;
+    height: 100vh;
+  }
+  .kw-mobile-shell {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .kw-menu-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  #menu_mobile {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-content: start;
+    padding-right: 2px;
+  }
+  #sub_cat_mobile .navbar-header {
+    float: none !important;
+    margin: 0 !important;
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  #sub_cat_mobile button {
+    flex: 0 0 auto;
+  }
+  #modal .modal-dialog {
+    width: calc(100vw - 24px);
+    max-width: 500px;
+    margin: 18px auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .kw-mobile-shell {
+    max-width: none;
+    width: calc(100vw - 24px);
+    height: 100vh;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  #menu_mobile {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+  #menu_mobile .additem,
+  #menu_mobile .btn {
+    height: 86px !important;
+    font-size: 12px !important;
+  }
+}

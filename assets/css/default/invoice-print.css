@@ -1,0 +1,36 @@
+ @media print {
+    body,
+    .content,
+    .page-header-fixed {
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 10px !important; 
+    }/**/
+    .sidebar,
+    .header,
+    .theme-panel{
+        display: none !important;
+    }
+
+    tr,th,td{ 
+      border: 2px solid #000 !important; 
+      font-size: 10px !important;
+      line-height: 1;
+    }
+ 
+ .print{
+    width: 100% !important; 
+ }
+
+    .hidden-print {
+        display: none !important;
+    }
+    
+    .table{   
+        width: 100% !important;
+        height: 100% !important;
+        border:  1.5px solid #000 !important;
+        line-height: 0.8;
+    }
+ 
+}

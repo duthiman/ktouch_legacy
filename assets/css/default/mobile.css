@@ -1,0 +1,6 @@
+/* Consolidated mobile styles - imports responsive + front styles for small screens */
+@charset "UTF-8";
+@import url('style-responsive.min.css');
+@import url('front-style.css');
+
+/* Add any mobile-only overrides below */

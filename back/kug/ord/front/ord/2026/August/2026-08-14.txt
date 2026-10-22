@@ -1,0 +1,1 @@
+14-Aug-2026 11:29:51pm|KTOUCH_ADMIN|../../|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/back/kug/ord|URI=/clients/ktouch/mvure/back/kug/ord/siku.php?po_id=18|IP=::1

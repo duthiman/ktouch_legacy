@@ -1,0 +1,6 @@
+01-Jul-2026 10:37:33am|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|13|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot|URI=/clients/ktouch/mvure/front/tot/tot_init.php|IP=192.168.100.37
+01-Jul-2026 10:49:26am|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|13|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot|URI=/clients/ktouch/mvure/front/tot/tot_init.php|IP=::1
+01-Jul-2026 10:58:20am|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|13|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot|URI=/clients/ktouch/mvure/front/tot/tot_init.php|IP=::1
+01-Jul-2026 11:27:24am|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|14|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot|URI=/clients/ktouch/mvure/front/tot/tot_init.php|IP=::1
+01-Jul-2026 11:31:03am|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|14|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot|URI=/clients/ktouch/mvure/front/tot/tot_init.php|IP=192.168.100.22
+01-Jul-2026 11:47:53am|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|15|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/tot|URI=/clients/ktouch/mvure/front/tot/tot_init.php|IP=192.168.100.66

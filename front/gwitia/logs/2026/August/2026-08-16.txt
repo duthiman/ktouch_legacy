@@ -1,0 +1,5 @@
+16-Aug-2026 12:11:28am|KTOUCH_ADMIN|STARTED|-|-|REQUISTIO NO|366FORBAR COUNTER |SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia/API|URI=/clients/ktouch/mvure/front/gwitia/API/gwit_api.php|IP=192.168.88.100
+16-Aug-2026 12:55:21pm|KTOUCH_ADMIN|STARTED|-|-|REQUISTIO NO|366FORBAR COUNTER |SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia/API|URI=/clients/ktouch/mvure/front/gwitia/API/gwit_api.php|IP=192.168.100.7
+16-Aug-2026 01:15:14pm|KTOUCH_ADMIN|ADDED|1|BALOZI CAN|TO REQUISITION NO|366|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia/API|URI=/clients/ktouch/mvure/front/gwitia/API/gwit_api.php|IP=192.168.100.7
+16-Aug-2026 01:16:16pm|KTOUCH_ADMIN|STARTED|-|-|REQUISTIO NO|366FORBAR COUNTER |SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia/API|URI=/clients/ktouch/mvure/front/gwitia/API/gwit_api.php|IP=::1
+16-Aug-2026 01:18:21pm|KTOUCH_ADMIN|PLACED|-|-| REQUISITION NO|366|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia/API|URI=/clients/ktouch/mvure/front/gwitia/API/gwit_api.php|IP=::1

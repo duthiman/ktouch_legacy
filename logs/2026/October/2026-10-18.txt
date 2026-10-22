@@ -1,0 +1,10 @@
+18-Oct-2026 03:48:44pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1
+18-Oct-2026 04:36:37pm|KTOUCH_ADMIN|COUNTER STOCK ADDED|175|ALL SEASONS 750ML|OLD|0|ADDED|8|NEW|8|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/barp|URI=/clients/ktouch/ndeck/front/barp/api.php|IP=::1
+18-Oct-2026 04:37:28pm|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|3|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+18-Oct-2026 04:37:31pm|KTOUCH_ADMIN|ADDED|25|CAMINO CLEAR SHOTS|TO UNIT GENERATOR NO|3|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+18-Oct-2026 04:37:35pm|KTOUCH_ADMIN|PLACED|-|-| TOT NO|3|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+18-Oct-2026 04:39:43pm|KTOUCH_ADMIN|STARTED|-|-|UNIT NO|4|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+18-Oct-2026 04:39:45pm|KTOUCH_ADMIN|ADDED|33|JOSE CUERVO GOLD SHOTS|TO UNIT GENERATOR NO|4|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+18-Oct-2026 04:39:51pm|KTOUCH_ADMIN|PLACED|-|-| TOT NO|4|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+18-Oct-2026 05:13:54pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=1|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1
+18-Oct-2026 07:06:46pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1

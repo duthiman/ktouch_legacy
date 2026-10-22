@@ -1,0 +1,32 @@
+<div class="sale-cap-card sale-cap-state-{{sale_cap_state}}">
+  <div class="sale-cap-shell">
+    <div class="sale-cap-copy">
+      <h3>Sales Cap Lock</h3>
+      <p>Current unpaid bills are measured against your allowed max sale before you open another order.</p>
+      <div class="sale-cap-stats">
+        {{sale_cap_stats}}
+      </div>
+      <div class="sale-cap-alert {{sale_cap_alert_class}}">
+        {{sale_cap_alert_text}}
+      </div>
+      <div class="sale-cap-mobile-progress">
+        <div class="sale-cap-mobile-progress-head">
+          <span>{{sale_cap_percent_label}}% Used</span>
+          <span>{{sale_cap_state_label}}</span>
+        </div>
+        <div class="sale-cap-mobile-progress-track">
+          <div class="sale-cap-mobile-progress-fill" style="--cap-fill:{{sale_cap_percent}}%; --cap-color:{{sale_cap_color}};"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sale-cap-meter">
+      <div class="sale-cap-radial" style="--cap-angle:{{sale_cap_angle}}deg; --cap-color:{{sale_cap_color}};">
+        <div class="sale-cap-radial-inner">
+          <strong>{{sale_cap_state_label}}</strong>
+          <span>{{sale_cap_percent_label}}%</span>
+          <small>Cap Used</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

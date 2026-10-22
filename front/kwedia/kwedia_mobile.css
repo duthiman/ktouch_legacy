@@ -1,0 +1,166 @@
+@media (max-width: 991px) {
+  body {
+    min-height: 100vh;
+    background:
+      url("../assets/img/bg/33.jpg") no-repeat center center fixed,
+      radial-gradient(circle at top, rgba(246, 208, 137, 0.18), transparent 32%),
+      linear-gradient(180deg, rgba(246, 240, 215, 0.94) 0%, rgba(239, 227, 191, 0.94) 36%, rgba(211, 182, 125, 0.94) 100%);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: 180px 180px, 260px 260px;
+    padding: 0 10px;
+    color: #2b2418;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+    overflow: hidden;
+  }
+  html,
+  body,
+  #page-container {
+    height: 100vh;
+  }
+  #page-container.page-header-fixed {
+    padding-top: 0 !important;
+  }
+  #page-container > #header {
+    display: none !important;
+  }
+  #content.content {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  .desktop-shell {
+    display: none;
+  }
+  .mobile-shell {
+    display: block;
+    height: 100vh;
+  }
+  .phone {
+    width: 100%;
+    max-width: 850px;
+    margin: auto;
+    background: #c2e3cf;
+    padding: 18px 25px 24px;
+  }
+  body {
+    background-image: radial-gradient(circle at 12% 12%, rgba(55,190,105,.22) 0 2px, transparent 3px), linear-gradient(135deg, transparent 0 48%, rgba(40,159,91,.18) 49% 49.3%, transparent 49.5% 100%);
+  }
+  .kw-mobile-shell {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .kw-mobile-menu-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 1px 1px 5px 0;
+    padding: 8px;
+    border: 1px solid #b74727;
+    border-radius: 7px !important;
+    background: #fff;
+  }
+  .kw-mobile-shell * { border-radius: 7px !important; }
+  .kw-mobile-shell .kw-card {
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 7px !important;
+  }
+  .kw-mobile-shell .kw-topbar {
+    position: sticky;
+    top: 10px;
+    z-index: 20;
+    margin-bottom: 15px;
+    padding: 10px 4px 4px;
+    border-radius: 7px !important;
+    background: linear-gradient(135deg, #7e2014 0%, #b94828 52%, #e7a33a 100%);
+    box-shadow: 0 18px 30px rgba(74, 37, 11, 0.18);
+    color: #fff8ea;
+  }
+  .profile {
+    height: auto !important;
+    min-height: 278px;
+    border-radius: 7px !important;
+    padding: 7px !important;
+    background: linear-gradient(145deg, #087b32, #005d25) !important;
+  }
+  .kw-mobile-menu-search .glyphicon { color:#087e36; }
+  #kw-mobile-item-search {
+    min-width:0;
+    flex:1;
+    border:0;
+    outline:0;
+    background:transparent;
+    font-size:14px;
+  }
+  #kw-mobile-item-search-clear {
+    border:0;
+    background:transparent;
+    color:#8a4a12;
+    font-size:22px;
+    line-height:1;
+  }
+  .kw-menu-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  #menu_mobile {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-content: start;
+    padding-right: 2px;
+  }
+  #sub_cat_mobile .navbar-header {
+    float: none !important;
+    margin: 0 !important;
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  #sub_cat_mobile button {
+    flex: 0 0 auto;
+  }
+  #sub_cat_mobile .kw-subcategories-empty {
+    display: block;
+    color: #8a6a3a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 0;
+  }
+  #modal .modal-dialog {
+    width: calc(100vw - 24px);
+    max-width: 500px;
+    margin: 18px auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .phone { padding: 5px; }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .kw-mobile-shell {
+    max-width: none;
+    width: calc(100vw - 24px);
+    height: 100vh;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  #menu_mobile {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+  #menu_mobile .additem,
+  #menu_mobile .btn {
+    height: 86px !important;
+    font-size: 12px !important;
+  }
+}

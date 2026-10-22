@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PRINT TEMPLATE 2</title>
+  <style>
+    /* ============================================================
+       THERMAL PRINT CSS — TEMPLATE 2
+       Style: Clean monospace, white receipt, no cell borders,
+              bold totals block, barcode placeholder, change row
+    ============================================================ */
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 4mm;
+      background: #ddd;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      color: #000;
+    }
+
+    /* ---- receipt wrapper ---- */
+    .rcpt {
+      margin: 0 auto;
+      width: 79mm;
+      background: #fff;
+      padding: 3mm 2mm;
+    }
+
+    /* ---- separators ---- */
+    .sep-eq  { border: none; border-top: 2px solid #000; margin: 3px 0; }
+    .sep-dot { border: none; border-top: 1px dashed #555; margin: 3px 0; }
+
+    /* ---- header ---- */
+    .rcpt-head { text-align: center; }
+    .rcpt-head .shop-name {
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin: 4px 0 2px;
+    }
+    .rcpt-head .shop-tag {
+      font-size: 12px;
+      font-style: italic;
+      margin: 0 0 2px;
+    }
+    .rcpt-head .shop-addr,
+    .rcpt-head .shop-phone {
+      font-size: 11px;
+      margin: 1px 0;
+    }
+
+    /* ---- meta row (left + right on same line) ---- */
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin: 1px 0;
+    }
+    .meta span { white-space: nowrap; }
+
+    /* ---- items table ---- */
+    .items-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2px 0;
+    }
+    .items-tbl thead th {
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 1px;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      text-transform: uppercase;
+    }
+    .items-tbl thead th:first-child { text-align: left; }
+    .items-tbl thead th:not(:first-child) { text-align: right; }
+    .items-tbl tbody td {
+      font-size: 12px;
+      padding: 2px 1px;
+      border: none;
+      vertical-align: top;
+    }
+    .items-tbl tbody td:first-child { text-align: left; }
+    .items-tbl tbody td:not(:first-child) { text-align: right; }
+    /* item name on second line when long */
+    .items-tbl .item-name { font-size: 11px; color: #222; font-style: italic; }
+
+    /* ---- section label inside table (e.g. HAPPY HOUR) ---- */
+    .items-tbl .sec-label td {
+      font-size: 11px;
+      font-weight: bold;
+      text-decoration: underline;
+      padding-top: 4px;
+    }
+
+    /* ---- totals block ---- */
+    .totals-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2px 0;
+    }
+    .totals-tbl td {
+      font-size: 12px;
+      padding: 1px 1px;
+      border: none;
+    }
+    .totals-tbl td:first-child { text-align: left; }
+    .totals-tbl td:last-child  { text-align: right; }
+    .totals-tbl .grand td {
+      font-size: 16px;
+      font-weight: bold;
+      padding-top: 3px;
+    }
+    .totals-tbl .change-row td {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    /* ---- QR code ---- */
+    .qr-wrap {
+      text-align: center;
+      margin: 6px 0 2px;
+    }
+    .qr-wrap canvas,
+    .qr-wrap img {
+      display: block;
+      margin: 0 auto;
+      background: #fff;
+    }
+    .qr-caption {
+      font-size: 10px;
+      margin: 3px 0;
+      text-align: center;
+    }
+
+    /* ---- mpesa / footer ---- */
+    .mpesa-line {
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 3px 0;
+    }
+    .footer-note {
+      text-align: center;
+      font-size: 10px;
+      margin: 1px 0;
+    }
+    .brand-line {
+      text-align: center;
+      font-size: 10px;
+      margin: 3px 0;
+      color: #333;
+    }
+
+    /* ---- BOT / KOT ticket ---- */
+    .bot-badge {
+      display: inline-block;
+      border: 2px solid #000;
+      padding: 1px 6px;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin: 3px 0;
+    }
+    .rcpt-head .ticket-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 3px 0;
+    }
+
+    /* ---- returned items block ---- */
+    .ret-meta {
+      font-size: 12px;
+      margin: 2px 0;
+    }
+    .ret-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2px 0;
+    }
+    .ret-tbl th {
+      font-size: 11px;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 2px 1px;
+      text-transform: uppercase;
+    }
+    .ret-tbl td {
+      font-size: 12px;
+      padding: 2px 1px;
+      border: none;
+    }
+    .ret-tbl th:first-child,
+    .ret-tbl td:first-child { text-align: center; width: 6mm; }
+    .ret-tbl th:nth-child(3),
+    .ret-tbl td:nth-child(3) { text-align: center; }
+
+    /* ---- template-only labels (hidden on print) ---- */
+    .tpl-tag {
+      display: block;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 3px;
+    }
+    .section-gap { margin-top: 10mm; }
+
+    /* ============================================================
+       PRINT MEDIA
+    ============================================================ */
+    @media print {
+      .tpl-tag    { display: none; }
+      .section-gap { margin-top: 0; }
+      p.break { page-break-after: always; }
+
+      body {
+        margin: 1mm;
+        background: #fff;
+      }
+      .rcpt {
+        width: 100%;
+        padding: 1mm;
+        background: #fff;
+      }
+      .items-tbl tbody td,
+      .items-tbl thead th { font-size: 12px; }
+      .qr-wrap canvas { width: 140px !important; height: 140px !important; }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- =============================================================
+       SECTION 1 — CUSTOMER RECEIPT / BILL
+  ============================================================== -->
+  <span class="tpl-tag">[ SECTION 1: Customer Receipt / Bill ]</span>
+  <div class="rcpt">
+
+    <!-- HEADER -->
+    <div class="rcpt-head">
+      <div class="shop-name">The Grand Tavern</div>
+      <div class="shop-tag">Fine Dining &amp; Bar</div>
+      <hr class="sep-dot">
+      <div class="shop-addr">Westlands, Nairobi</div>
+      <div class="shop-phone">+254 712 000 001 | +254 733 000 002</div>
+      <div class="shop-addr">PIN: P051234567T</div>
+    </div>
+
+    <hr class="sep-eq">
+
+    <!-- META -->
+    <div class="meta"><span>BILL NO: <b>10045</b></span>       <span>13-Apr-2026</span></div>
+    <div class="meta"><span>CASHIER: <b>JOHN KAMAU</b></span>  <span>07:34 AM</span></div>
+    <div class="meta"><span>SHIFT: <b>MORNING</b></span>       <span>TABLE: 7</span></div>
+
+    <hr class="sep-dot">
+
+    <!-- ITEMS -->
+    <table class="items-tbl">
+      <thead>
+        <tr>
+          <th>ITEM</th>
+          <th>QTY</th>
+          <th>PRICE</th>
+          <th>AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Regular items -->
+        <tr>
+          <td>Tusker Lager</td>
+          <td>2</td>
+          <td>250.00</td>
+          <td>500.00</td>
+        </tr>
+        <tr>
+          <td>Nyama Choma</td>
+          <td>1</td>
+          <td>850.00</td>
+          <td>850.00</td>
+        </tr>
+        <tr>
+          <td>Soda (Coke)</td>
+          <td>3</td>
+          <td>80.00</td>
+          <td>240.00</td>
+        </tr>
+        <tr>
+          <td>Fries &amp; Kachumbari</td>
+          <td>1</td>
+          <td>350.00</td>
+          <td>350.00</td>
+        </tr>
+
+        <!-- Happy hour section -->
+        <tr class="sec-label"><td colspan="4">-- HAPPY HOUR --</td></tr>
+        <tr>
+          <td>Pilsner (500ml)</td>
+          <td>4</td>
+          <td>180.00</td>
+          <td>720.00</td>
+        </tr>
+        <tr>
+          <td>Savanna Dry</td>
+          <td>2</td>
+          <td>200.00</td>
+          <td>400.00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="sep-dot">
+
+    <!-- TOTALS -->
+    <table class="totals-tbl">
+      <tr>
+        <td>Sub-Total</td>
+        <td>3,060.00</td>
+      </tr>
+      <tr>
+        <td>Discount</td>
+        <td>- 60.00</td>
+      </tr>
+      <tr>
+        <td>V.A.T (16%)</td>
+        <td>414.62</td>
+      </tr>
+      <tr>
+        <td>Cat Levy (2%)</td>
+        <td>58.82</td>
+      </tr>
+    </table>
+
+    <hr class="sep-eq">
+
+    <table class="totals-tbl">
+      <tr class="grand">
+        <td>TOTAL</td>
+        <td>3,000.00</td>
+      </tr>
+      <tr>
+        <td>Cash Tendered</td>
+        <td>3,500.00</td>
+      </tr>
+      <tr class="change-row">
+        <td>CHANGE</td>
+        <td>500.00</td>
+      </tr>
+    </table>
+
+    <hr class="sep-eq">
+
+    <!-- QR CODE (bill number) -->
+    <div class="qr-wrap">
+      <div id="qr-tpl2"></div>
+      <p class="qr-caption">Scan to place next order &bull; Bill: 10045</p>
+    </div>
+
+    <hr class="sep-dot">
+
+    <!-- MPESA -->
+    <div class="mpesa-line">PAYBILL 522522 | A/C: GRANDTAVERN</div>
+
+    <hr class="sep-dot">
+
+    <!-- FOOTER -->
+    <div class="footer-note"><b>THANK YOU — COME AGAIN!</b></div>
+    <div class="footer-note">We appreciate your business.</div>
+    <div class="footer-note">This is not an ETR. Request one.</div>
+    <br>
+    <div class="brand-line">K-TOUCH POS by K-TEN | +254716100335</div>
+
+  </div>
+  <!-- END SECTION 1 -->
+
+
+  <!-- =============================================================
+       SECTION 2 — BAR ORDER TICKET (BOT)
+       Printed on page break when bar items (dpt=1) exist
+  ============================================================== -->
+  <p class="break"></p>
+  <span class="tpl-tag section-gap">[ SECTION 2: Bar Order Ticket (BOT) ]</span>
+  <div class="rcpt">
+
+    <div class="rcpt-head">
+      <div style="font-size:12px;">*** BAR STATION ***</div>
+      <div class="shop-name">BAR COUNTER 1</div>
+      <hr class="sep-eq">
+      <div class="bot-badge">BAR ORDER TICKET</div>
+      <hr class="sep-dot">
+      <div class="ticket-title">Order No: 10045</div>
+    </div>
+
+    <div class="meta"><span>WAITER: <b>JOHN KAMAU</b></span></div>
+    <div class="meta"><span>SHIFT: MORNING</span>   <span>07:34 AM</span></div>
+    <div class="meta"><span>TABLE: 7</span></div>
+
+    <hr class="sep-dot">
+
+    <table class="items-tbl">
+      <thead>
+        <tr>
+          <th>ITEM</th>
+          <th>QTY</th>
+          <th>PRICE</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tusker Lager</td>
+          <td>2</td>
+          <td>250.00</td>
+          <td>500.00</td>
+        </tr>
+        <tr>
+          <td>Savanna Dry</td>
+          <td>2</td>
+          <td>200.00</td>
+          <td>400.00</td>
+        </tr>
+        <tr>
+          <td>Pilsner (500ml)</td>
+          <td>4</td>
+          <td>180.00</td>
+          <td>720.00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="sep-eq">
+
+    <table class="totals-tbl">
+      <tr class="grand">
+        <td>TOTAL</td>
+        <td>1,620.00</td>
+      </tr>
+    </table>
+
+    <hr class="sep-dot">
+    <div class="footer-note">Printed: 13-Apr-2026 07:34 AM</div>
+    <br>
+
+  </div>
+  <!-- END SECTION 2 -->
+
+
+  <!-- =============================================================
+       SECTION 3 — RETURNED ITEMS RECEIPT
+       Printed only on status = 3
+  ============================================================== -->
+  <p class="break">.</p>
+  <span class="tpl-tag section-gap">[ SECTION 3: Returned Items Receipt ]</span>
+  <div class="rcpt">
+
+    <div class="rcpt-head">
+      <div class="shop-name">THE GRAND TAVERN</div>
+      <hr class="sep-eq">
+      <div class="ticket-title">*** RETURN NOTE ***</div>
+    </div>
+
+    <hr class="sep-dot">
+
+    <div class="ret-meta">BILL NO: <b>10045</b></div>
+    <div class="ret-meta">RETURN BY: <b>JANE WANJIRU</b></div>
+    <div class="ret-meta">DATE: <b>13-Apr-2026</b></div>
+    <div class="ret-meta">SHIFT: <b>MORNING</b></div>
+
+    <hr class="sep-dot">
+
+    <table class="ret-tbl">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Confirmed By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Tusker Lager</td>
+          <td>1</td>
+          <td>MGR PETER</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Soda (Coke)</td>
+          <td>2</td>
+          <td>MGR PETER</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="sep-eq">
+    <div class="footer-note">Authorised return — keep this copy.</div>
+    <br>
+    <div class="brand-line">K-TOUCH POS by K-TEN | +254716100335</div>
+
+  </div>
+  <!-- END SECTION 3 -->
+
+  <script>
+    new QRCode(document.getElementById('qr-tpl2'), {
+      text: 'ORDER:10045',
+      width: 140,
+      height: 140,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  </script>
+</body>
+</html>

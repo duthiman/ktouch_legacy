@@ -1,0 +1,2 @@
+12-Sep-2026 12:04:21am|KTOUCH_ADMIN|../../|SHIFT=2026-09-11|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=192.168.88.26
+12-Sep-2026 12:04:21am|KTOUCH_ADMIN|../|SHIFT=2026-09-11|USER_ID=1|MODULE=ktouch/back/kug/ord|URI=/ktouch/back/kug/ord/confirm_modal.php|IP=192.168.88.26

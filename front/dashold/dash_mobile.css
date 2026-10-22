@@ -1,0 +1,147 @@
+@media (max-width: 991px) {
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top left, rgba(97, 184, 70, 0.2), transparent 32%),
+      radial-gradient(circle at top right, rgba(243, 108, 38, 0.18), transparent 28%),
+      linear-gradient(180deg, #fffaf4 0%, #f6ecd9 42%, #eddfca 100%);
+    color: var(--kt-ink);
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
+
+  .desktop-shell {
+    display: none;
+  }
+
+  .mobile-shell {
+    display: block;
+  }
+
+  .app-shell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .status-card,
+  .sale-cap-card,
+  .menu-card,
+  .stats-card {
+    margin-bottom: 10px;
+    padding: 14px;
+  }
+
+  .sale-cap-shell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sale-cap-meter {
+    width: 100%;
+    flex-basis: auto;
+    display: none;
+  }
+
+  .sale-cap-mobile-progress {
+    display: block;
+  }
+
+  .sale-cap-stats,
+  .action-grid,
+  .stats-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #modal .modal-dialog {
+    width: calc(100vw - 24px);
+    max-width: 500px;
+    margin: 18px auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .sale-cap-card {
+    margin-bottom: 8px;
+    padding: 12px;
+  }
+
+  .sale-cap-shell {
+    gap: 10px;
+  }
+
+  .sale-cap-copy {
+    flex: 1 1 auto;
+  }
+
+  .sale-cap-copy p {
+    margin-top: 4px;
+  }
+
+  .sale-cap-alert {
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding: 10px 12px;
+  }
+
+  .sale-cap-mobile-progress {
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+
+  .app-topbar {
+    border-radius: 5px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .brand-row {
+    align-items: center;
+  }
+
+  .brand-row-actions {
+    gap: 6px;
+  }
+
+  .top-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .topbar-meta {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .app-btn {
+    min-height: 94px;
+    font-size: 16px;
+  }
+
+  .app-badge {
+    min-width: 64px;
+  }
+
+  .app-badge span {
+    font-size: 18px;
+  }
+
+  .stats-list,
+  .action-grid {
+    gap: 10px;
+  }
+
+  .sale-cap-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .sale-cap-stat {
+    padding: 10px 8px;
+  }
+
+  .sale-cap-stat strong {
+    font-size: 9px;
+    letter-spacing: 0.03em;
+  }
+
+  .sale-cap-stat span {
+    font-size: 15px;
+  }
+}

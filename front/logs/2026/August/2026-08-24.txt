@@ -1,0 +1,89 @@
+24-Aug-2026 10:31:27am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-08-17|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 10:31:55am|KTOUCH_ADMIN|CLOSED|-|-|COUNTER|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front/counter|URI=/ktouch/front/counter/close_counter.php|IP=192.168.88.115
+24-Aug-2026 10:32:02am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 10:32:06am|KTOUCH_ADMIN|OPENED|-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 10:32:07am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 10:32:11am|KTOUCH_ADMIN|OPENED|-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front/shift|URI=/ktouch/front/shift/open_shift.php|IP=192.168.88.115
+24-Aug-2026 10:32:12am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 10:32:16am|KTOUCH_ADMIN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 10:32:22am|KTOUCH_ADMIN|OPENED BAR COUNTER |-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front/counter|URI=/ktouch/front/counter/open_counter.php?cash_id=1&cntr=1|IP=192.168.88.115
+24-Aug-2026 10:32:22am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:02:49am|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:16:43am|BELLAH|OPENED|-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=3|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.153
+24-Aug-2026 11:25:55am|KTOUCH_ADMIN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 11:26:22am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:31:08am|HARUN|OPENED|-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 11:31:21am|HARUN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 11:31:29am|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:32:03am|HARUN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 11:33:46am|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:33:50am|HARUN|LOGGED IN|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 11:33:57am|HARUN|OPENED|-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front/shift|URI=/ktouch/front/shift/open_shift.php|IP=192.168.88.115
+24-Aug-2026 11:33:57am|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:34:05am|HARUN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 11:34:36am|HARUN|OPENED MAIN COUNTER COUNTER |-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front/counter|URI=/ktouch/front/counter/open_counter.php?cash_id=4&cntr=1|IP=192.168.88.115
+24-Aug-2026 11:34:37am|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 11:34:45am|HARUN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.115
+24-Aug-2026 12:06:11pm|KTOUCH_ADMIN|LOGGED IN TO OPEN COUNTERS|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/kuingira.php|IP=192.168.88.191
+24-Aug-2026 12:06:22pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.191
+24-Aug-2026 12:09:46pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.193
+24-Aug-2026 12:27:10pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.193
+24-Aug-2026 12:32:53pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.193
+24-Aug-2026 12:38:03pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.193
+24-Aug-2026 12:57:43pm|KTOUCH_ADMIN|RECEIVED|125.00|BALOZI|REQUISITION NO|365|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/rec|URI=/clients/ktouch/muigai/front/rec/to_store.php?req_id=365&item_id=12&qty=125.00|IP=::1
+24-Aug-2026 12:57:47pm|KTOUCH_ADMIN|RECEIVED|25.00|BLACK ICE|REQUISITION NO|365|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/rec|URI=/clients/ktouch/muigai/front/rec/rec&send.php|IP=::1
+24-Aug-2026 12:57:47pm|KTOUCH_ADMIN|RECEIVED|24.00|GUINESS CAN|REQUISITION NO|365|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/rec|URI=/clients/ktouch/muigai/front/rec/rec&send.php|IP=::1
+24-Aug-2026 12:57:47pm|KTOUCH_ADMIN|RECEIVED|24.00|HEINEKEN|REQUISITION NO|365|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/rec|URI=/clients/ktouch/muigai/front/rec/rec&send.php|IP=::1
+24-Aug-2026 12:57:47pm|KTOUCH_ADMIN|RECEIVED|25.00|TUSKER LAGER CAN|REQUISITION NO|365|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/rec|URI=/clients/ktouch/muigai/front/rec/rec&send.php|IP=::1
+24-Aug-2026 12:57:56pm|KTOUCH_ADMIN|CLOSED|-|-|COUNTER|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front/counter|URI=/clients/ktouch/muigai/front/counter/close_counter.php|IP=::1
+24-Aug-2026 12:57:57pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front|URI=/clients/ktouch/muigai/front/log_out.php|IP=::1
+24-Aug-2026 12:58:09pm|KTOUCH_ADMIN|OPENED|-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front/shift|URI=/clients/ktouch/muigai/front/shift/open_shift.php|IP=::1
+24-Aug-2026 12:58:09pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front|URI=/clients/ktouch/muigai/front/log_out.php|IP=::1
+24-Aug-2026 12:58:18pm|KTOUCH_ADMIN|OPENED BAR COUNTER |-|-|SHIFT|2026-08-24|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front/counter|URI=/clients/ktouch/muigai/front/counter/open_counter.php?cash_id=1&cntr=1|IP=::1
+24-Aug-2026 12:58:18pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front|URI=/clients/ktouch/muigai/front/log_out.php|IP=::1
+24-Aug-2026 01:00:38pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front|URI=/clients/ktouch/muigai/front/log_out.php|IP=::1
+24-Aug-2026 01:07:57pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front|URI=/clients/ktouch/muigai/front/log_out.php|IP=::1
+24-Aug-2026 01:11:06pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=clients/ktouch/muigai/front|URI=/clients/ktouch/muigai/front/log_out.php|IP=::1
+24-Aug-2026 03:03:54pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 03:36:47pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 04:18:31pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.171
+24-Aug-2026 04:20:15pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.171
+24-Aug-2026 04:26:34pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 05:09:26pm|BELLAH|LOGGED OUT|SHIFT=2026-08-24|USER_ID=3|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.134
+24-Aug-2026 05:45:06pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.133
+24-Aug-2026 05:45:13pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 05:45:52pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.133
+24-Aug-2026 05:47:00pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.115
+24-Aug-2026 07:19:39pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 07:23:04pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 07:23:32pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 07:26:55pm|BRENDA|LOGGED OUT|SHIFT=2026-08-24|USER_ID=7|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.145
+24-Aug-2026 07:47:23pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.189
+24-Aug-2026 07:51:39pm|JECINTA|LOGGED OUT|SHIFT=2026-08-24|USER_ID=9|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.133
+24-Aug-2026 08:00:50pm|PETER|LOGGED OUT|SHIFT=2026-08-24|USER_ID=8|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.129
+24-Aug-2026 08:12:13pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.134
+24-Aug-2026 09:15:51pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:16:00pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:16:07pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:17:32pm|BELLAH|LOGGED OUT|SHIFT=2026-08-24|USER_ID=3|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.134
+24-Aug-2026 09:19:23pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:19:25pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:21:12pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:21:51pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 09:29:10pm|NANCY K|LOGGED OUT|SHIFT=2026-08-24|USER_ID=11|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.126
+24-Aug-2026 09:53:16pm|JECINTA|LOGGED OUT|SHIFT=2026-08-24|USER_ID=9|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.131
+24-Aug-2026 09:55:32pm|PETER|LOGGED OUT|SHIFT=2026-08-24|USER_ID=8|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.129
+24-Aug-2026 09:56:55pm|PETER|LOGGED OUT|SHIFT=2026-08-24|USER_ID=8|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.129
+24-Aug-2026 09:58:18pm|BELLAH|LOGGED OUT|SHIFT=2026-08-24|USER_ID=3|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.134
+24-Aug-2026 09:59:58pm|PETER|LOGGED OUT|SHIFT=2026-08-24|USER_ID=8|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.129
+24-Aug-2026 10:27:47pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 10:48:47pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 10:49:10pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.108
+24-Aug-2026 11:00:41pm|System|LOGGED OUT|SHIFT=2026-08-24|USER_ID=0|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 11:03:48pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 11:04:07pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=1|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 11:04:34pm|HARUN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=4|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=100.79.139.23
+24-Aug-2026 11:12:10pm|BELLAH|LOGGED OUT|SHIFT=2026-08-24|USER_ID=3|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.134
+24-Aug-2026 11:13:21pm|BELLAH|LOGGED OUT|SHIFT=2026-08-24|USER_ID=3|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.134
+24-Aug-2026 11:18:00pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143
+24-Aug-2026 11:18:21pm|REEN|LOGGED OUT|SHIFT=2026-08-24|USER_ID=6|MODULE=ktouch/front|URI=/ktouch/front/log_out.php|IP=192.168.88.143

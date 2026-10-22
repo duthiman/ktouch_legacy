@@ -1,0 +1,9 @@
+14-Oct-2026 08:19:42pm|HARUN|STARTED|-|-|UNIT NO|1|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:19:48pm|HARUN|ADDED|33|JOSE CUERVO GOLD SHOTS|TO UNIT GENERATOR NO|1|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:19:51pm|HARUN|ADDED|33|JOSE CUERVO SILVER SHOTS|TO UNIT GENERATOR NO|1|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:19:54pm|HARUN|PLACED|-|-| TOT NO|1|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:22:10pm|HARUN|STARTED|-|-|UNIT NO|2|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:22:12pm|HARUN|ADDED|25|GILBEYS  750ML|TO UNIT GENERATOR NO|2|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:22:14pm|HARUN|ADDED|25|CAMINO CLEAR SHOTS|TO UNIT GENERATOR NO|2|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:22:15pm|HARUN|ADDED|33|JOSE CUERVO GOLD SHOTS|TO UNIT GENERATOR NO|2|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1
+14-Oct-2026 08:22:18pm|HARUN|PLACED|-|-| TOT NO|2|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front/tot/API|URI=/clients/ktouch/ndeck/front/tot/API/tots_api.php|IP=::1

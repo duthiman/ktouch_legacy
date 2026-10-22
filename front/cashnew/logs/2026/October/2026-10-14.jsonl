@@ -1,0 +1,8 @@
+{"timestamp":"2026-10-14T17:45:00+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=live","context":{"action":"live","user_id":4}}
+{"timestamp":"2026-10-14T17:45:00+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=panel&panel=cashbox","context":{"action":"panel","user_id":4}}
+{"timestamp":"2026-10-14T17:45:18+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=panel&panel=cashbox","context":{"action":"panel","user_id":4}}
+{"timestamp":"2026-10-14T17:45:18+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=live","context":{"action":"live","user_id":4}}
+{"timestamp":"2026-10-14T17:54:54+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=live","context":{"action":"live","user_id":4}}
+{"timestamp":"2026-10-14T17:54:54+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=panel&panel=cashbox","context":{"action":"panel","user_id":4}}
+{"timestamp":"2026-10-14T17:54:54+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=panel&panel=clearb","context":{"action":"panel","user_id":4}}
+{"timestamp":"2026-10-14T17:54:55+00:00","action":"cash_api_request","user_id":4,"uri":"\/clients\/ktouch\/ndeck\/front\/cashnew\/API\/cash_api.php?action=clrbill_staff_sales&id=0&st=2","context":{"action":"clrbill_staff_sales","user_id":4}}

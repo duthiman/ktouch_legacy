@@ -1,0 +1,779 @@
+html:not(.dashboard-loaded) .open,html:not(.dashboard-loaded) .open-counter,html:not(.dashboard-loaded) .open-shift,html:not(.dashboard-loaded) .open-shift-btn,html:not(.dashboard-loaded) .dash-open-shift,html:not(.dashboard-loaded) .dash-mobile-open-shift,html:not(.dashboard-loaded) #role-actions-card,html:not(.dashboard-loaded) .returns,html:not(.dashboard-loaded) .review-returns,html:not(.dashboard-loaded) .stock,html:not(.dashboard-loaded) .close-counter,html:not(.dashboard-loaded) .approval{display:none!important}
+:root {
+  --green:#08752c;
+  --dark-green:#006523;
+  --teal:#098b9c;
+  --orange:#f35500;
+  --red:#ed161b;
+  --ink:#121820;
+  --muted:#52606b;
+  --line:#dce4e0;
+  --paper:#fff;
+  --slate:#172b3b}
+* {
+  box-sizing:border-box}
+html,body {
+  margin:0;
+  min-height:100%;
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:#f8faf8}
+button {
+  font:inherit;
+  touch-action:manipulation;
+  cursor:pointer;
+  -webkit-tap-highlight-color:rgba(24,132,38,.16)}
+.phone {
+  width:100%;
+  max-width:850px;
+  margin:auto;
+  background:#fff;
+  padding:18px 25px 24px}
+.brand {
+  display:flex;
+  align-items:center;
+  height:76px;
+  gap:10px;
+  padding-left:10px}
+.brand i {
+  font-style:normal;
+  font-size:39px;
+  color:var(--green)}
+.brand b {
+  font-size:25px}
+.brand b strong {
+  color:var(--green)}
+.brand small {
+  display:block;
+  font-size:16px;
+  margin-top:3px}
+.profile {
+  background:linear-gradient(135deg,#087a30,#006522);
+  border-radius:10px;
+  color:#fff;
+  padding:32px 32px 18px;
+  box-shadow:0 2px 8px rgba(0,70,20,.12)}
+.profile-top {
+  display:grid;
+  grid-template-columns:1fr 235px;
+  align-items:center;
+  gap:15px}
+.person h1 {
+  font-size:38px;
+  line-height:1;
+  margin:0 0 16px}
+.person .id {
+  display:flex;
+  align-items:center;
+  gap:18px}
+.person .id b {
+  font-size:23px}
+.person .role {
+  color:#176d31;
+  background:#fff;
+  border-radius:5px;
+  padding:6px 16px;
+  font-size:17px;
+  font-weight:850}
+.person p {
+  font-size:19px;
+  margin:18px 0 0}
+.person p.location:before {
+  content:"●";
+  margin-right:13px}
+.person p.online:before {
+  content:"●";
+  color:#5bd10d;
+  margin-right:13px}
+.rank {
+  width:220px;
+  height:220px;
+  border:4px double #fff;
+  border-radius:50%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center}
+.rank small {
+  font-size:13px;
+  font-weight:750}
+.rank .star {
+  font-size:45px;
+  line-height:1}
+.rank strong {
+  font-size:52px;
+  line-height:.95}
+.rank b {
+  font-size:22px;
+  margin-top:4px}
+.rank em {
+  font-size:13px}
+.metric-row {
+  display:grid;
+  grid-template-columns:.78fr 1.35fr 1fr 1.12fr;
+  align-items:center;
+  height:103px;
+  margin-top:16px;
+  border-top:1px solid rgba(255,255,255,.65)}
+.metric {
+  height:50px;
+  padding:0 13px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center}
+.metric+.metric {
+  border-left:1px solid rgba(255,255,255,.72)}
+.metric small {
+  font-size:13px;
+  font-weight:700}
+.metric b {
+  font-size:23px;
+  margin-top:8px}
+.metric.sales{cursor:pointer;touch-action:manipulation}.metric.sales b {
+  font-size:34px}
+.metric.orders b {
+  font-size:30px}
+.metric.with-icon {
+  display:grid;
+  grid-template-columns:45px 1fr;
+  align-items:center;
+  text-align:left}
+.metric.with-icon i {
+  font-style:normal;
+  font-size:35px}
+.profile-actions {
+  display:grid;
+  grid-template-columns:1fr .95fr 1fr;
+  gap:11px}
+.profile-actions button {
+  height:72px;
+  border-radius:8px;
+  font-size:17px;
+  font-weight:850}
+.open,.open-shift {
+  background:#fff;
+  border:0;
+  color:var(--green)}
+.refresh {
+  background:transparent;
+  color:#fff;
+  border:2px solid #fff}
+.logout {
+  background:var(--red);
+  color:#fff;
+  border:2px solid #fff}
+.card {
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#fff;
+  margin-top:14px;
+  padding:16px;
+  box-shadow:0 2px 8px rgba(17,24,39,.035)}
+.section-head h2 {
+  font-size:22px;
+  margin:0 0 4px}
+.section-head p {
+  font-size:13px;
+  color:var(--muted);
+  margin:0}
+.actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+  margin-top:12px}
+.action {
+  height:95px;
+  border:1px solid var(--green);
+  border-radius:7px;
+  background:#fff;
+  color:#076229;
+  display:grid;
+  grid-template-columns:75px 1fr 27px;
+  align-items:center;
+  text-align:left;
+  padding:0 14px}
+.action i {
+  font-style:normal;
+  font-size:43px;
+  text-align:center}
+.action span {
+  display:flex;
+  flex-direction:column;
+  gap:6px}
+.action b {
+  font-size:17px}
+.action small {
+  font-size:12px;
+  color:#1e2933}
+.action em {
+  font-style:normal;
+  font-size:37px}
+.action.primary {
+  height:102px;
+  color:#fff;
+  border:0}
+.action.primary small {
+  color:#fff}
+.action.place {
+  background:linear-gradient(135deg,#078137,#006a25)}
+.action.continue {
+  background:linear-gradient(135deg,#079aa5,#087d8d)}
+.action.wide {
+  grid-column:1/-1;
+  height:80px}
+.action.password {
+  background:linear-gradient(135deg,#1f3444,#142637);
+  border:0;
+  color:#fff}
+.action.password small {
+  color:#d8e0e6}
+.role-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between}
+.tabs {
+  display:flex}
+.tabs button {
+  height:34px;
+  padding:0 29px;
+  border:1px solid #cbd3cf;
+  background:#fff;
+  font-weight:750}
+.tabs button:first-child {
+  border-radius:6px 0 0 6px}
+.tabs button:last-child {
+  border-radius:0 6px 6px 0}
+.tabs .active {
+  color:#fff;
+  background:var(--green);
+  border-color:var(--green)}
+.role-actions .clear {
+  color:#087d94;
+  border-color:#0f9bb4}
+.role-actions .returns {
+  color:#f04f00;
+  border-color:#ff6220}
+.role-actions .stock {
+  color:#08722b}
+.role-actions .danger {
+  color:var(--red);
+  border-color:#ff1e24}
+.approval {
+  padding:0}
+.approval header {
+  height:51px;
+  display:flex;
+  align-items:center;
+  padding:0 21px;
+  background:#fff4f4;
+  color:var(--red);
+  border-bottom:1px solid #ffd1d1}
+.approval header h2 {
+  font-size:20px;
+  margin:0}
+.approval-row {
+  height:58px;
+  display:grid;
+  grid-template-columns:55px 1fr 55px 115px 91px;
+  align-items:center;
+  padding:0 16px;
+  border-bottom:1px solid var(--line)}
+.approval-row:last-child {
+  border:0}
+.approval-row i {
+  font-style:normal;
+  font-size:27px;
+  color:var(--red)}
+.approval-row span {
+  font-size:13px}
+.approval-row strong {
+  font-size:23px;
+  color:var(--red)}
+.approval-row b {
+  font-size:13px}
+.approval-row button {
+  height:34px;
+  border:1px solid var(--red);
+  border-radius:5px;
+  background:#fff;
+  color:var(--red);
+  font-size:12px;
+  font-weight:800}
+.approval-row {
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:rgba(185,77,25,.12)}
+.wallet {
+  background:linear-gradient(115deg,#f15c00,#fb5600);
+  color:#fff;
+  border:0;
+  padding:14px 24px}
+.wallet h2 {
+  font-size:22px;
+  margin:0 0 8px}
+.wallet-grid {
+  display:grid;
+  grid-template-columns:58px repeat(3,1fr);
+  align-items:center}
+.wallet-grid>i {
+  font-style:normal;
+  width:49px;
+  height:49px;
+  border-radius:50%;
+  background:#fff;
+  color:var(--orange);
+  display:grid;
+  place-items:center}
+.wallet-stat {
+  padding:0 18px;
+  border-right:1px solid rgba(255,255,255,.75);
+  text-align:center}
+.wallet-stat:last-child {
+  border:0}
+.wallet-stat small {
+  display:block;
+  font-size:11px}
+.wallet-stat b {
+  font-size:19px}
+.claim {
+  width:100%;
+  height:37px;
+  margin-top:10px;
+  border:1px solid #fff;
+  border-radius:5px;
+  background:#d83c00;
+  color:#fff;
+  font-weight:850}
+.orders {
+  padding:0}
+.orders header {
+  height:50px;
+  display:flex;
+  align-items:center;
+  padding:0 17px;
+  border-bottom:1px solid var(--line)}
+.orders h2 {
+  font-size:20px;
+  margin:0}
+.orders .all {
+  margin-left:auto;
+  height:32px;
+  padding:0 24px;
+  border:1px solid var(--green);
+  border-radius:5px;
+  background:#fff;
+  color:var(--green);
+  font-size:12px;
+  font-weight:750}
+.orders table {
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  font-size:12px}
+.orders th {
+  height:35px}
+.orders td {
+  height:37px;
+  text-align:center;
+  border-top:1px solid var(--line)}
+.orders td:first-child {
+  color:#076426;
+  font-weight:750}
+.status {
+  display:inline-block;
+  padding:4px 13px;
+  border-radius:5px}
+.pending {
+  background:#fff0e9;
+  color:#ef4300}
+.paid {
+  background:#e1f2e3;
+  color:#08702a}
+.orders td button {
+  height:28px;
+  padding:0 20px;
+  border:1px solid var(--green);
+  border-radius:4px;
+  background:#fff;
+  color:var(--green);
+  font-size:11px;
+  font-weight:750}
+
+@media(max-width:560px) {
+  .phone {
+  padding:10px}
+.brand {
+  height:65px}
+.brand b {
+  font-size:20px}
+.brand small {
+  font-size:13px}
+.profile {
+  padding:20px 15px 13px}
+.profile-top {
+  grid-template-columns:1fr 125px}
+.person h1 {
+  font-size:25px;
+  margin-bottom:10px}
+.person .id b {
+  font-size:17px}
+.person .role {
+  font-size:12px;
+  padding:5px 8px}
+.person p {
+  font-size:13px;
+  margin-top:11px}
+.rank {
+  width:120px;
+  height:120px}
+.rank .star {
+  font-size:25px}
+.rank strong {
+  font-size:33px}
+.rank b {
+  font-size:15px}
+.rank em,.rank small {
+  font-size:9px}
+.metric-row {
+  height:78px}
+.metric {
+  padding:0 5px}
+.metric small {
+  font-size:9px}
+.metric b {
+  font-size:15px;
+  margin-top:5px}
+.metric.sales b {
+  font-size:20px}
+.metric.orders b {
+  font-size:20px}
+.metric.with-icon {
+  display:flex;
+  text-align:center}
+.metric.with-icon i {
+  display:none}
+.profile-actions button {
+  height:52px;
+  font-size:12px}
+.card {
+  padding:11px}
+.action {
+  height:75px;
+  grid-template-columns:50px 1fr 20px;
+  padding:0 8px}
+.action i {
+  font-size:30px}
+.action b {
+  font-size:13px}
+.action small {
+  font-size:9px}
+.action.primary {
+  height:82px}
+.action.wide {
+  height:65px}
+.tabs button {
+  padding:0 16px}
+.approval-row {
+  grid-template-columns:35px 1fr 30px 68px 62px;
+  padding:0 8px}
+.approval-row span,.approval-row b {
+  font-size:10px}
+.approval-row button {
+  font-size:9px}
+.wallet {
+  padding:11px}
+.wallet-grid {
+  grid-template-columns:40px repeat(3,1fr)}
+.wallet-stat {
+  padding:0 5px}
+.wallet-stat b {
+  font-size:13px}
+.orders table {
+  font-size:9px}
+.orders td button {
+  padding:0 10px}
+}
+
+.rank {
+  width:80px;
+  height:80px}
+.rank .star {
+  font-size:19px}
+.rank strong {
+  font-size:25px}
+.rank b {
+  font-size:11px}
+.rank em,.rank small {
+  font-size:7px}
+
+.action,.action.primary,.action.wide {
+  height:60px!important}
+
+.metric-row {
+  display:grid;
+  grid-template-columns:1.78fr 1.35fr 1.5fr;
+  align-items:center;
+  margin-top:8px;
+  border-top:1px solid rgba(255,255,255,.65);
+  height:auto}
+
+.card {
+  padding:5px!important}
+/* Reference mobile dashboard skin */
+html,body{background:#063d25;color:#111827}
+body{padding:0 10px;background-image:radial-gradient(circle at 12% 12%,rgba(55,190,105,.22) 0 2px,transparent 3px),linear-gradient(135deg,transparent 0 48%,rgba(40,159,91,.18) 49% 49.3%,transparent 49.5% 100%);background-size:180px 180px,260px 260px}
+main{width:100%;max-width:470px;margin:18px auto 28px;padding:12px 10px 24px;background:#fff;border:2px solid rgba(255,255,255,.72);border-radius:28px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.profile{height:auto!important;border-radius:7px!important;padding:7px!important;background:linear-gradient(145deg,#087b32,#005d25)!important}
+.profile,.profile button{font-family:'Poppins','Inter','Segoe UI',Arial,sans-serif}
+.profile-actions .open-shift{display:none!important}
+.person h1{font-size:38px;line-height:1;margin:0 0 16px;font-weight:bolder}
+.rank{width:140px;height:140px;border-radius:50%;background:linear-gradient(145deg,#006b3c,#003d29);border:5px solid #ffb900;box-shadow:0 0 0 5px #fff,0 0 0 8px #e9a500,0 6px 18px rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+.rank strong{font-size:48px;font-weight:800;line-height:1;color:#ffbf24}
+.rank .rank-crown{font-size:24px;color:#f5a623;line-height:1}.rank em{font-size:8px;font-style:normal;font-weight:800;text-transform:uppercase;color:#fff}
+.mobile-brandbar{display:flex;align-items:center;justify-content:space-between;min-height:88px;padding:14px 16px;background:#fff;border-bottom:1px solid #dce5e0}
+.mobile-brand{display:flex;align-items:center;gap:5px;color:#063d25;font-size:31px;font-weight:900;letter-spacing:-1px}.mobile-brand-k{display:inline-grid;place-items:center;width:43px;height:52px;background:linear-gradient(145deg,#087b4b,#005d35);color:#fff;font-size:48px;line-height:1;font-weight:900;clip-path:polygon(0 0,100% 0,64% 48%,100% 100%,0 100%)}
+.mobile-brand-actions{display:flex;align-items:center;gap:8px}.mobile-brand-actions button{position:relative;width:48px;height:48px;border:0;border-radius:50%!important;background:#eef3f8;color:#243b5d;font-size:27px;line-height:1}.mobile-brand-actions button i{position:absolute;right:4px;top:3px;width:10px;height:10px;border-radius:50%!important;background:#f52228}
+.phone{width:100%;max-width:850px;margin:auto;background:#c2e3cf;padding:7px}
+@media (max-width:560px){.phone{padding:1px}}
+.profile-top{padding-top:4px}.profile-top .brand,.profile-top h1,.profile-top .logo{color:#fff}.profile-actions{gap:8px!important}.profile-actions button{min-height:42px!important;border-radius:7px!important;font-size:12px!important;padding:0 9px!important}.profile-actions .home{order:1}.profile-actions .refresh{order:2}.profile-actions .logout{order:3}
+.wallet{margin-top:7px!important;border-radius:7px!important;height:auto!important;min-height:128px!important;padding:7px!important;background:linear-gradient(135deg,#d97818,#f0a33a)!important;color:#fff!important}.wallet h2{font-size:17px!important}.wallet-grid{gap:4px!important}.wallet-stat{padding:0 7px!important}.wallet-stat b{font-size:15px!important}.claim{height:36px!important;margin-top:9px!important;font-size:13px!important;background:#b9570d!important;color:#fff!important;border-color:#fff!important}
+.card{border:1px solid var(--line);border-radius:7px!important;background:#a9d8bb;margin-top:5px;padding:5px!important;box-shadow:0 2px 8px rgba(17,24,39,.035)}
+#role-actions-card{margin-top:5px!important;padding:5px!important;border-radius:7px!important}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:1px}
+main,.profile,.wallet,.approval,.orders,.action,.action.primary,.action.wide,.claim,.topbar{border-radius:0px!important}
+#role-actions-card{margin-top:10px!important;padding:8px!important;border-radius:14px!important}.actions{gap:7px!important}.action{min-height:48px!important;height:48px!important;border-radius:7px!important;grid-template-columns:36px 1fr 18px!important;padding:0 7px!important}.action i{font-size:24px!important}.action b{font-size:11px!important}.action.wide{height:48px!important}.approval{margin-top:10px!important;border-radius:14px!important}.approval h2{font-size:16px!important}.approval-row{min-height:35px!important}.orders{margin-top:0px!important;height:auto!important;min-height:60px!important;}.orders>header{height:44px!important;padding:0 13px!important}.orders h2{font-size:16px!important}.orders table{font-size:10px!important}.orders th{height:30px!important;font-size:10px!important}.orders td{height:36px!important}.orders td button{padding:4px 8px!important;font-size:10px!important}
+@media(max-width:360px){body{padding:0 5px}main{padding-inline:7px}.profile-actions button{font-size:10px!important;padding-inline:6px!important}.action b{font-size:10px!important}.orders table{font-size:9px!important}}
+.profile .profile-top{display:grid!important;grid-template-columns:minmax(150px,30%) minmax(0,1fr) 116px!important;gap:12px!important;align-items:center;min-height:152px!important}
+.profile .person{position:relative!important;align-self:stretch!important;min-height:0!important;padding:12px!important;background:linear-gradient(125deg,#006b49,#00442e)!important;border-radius:7px!important;text-align:left!important}
+.profile .person h1{font-size:clamp(27px,8vw,37px)!important;letter-spacing:.4px!important;margin:0 0 10px!important}
+.profile .person .id{display:flex!important;flex-direction:row!important;align-items:center!important;gap:8px!important}.profile .person .id b,.profile .person .id .role{padding:7px 8px!important;font-size:12px!important;white-space:nowrap!important}
+.profile .metric-row{position:static!important;display:grid!important;grid-template-columns:1.1fr .75fr 1fr!important;align-self:center!important;background:transparent!important;box-shadow:none!important;padding:0!important;border-radius:0!important}
+.profile .metric{display:flex!important;flex-direction:row!important;align-items:center!important;gap:8px!important;padding:8px 7px!important;border-right:1px solid #d5dde1!important;border-left:0!important}.profile .metric:last-child{border:0!important}
+.profile .metric-icon{width:38px!important;height:38px!important;display:grid!important;place-items:center!important;border-radius:7px!important}.profile .metric-icon .icon{width:21px!important;height:21px!important}.profile .metric small{font-size:9px!important;margin-bottom:4px!important;white-space:nowrap!important}.profile .metric b{font-size:clamp(12px,3.4vw,18px)!important;color:#003e2a!important}
+.profile .rank{position:static!important;justify-self:center!important;width:106px!important;height:106px!important;margin:0!important;border-width:4px!important;outline-width:4px!important}.profile .rank strong{font-size:41px!important}.profile .rank small{font-size:8px!important}.profile .rank em{font-size:7px!important}
+.profile .profile-actions{display:grid!important;grid-template-columns:1.15fr .95fr 1fr!important;gap:6px!important;margin-top:7px!important}.profile .profile-actions button{height:44px!important;padding:0 6px!important;display:flex!important;border-radius:7px!important;font-size:12px!important}.profile .profile-actions button .icon{width:17px!important;height:17px!important}.profile .profile-actions button .label{font-size:clamp(9px,2.5vw,12px)!important}.profile .profile-actions .chev{font-size:16px!important}
+
+/* Final profile-only reference layout. */
+.phone .profile{display:grid!important;grid-template-rows:auto auto auto!important;gap:10px!important;min-height:0!important;height:auto!important;padding:10px!important;overflow:hidden!important;background:linear-gradient(135deg,#006b3c 0%,#007e4c 38%,#f5faf8 38.2%,#fff 100%)!important}
+.phone .profile .profile-top{display:grid!important;grid-template-columns:minmax(0,1fr) 116px!important;grid-template-rows:auto auto!important;gap:10px!important;min-height:0!important;padding:0!important}
+.phone .profile .person{grid-column:1!important;grid-row:1!important;min-height:115px!important;padding:16px!important;border-radius:7px!important;background:linear-gradient(125deg,#006b49,#00442e)!important}
+.phone .profile .person h1{font-size:clamp(30px,9vw,42px)!important;margin:0 0 15px!important;line-height:1!important}
+.phone .profile .person .id{display:flex!important;gap:7px!important;align-items:center!important}
+.phone .profile .person .id b,.phone .profile .person .id .role{font-size:12px!important;padding:7px 8px!important;border-radius:7px!important;white-space:nowrap!important}
+.phone .profile .rank{grid-column:2!important;grid-row:1!important;justify-self:center!important;align-self:center!important;width:106px!important;height:106px!important;margin:0!important;border:4px solid #ffb900!important;outline:4px solid #e9a500!important;box-shadow:0 0 0 7px #fff,0 6px 18px rgba(0,0,0,.15)!important}
+.phone .profile .rank .rank-crown,.phone .profile .rank .crown{font-size:22px!important;color:#ffbf24!important;line-height:1!important}
+.phone .profile .rank strong{font-size:40px!important;color:#ffbf24!important;line-height:1!important}
+.phone .profile .rank small{font-size:8px!important}.phone .profile .rank em{font-size:7px!important}
+.phone .profile .metric-row{grid-column:1 / -1!important;grid-row:2!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;margin:0!important;padding:8px 0 0!important;border-top:1px solid rgba(0,80,50,.16)!important;background:transparent!important}
+.phone .profile .metric{min-width:0!important;padding:4px 6px!important;gap:6px!important;border-left:0!important;border-right:1px solid #d5dde1!important;background:transparent!important}
+.phone .profile .metric:last-child{border-right:0!important}.phone .profile .metric-icon{width:32px!important;height:32px!important;flex:0 0 32px!important;border-radius:7px!important}.phone .profile .metric-icon .icon{width:18px!important;height:18px!important}.phone .profile .metric small{font-size:8px!important;margin:0!important;white-space:nowrap!important}.phone .profile .metric b{font-size:14px!important;margin:2px 0 0!important;color:#003e2a!important;white-space:nowrap!important}
+.phone .profile .profile-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;margin:0!important}.phone .profile .profile-actions button{height:44px!important;min-width:0!important;padding:0 5px!important;border-radius:7px!important;font-size:11px!important}
+@media(max-width:380px){.phone .profile{padding:8px!important}.phone .profile .profile-top{grid-template-columns:minmax(0,1fr) 100px!important;gap:8px!important}.phone .profile .rank{width:92px!important;height:92px!important}.phone .profile .rank strong{font-size:34px!important}.phone .profile .metric{padding-inline:3px!important;gap:3px!important}.phone .profile .metric-icon{width:28px!important;height:28px!important;flex-basis:28px!important}.phone .profile .metric small{font-size:7px!important}.phone .profile .metric b{font-size:12px!important}.phone .profile .profile-actions button{font-size:9px!important}}
+
+/* Compact mobile reference profile */
+@media(max-width:760px){
+  .phone .profile{
+    display:grid!important;
+    grid-template-rows:86px 43px 34px!important;
+    gap:0!important;
+    padding:0!important;
+    border:1px solid #cbd8d2!important;
+    border-radius:7px!important;
+    background:#fff!important;
+  }
+  .phone .profile .profile-top{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 86px!important;
+    grid-template-rows:86px 43px!important;
+    gap:0!important;
+    min-height:0!important;
+    background:linear-gradient(110deg,#006b49,#005c3b)!important;
+    border-radius:7px 7px 0 0!important;
+    overflow:hidden!important;
+  }
+  .phone .profile .person{
+    grid-column:1!important;grid-row:1!important;
+    min-height:0!important;height:86px!important;
+    padding:12px 8px!important;background:transparent!important;
+    border-radius:0!important;
+  }
+  .phone .profile .person h1{font-size:30px!important;line-height:1!important;margin:0 0 7px!important;letter-spacing:0!important}
+  .phone .profile .person .id{gap:4px!important}
+  .phone .profile .person .id b,.phone .profile .person .id .role{font-size:8px!important;line-height:1!important;padding:5px 6px!important;border-radius:5px!important;background:rgba(255,255,255,.18)!important;color:#fff!important}
+  .phone .profile .rank{
+    grid-column:2!important;grid-row:1!important;
+    width:76px!important;height:76px!important;
+    align-self:center!important;justify-self:center!important;
+    border-width:3px!important;outline-width:3px!important;
+    box-shadow:0 0 0 5px #fff,0 3px 8px rgba(0,0,0,.2)!important;
+  }
+  .phone .profile .rank .rank-crown,.phone .profile .rank .crown{font-size:12px!important}
+  .phone .profile .rank strong{font-size:26px!important}
+  .phone .profile .rank small{font-size:5px!important}.phone .profile .rank em{font-size:4px!important}
+  .phone .profile .metric-row{
+    grid-column:1 / -1!important;grid-row:2!important;
+    height:43px!important;min-height:43px!important;
+    padding:0!important;margin:0!important;
+    border-top:1px solid #d7e0dc!important;
+    background:#fff!important;
+  }
+  .phone .profile .metric{height:43px!important;padding:3px 7px!important;gap:4px!important;background:#fff!important;color:#12213c!important}
+  .phone .profile .metric-icon{display:none!important}
+  .phone .profile .metric small{display:block!important;font-size:7px!important;line-height:1!important;color:#526276!important;margin:0 0 4px!important}
+  .phone .profile .metric b{display:block!important;font-size:12px!important;line-height:1!important;margin:0!important;color:#003e2a!important}
+  .phone .profile .profile-actions{
+    display:grid!important;grid-column:1!important;grid-row:3!important;
+    grid-template-columns:1.2fr 1fr 1fr!important;gap:4px!important;
+    height:34px!important;margin:0!important;padding:3px 5px!important;
+    background:#fff!important;
+  }
+  .phone .profile .profile-actions button{height:28px!important;min-height:28px!important;padding:0 5px!important;border-radius:6px!important;font-size:9px!important;line-height:1!important;gap:3px!important}
+  .phone .profile .profile-actions button .icon{width:12px!important;height:12px!important}
+  .phone .profile .profile-actions button .label{font-size:9px!important}
+  .phone .profile .profile-actions button .chev{font-size:12px!important}
+}
+
+/* Requested role-action sizing */
+.action,.action.primary,.action.wide{height:43px!important}
+#role-actions-card{margin-top:10px!important;padding:5px!important;border-radius:7px!important}
+
+@media(max-width:760px){
+  .phone .metric-row-new{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    align-items:stretch!important;
+    justify-items:stretch!important;
+  }
+  .phone .metric-row-new .metric{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    width:100%!important;
+    min-width:0!important;
+    height:43px!important;
+    min-height:43px!important;
+    align-self:stretch!important;
+    padding:3px 8px!important;
+    gap:0!important;
+    text-align:left!important;
+  }
+  .phone .metric-row-new .metric-icon,
+  .phone .metric-row-new .metric > i{
+    display:none!important;
+  }
+  .phone .metric-row-new .metric > div{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    min-width:0!important;
+    width:100%!important;
+  }
+  .phone .metric-row-new .metric small{
+    width:100%!important;
+    margin:0 0 3px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+    flex:0 0 auto!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .phone .metric-row-new .metric b{
+    width:100%!important;
+    margin:0!important;
+    line-height:1.1!important;
+    flex:0 0 auto!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+}
+
+/* Independent mobile profile blocks */
+@media(max-width:760px){
+  .phone .profile{display:flex!important;flex-direction:column!important;gap:0!important;padding:0 0 2px!important;overflow:hidden!important}
+  .phone .profile-top-new{display:grid!important;flex:0 0 86px!important;height:86px!important;width:100%!important;grid-template-columns:minmax(0,1fr) 86px!important;background:linear-gradient(110deg,#006b49,#005c3b)!important;border-radius:7px 7px 0 0!important;overflow:hidden!important;margin:0 0 3px!important}
+  .phone .profile-top-new .person{min-height:0!important;height:86px!important;padding:12px 8px!important;background:transparent!important;border-radius:0!important}
+  .phone .profile-top-new .person h1{font-size:30px!important;line-height:1!important;margin:0 0 7px!important}
+  .phone .profile-top-new .person .id{display:flex!important;gap:4px!important;align-items:center!important}
+  .phone .profile-top-new .person .id b,.phone .profile-top-new .person .id .role{font-size:8px!important;padding:5px 6px!important;border-radius:5px!important;white-space:nowrap!important}
+  .phone .profile-top-new .rank{width:76px!important;height:76px!important;align-self:center!important;justify-self:center!important;border-width:3px!important;outline-width:3px!important;box-shadow:0 0 0 5px #fff,0 3px 8px rgba(0,0,0,.2)!important}
+  .phone .profile-top-new .rank strong{font-size:26px!important}.phone .profile-top-new .rank small{font-size:5px!important}.phone .profile-top-new .rank em{font-size:4px!important}.phone .profile-top-new .rank .rank-crown{font-size:12px!important}
+  .phone .metric-row-new{display:grid!important;flex:0 0 43px!important;height:43px!important;width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:0 0 2px!important;padding:0!important;background:#fff!important;border-top:1px solid #d7e0dc!important}
+  .phone .metric-row-new .metric{height:43px!important;min-width:0!important;padding:3px 7px!important;gap:4px!important;background:#fff!important;border-right:1px solid #d5dde1!important}
+  .phone .metric-row-new .metric:last-child{border-right:0!important}.phone .metric-row-new .metric-icon{display:none!important}.phone .metric-row-new .metric small{display:block!important;font-size:8px!important;font-weight:800!important;margin:0 0 4px!important;color:#43526a!important}.phone .metric-row-new .metric b{display:block!important;font-size:14px!important;font-weight:900!important;color:#004f32!important;white-space:nowrap!important}
+  .phone .profile-btns{display:grid!important;flex:0 0 36px!important;height:36px!important;width:100%!important;grid-template-columns:1.15fr 1.15fr 1fr 1fr!important;gap:4px!important;margin:0!important;padding:0 5px!important;background:#fff!important}
+  .phone .profile-btns button{height:30px!important;min-height:30px!important;padding:0 5px!important;border:1px solid #b8c8d2!important;border-radius:6px!important;font-size:10px!important;font-weight:900!important;white-space:nowrap!important}
+  .phone .profile-btns .open,.phone .profile-btns .open-shift{border-color:#07945b!important;background:#f6fffb!important;color:#006b49!important}.phone .profile-btns .refresh{background:#fff!important;color:#243b5d!important}.phone .profile-btns .logout{border-color:#e0202a!important;background:#ff202a!important;color:#fff!important}
+}
+
+@media(max-width:760px){
+  .phone .profile .metric small{font-size:8px!important;font-weight:800!important;color:#43526a!important;letter-spacing:.1px!important}
+  .phone .profile .metric b{font-size:14px!important;font-weight:900!important;color:#004f32!important;letter-spacing:-.2px!important}
+  .phone .profile .metric.orders b{font-size:15px!important}
+  .phone .profile .profile-actions button{font-size:10px!important;font-weight:900!important;white-space:nowrap!important;overflow:visible!important;letter-spacing:-.15px!important}
+  .phone .profile .profile-actions button .label{font-size:10px!important;font-weight:900!important;white-space:nowrap!important}
+}
+@media(max-width:380px){
+  .phone .profile .metric b{font-size:12px!important}
+  .phone .profile .metric.orders b{font-size:13px!important}
+  .phone .profile .profile-actions button,.phone .profile .profile-actions button .label{font-size:9px!important}
+}
+
+@media(max-width:760px){
+  /* Maintainable mobile profile blocks: header, summaries, actions. */
+  .phone .profile{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:0!important;
+    padding-bottom:2px!important;
+  }
+  .phone .profile .profile-top{
+    flex:0 0 86px!important;
+    width:100%!important;
+    height:86px!important;
+  }
+  .phone .profile > .metric-row{
+    flex:0 0 43px!important;
+    width:100%!important;
+    height:43px!important;
+    min-height:43px!important;
+    display:grid!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  .phone .profile .profile-actions{
+    flex:0 0 36px!important;
+    width:100%!important;
+    height:36px!important;
+    margin-top:2px!important;
+    padding:0 5px!important;
+    background:#fff!important;
+    z-index:2!important;
+  }
+  .phone .profile .profile-actions button{
+    height:30px!important;
+    min-height:30px!important;
+    border:1px solid #b8c8d2!important;
+    box-shadow:0 1px 2px rgba(24,48,70,.12)!important;
+  }
+  .phone .profile .profile-actions .open,
+  .phone .profile .profile-actions .home{
+    border-color:#07945b!important;
+    background:#f6fffb!important;
+    color:#006b49!important;
+  }
+  .phone .profile .profile-actions .refresh{
+    border-color:#b8c8d2!important;
+    background:#fff!important;
+    color:#243b5d!important;
+  }
+  .phone .profile .profile-actions .logout{
+    border-color:#e0202a!important;
+    background:#ff202a!important;
+    color:#fff!important;
+  }
+}

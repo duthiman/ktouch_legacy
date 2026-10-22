@@ -1,0 +1,28 @@
+<div class="panel panel-default thit-stockman-shell">
+  <div class="panel-heading">
+    <strong><i class="fa fa-shopping-bag"></i> STOCK MANAGEMENT</strong>
+    <button type="button" class="btn btn-default btn-xs pull-right" id="thit-stockman-refresh"><i class="fa fa-refresh"></i> Refresh</button>
+  </div>
+  <div class="panel-body">
+    <div class="row thit-stock-summary-row"><div class="col-md-4"><div class="thit-stock-summary ok"><small>OK STOCK</small><strong id="thit-stock-ok-count">0</strong><span>above reorder level</span></div></div><div class="col-md-4"><div class="thit-stock-summary low"><small>BELOW REORDER</small><strong id="thit-stock-low-count">0</strong><span>needs attention</span></div></div><div class="col-md-4"><div class="thit-stock-summary out"><small>OUT OF STOCK</small><strong id="thit-stock-out-count">0</strong><span>zero quantity</span></div></div></div>
+    <div class="row">
+      <div class="col-md-8"><p class="text-muted">Review store stock and update quantities or reorder levels.</p></div>
+      <div class="col-md-4"><input type="search" class="form-control" id="thit-stockman-search" placeholder="Search items..."></div>
+    </div>
+    <div id="thit-stockman-status" class="alert alert-info"><i class="fa fa-spinner fa-spin"></i> Loading stock items...</div>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered table-hover">
+        <thead><tr><th>#</th><th>Item</th><th>Current Stock</th><th>Reorder Level</th><th>Stock Status</th><th>Actions</th></tr></thead>
+        <tbody id="thit-stockman-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="thit-stockman-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm"><div class="modal-content">
+    <div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title" id="thit-stockman-modal-title">Adjust Stock</h4></div>
+    <div class="modal-body"><p id="thit-stockman-modal-item"></p><input type="number" min="0" step="any" class="form-control" id="thit-stockman-modal-value"></div>
+    <div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Cancel</button><button class="btn btn-success" id="thit-stockman-save">Save</button></div>
+  </div></div>
+</div>

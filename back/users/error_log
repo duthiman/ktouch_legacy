@@ -1,0 +1,6 @@
+[04-Oct-2025 05:55:05 UTC] PHP Notice:  Undefined index: user_username in /home/ksoftcok/ktouch/chase/back/users/susp_user.php on line 16
+[04-Oct-2025 05:55:05 UTC] PHP Notice:  Undefined index: user_username in /home/ksoftcok/ktouch/chase/back/users/susp_user.php on line 21
+[04-Oct-2025 05:56:06 UTC] PHP Notice:  Undefined index: user_username in /home/ksoftcok/ktouch/chase/back/users/susp_user.php on line 16
+[04-Oct-2025 05:56:06 UTC] PHP Notice:  Undefined index: user_username in /home/ksoftcok/ktouch/chase/back/users/susp_user.php on line 21
+[04-Oct-2025 06:47:52 UTC] PHP Notice:  Undefined index: user_permissions in /home/ksoftcok/ktouch/chase/back/users/user_perm.php on line 8
+[04-Oct-2025 06:47:52 UTC] PHP Notice:  Undefined index: user_username in /home/ksoftcok/ktouch/chase/back/users/user_perm.php on line 27

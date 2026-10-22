@@ -1,0 +1,2 @@
+24-Aug-2026 12:52:06pm|KTOUCH_ADMIN|CONFIRMED RETURN|1|MANYATTA BEER|FROM ORDER NO|72|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/ret/API|URI=/clients/ktouch/muigai/front/ret/API/ret_api.php|IP=::1
+24-Aug-2026 12:52:08pm|KTOUCH_ADMIN|CONFIRMED RETURN|1|CUCUMBER GIMLET|FROM ORDER NO|70|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/muigai/front/ret/API|URI=/clients/ktouch/muigai/front/ret/API/ret_api.php|IP=::1

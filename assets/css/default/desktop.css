@@ -1,0 +1,6 @@
+/* Consolidated desktop styles - imports base + front styles for larger screens */
+@charset "UTF-8";
+@import url('style.min.css');
+@import url('front-style.css');
+
+/* Add any desktop-only overrides below */

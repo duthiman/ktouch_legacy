@@ -1,0 +1,1 @@
+<?php $templateType='UGT';$defaultSections=['title','header','items','summary','advertising'];$document['document_type']=$document['document_type']??$templateType;$document['title']=$document['title']??'UNIT GENERATED TICKET';require __DIR__.'/../template.php';

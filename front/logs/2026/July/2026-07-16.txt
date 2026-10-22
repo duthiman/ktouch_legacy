@@ -1,0 +1,1 @@
+16-Jul-2026 08:01:13am|System|LOGGED OUT|SHIFT=2026-06-29|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1

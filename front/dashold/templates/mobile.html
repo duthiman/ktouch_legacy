@@ -1,0 +1,45 @@
+<div class="mobile-shell">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div class="brand-row">
+        <div>
+          <h1>K-Touch</h1>
+          <p>{{mobile_user_line}}</p>
+        </div>
+        <div class="brand-row-actions">
+          <div class="app-badge">
+            <strong>Open</strong>
+            <span>{{mobile_open_counters}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="top-actions">
+        {{mobile_top_actions}}
+      </div>
+    </div>
+    {{alerts}}
+    {{sale_cap}}
+    <div class="menu-card">
+      <p class="section-title">Quick Actions</p>
+      <div class="action-grid">
+        {{mobile_actions}}
+      </div>
+    </div>
+    <div class="token-spotlight">
+      <span class="token-spotlight-label">My Token Wallet</span>
+      <span class="token-spotlight-total">{{token_total}}</span>
+      <div class="token-spotlight-sub">
+        <div class="token-spotlight-stat">
+          <strong>This Month</strong>
+          <span>{{token_month}}</span>
+        </div>
+        <div class="token-spotlight-stat">
+          <strong>Today</strong>
+          <span>{{token_today}}</span>
+        </div>
+      </div>
+    </div>
+    {{mobile_stats}}
+    <div class="mobile-footer">Built for touch. Tap a card to continue.</div>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Purchase Receiving & GRN Intake</title>
+  <link rel="stylesheet" href="../../../assets/css/tailwind.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent; 
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1; 
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8; 
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #4b5563; 
+    }
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: #6b7280; 
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-screen flex flex-col font-body transition-colors duration-200">
+<header class="bg-white dark:bg-surface-dark border-b border-gray-200 dark:border-gray-700">
+  <!-- ...full header and nav from code.html... -->
+</header>
+<main class="flex-grow p-6 overflow-hidden flex flex-col h-[calc(100vh-140px)]">
+  <!-- ...full dashboard content from code.html including PO header, item table, summary, etc... -->
+</main>
+<script>
+// Utility: Escape HTML
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : s;
+  return d.innerHTML;
+}
+// Render GRN dashboard with backend data
+function loadGRNDashboard(po_id) {
+  fetch('kug/rec/api/rec_api.php?action=get_po_detail&po_id=' + encodeURIComponent(po_id))
+    .then(resp => resp.json())
+    .then(data => {
+      if (!data.success) {
+        document.body.innerHTML = '<div class="p-8 text-center text-red-600 text-xl">' + (data.message || 'Failed to load PO details.') + '</div>';
+        return;
+      }
+      // Fill PO header
+      document.querySelector('.font-bold.text-primary').textContent = 'PO-' + esc(data.po.po_id);
+      document.querySelector('.font-medium.text-gray-800').textContent = esc(data.po.sup_name);
+      document.querySelectorAll('.font-medium.text-gray-800')[1].textContent = esc(data.po.po_date);
+      document.querySelector('.font-bold.text-gray-800').textContent = data.items.length + ' Items';
+      // Render item rows
+      const tbody = document.querySelector('tbody');
+      tbody.innerHTML = '';
+      data.items.forEach((item, idx) => {
+        tbody.innerHTML += `
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+<td class="px-4 py-4 text-xs text-gray-500 font-mono">${String(idx+1).padStart(2,'0')}</td>
+<td class="px-4 py-4">
+<div class="flex items-start">
+<div class="h-10 w-10 rounded bg-gray-100 dark:bg-gray-700 flex-shrink-0 mr-3 flex items-center justify-center text-gray-500">
+<span class="material-symbols-outlined">devices</span>
+</div>
+<div>
+<div class="font-medium text-gray-900 dark:text-white text-sm">${esc(item.item_name)}</div>
+<div class="text-xs text-gray-500 dark:text-gray-400 font-mono mt-0.5">SKU: ${esc(item.product_code)}</div>
+</div>
+</div>
+</td>
+<td class="px-4 py-4 text-center">
+<div class="text-sm font-bold text-gray-900 dark:text-white">${item.qty}</div>
+<div class="text-[10px] text-gray-500">Units</div>
+</td>
+<td class="px-4 py-4 text-center bg-gray-50/50 dark:bg-gray-800/30">
+<div class="relative rounded-md shadow-sm">
+<input class="focus:ring-primary focus:border-primary block w-full text-center sm:text-lg font-bold border-gray-300 rounded-md py-2 dark:bg-gray-800 dark:border-gray-600 dark:text-white" type="number" value="${item.qty}"/>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col space-y-2">
+<label class="text-[10px] uppercase text-gray-500 font-semibold">Location</label>
+<select class="block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+<option selected>Bin...</option>
+</select>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded border border-green-200 dark:border-green-800">PASS</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked class="sr-only peer" type="checkbox" value=""/>
+<div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary dark:peer-focus:ring-primary rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<input class="text-xs border-gray-300 rounded focus:ring-primary focus:border-primary w-full dark:bg-gray-800 dark:border-gray-600" placeholder="Notes..." type="text"/>
+</div>
+</td>
+</tr>`;
+      });
+      // Update summary
+      document.querySelectorAll('.font-semibold.text-gray-900')[0].textContent = data.items.reduce((sum, it) => sum + it.qty, 0);
+      document.querySelectorAll('.font-bold.text-primary')[0].textContent = data.items.reduce((sum, it) => sum + it.qty, 0);
+      document.querySelectorAll('.font-semibold.text-gray-500')[0].textContent = 0;
+    })
+    .catch(err => {
+      document.body.innerHTML = '<div class="p-8 text-center text-red-600 text-xl">Backend error: ' + err + '</div>';
+    });
+}
+window.addEventListener('DOMContentLoaded', function() { loadGRNDashboard(1); });
+</script>
+</body>
+</html>

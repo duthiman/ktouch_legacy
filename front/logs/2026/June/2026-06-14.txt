@@ -1,0 +1,321 @@
+14-Jun-2026 07:29:16am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:29:22am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:29:45am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:29:53am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:30:14am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:30:22am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:30:43am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|16|PARENT|16|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 07:30:55am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:31:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:31:16am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|16|PARENT|16|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 07:31:32am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:31:43am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:33:06am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|16|PARENT|16|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 07:33:24am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:23:33am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:23:45am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:23:49am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:24:08am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:27:32am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:27:50am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:27:57am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:28:22am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|19|PARENT|19|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 08:28:47am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:28:55am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:29:52am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|19|PARENT|19|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 08:30:15am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:31:06am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:31:21am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|19|PARENT|19|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 08:32:26am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:32:36am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:32:47am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|19|PARENT|19|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 08:43:47am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:43:55am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:44:08am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 08:44:16am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 08:49:25am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|2|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:00:57am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:01:04am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:01:25am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|2|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:01:39am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:01:46am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:07:05am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:07:14am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:08:14am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|2|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:08:45am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:08:57am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:12:05am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|3|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:12:18am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:12:26am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:13:46am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|4|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:16:30am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:16:56am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:17:08am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|5|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:17:34am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:17:42am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:18:00am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|1|CHILD|6|IDENTIFIER|TEAL|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:18:16am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:18:25am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:24:57am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:25:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:28:39am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|7|CHILD|8|IDENTIFIER|BLACK|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:28:55am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:29:02am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:29:18am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|PARENT|7|CHILD|9|IDENTIFIER|BLACK|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:30:12am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:30:31am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:30:58am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:31:06am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:34:48am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|10|PARENT|9|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:39:01am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:39:12am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:39:31am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|10|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:39:31am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|11|PARENT|9|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:40:05am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:40:15am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:50:32am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:50:41am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:52:43am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:52:55am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:53:05am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:54:48am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|1|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:54:59am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:55:07am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:55:37am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|1|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:55:54am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:56:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:58:14am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:58:23am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:59:04am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|2|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:59:04am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|4|PARENT|3|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:59:16am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 09:59:25am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 09:59:42am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|3|PARENT|3|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 09:59:57am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:00:06am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:01:15am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:01:28am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:06:57am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:07:08am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:07:39am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:07:52am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:08:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:08:18am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|1|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:08:28am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:08:35am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:10:47am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:11:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:11:37am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:11:38am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|2|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:11:38am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|4|PARENT|3|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:12:22am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:12:34am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:12:59am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|3|PARENT|3|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:13:14am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:13:24am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:13:44am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|3|PARENT|3|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:16:30am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:16:41am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:17:13am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:17:26am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:17:41am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:18:53am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|1|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:20:11am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|1|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:24:03am|System|LOGGED OUT|SHIFT=2026-06-12|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:24:07am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:24:19am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:24:22am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:24:46am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:25:02am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:25:20am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:25:27am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:25:30am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:25:37am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:25:44am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:25:47am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:25:54am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:26:01am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:26:04am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:26:14am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:26:17am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:31:14am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:31:18am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:31:32am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:31:40am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:31:42am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:31:50am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:31:58am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:32:01am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:32:08am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:32:17am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:35:38am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|3|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:35:56am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:36:06am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:36:20am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|3|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:36:35am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:36:44am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:37:11am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:37:22am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:46:53am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:47:05am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:47:08am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:47:22am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:47:43am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:47:46am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:47:53am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 10:48:00am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:48:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 10:48:11am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 10:50:34am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|3|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:50:46am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:50:55am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:51:17am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|3|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:51:48am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:52:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:52:17am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|3|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:52:28am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:58:25am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 10:58:59am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|4|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 10:59:35am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 10:59:47am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 11:00:15am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|RESUME OPEN LAST BILL|4|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 11:00:43am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 11:00:51am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 11:01:12am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 11:01:22am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 11:01:49am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 11:02:01am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 11:02:30am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|5|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 11:02:30am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|6|PARENT|5|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=::1
+14-Jun-2026 11:02:49am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 11:03:45am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 11:03:54am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 11:04:04am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.137.194
+14-Jun-2026 11:04:06am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.137.194
+14-Jun-2026 11:04:15am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 11:04:15am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|2|PARENT|1|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.137.194
+14-Jun-2026 11:42:57am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 11:43:16am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 11:43:24am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 11:43:43am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 11:43:45am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 11:44:00am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|2|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.0.123
+14-Jun-2026 11:44:00am|KTOUCH_ADMIN|AUTO CANCELLED DRAFT|-|-|ORDER NO|4|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.0.123
+14-Jun-2026 11:44:01am|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|REOPENED CLOSED BILL AS CHILD|5|PARENT|4|COUNTER|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/continue_child.php|IP=192.168.0.123
+14-Jun-2026 11:44:09am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 11:44:11am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 11:44:22am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 11:47:03am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 11:48:40am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 11:48:48am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 11:50:57am|KTOUCH_ADMIN|STARTED|-|-|BUY STOCK DRAFT NO|7|FOR BAR COUNTER|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug|URI=/clients/ktouch/mvure/front/kug/buy_init.php|IP=192.168.0.123
+14-Jun-2026 11:54:28am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 11:54:36am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 12:00:42pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 12:00:51pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 12:05:35pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 12:05:40pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 12:07:25pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 01:05:42pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 01:06:15pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 01:30:00pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 01:34:38pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 01:34:39pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 01:34:50pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 01:35:06pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 01:35:07pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 01:35:13pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 01:37:35pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 01:37:35pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 01:37:40pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 01:38:13pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 01:38:14pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 01:38:20pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 01:39:01pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 01:39:02pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 01:39:07pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:21:14pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:21:32pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:21:35pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:21:43pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:52:49pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:52:57pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:53:15pm|DENINIS|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 02:53:16pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:53:22pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:53:56pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:54:19pm|DENINIS|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 02:54:20pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:54:25pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:54:39pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:54:57pm|DENINIS|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 02:54:58pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:55:06pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:55:55pm|DENINIS|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 02:55:55pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:56:13pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:57:31pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:57:32pm|System|LOGGED OUT|SHIFT=2026-06-12|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:57:37pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 02:57:52pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 02:57:56pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 03:04:55pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 03:04:56pm|System|LOGGED OUT|SHIFT=2026-06-12|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 03:04:58pm|System|LOGGED OUT|SHIFT=2026-06-12|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 03:05:06pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 03:05:50pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=::1
+14-Jun-2026 03:06:42pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 03:06:43pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 03:06:48pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 03:08:44pm|KTOUCH_ADMIN|PRINTED|-|-|ORDER NO|0|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/chaba|URI=/clients/ktouch/mvure/front/chaba/print_bill.php?status=1|IP=192.168.0.123
+14-Jun-2026 03:08:47pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 03:08:52pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:18:46pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 04:22:51pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:23:49pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 04:24:26pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:25:42pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 04:26:08pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:28:45pm|System|LOGGED OUT|SHIFT=2026-06-12|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 04:28:49pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 04:36:28pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 04:36:32pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:42:18pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 04:42:22pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:42:54pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 04:42:59pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 04:49:53pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 04:50:01pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 05:00:50pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 05:00:54pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 05:10:09pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 05:10:12pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 05:13:16pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 05:13:19pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 05:19:36pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 05:19:41pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 05:59:37pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 05:59:44pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 06:00:18pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 06:00:22pm|DENINIS|LOGGED IN|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 06:00:32pm|DENINIS|LOGGED OUT|SHIFT=2026-06-12|USER_ID=8|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 06:00:37pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 06:31:29pm|System|LOGGED OUT|SHIFT=2026-06-12|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 06:31:32pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 06:42:30pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 06:42:33pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 06:42:49pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 06:43:01pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 06:43:14pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 06:43:28pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 06:54:11pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 06:56:34pm|KTOUCH_ADMIN|OPEN ORDER FLOW|-|-|CLOSE PARENT|2|LAST BILL|2|COUNT|1|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front/open|URI=/clients/ktouch/mvure/front/open/close_parent.php|IP=::1
+14-Jun-2026 06:57:05pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 06:57:09pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:02:35pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.0.123
+14-Jun-2026 07:02:46pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.0.123
+14-Jun-2026 07:50:19pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:51:09pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:51:22pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
+14-Jun-2026 07:52:06pm|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=::1
+14-Jun-2026 07:52:11pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-12|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1

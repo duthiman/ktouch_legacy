@@ -1,0 +1,128 @@
+<?php 
+require("../clude/head.php"); 
+?>
+<!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
+  <link href="../../assets/plugins/DataTables/media/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+  <link href="../../assets/plugins/DataTables/extensions/FixedHeader/css/fixedHeader.bootstrap.min.css" rel="stylesheet" />
+  <link href="../../assets/plugins/DataTables/extensions/Responsive/css/responsive.bootstrap.min.css" rel="stylesheet" />
+  <!-- ================== END PAGE LEVEL STYLE ================== -->
+<!-- begin #page-container -->
+<div id="page-container" class="page-container fade page-without-sidebar page-header-fixed page-with-top-menu">
+  <!-- begin #header -->  
+ <?php 
+     require("../clude/header.php");
+ ?>
+  <!-- end #header -->  
+  <!-- begin #sidebar -->
+ <?php 
+     require("../clude/top_menu.php");
+ ?>
+  <!-- begin #content -->
+	<div id="content" class="content">
+		<div class="panel panel-default col-md-12 hidden-print"> 
+         <div class="col-md-12 form-group">
+            <div class="form-group row">
+                <div class="form-group  col-md-3"> 
+          <select class="form-control selectpicker" id="counter" name="counter" data-parsley-required="true">
+              <option>----SELECT COUNTER----</option>
+              <option  value="ALL">ALL</option>
+              <?php
+          $cat = "SELECT * FROM kp_counters";
+          $cat_r = mysqli_query($connection,$cat) or die("Error getting categories");
+          while ($ct = mysqli_fetch_assoc($cat_r)) {
+              $name = $ct['name'];
+              $cntr_id = $ct['cntr_id'];
+              ?>
+              <option  value="<?php echo $cntr_id; ?>"><?php echo $name; ?></option>
+              <?php
+          }
+          ?>
+          </select>
+      </div>
+              <div class="form-group col-md-2">
+                <label class="sr-only" for="pick">SHIFT</label>
+                <input type="" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="day1" class="form-control" id="pick" placeholder="Date From">
+              </div>
+              <div class="form-group col-md-2">
+                <label class="sr-only" for="pick">END DATE</label>
+                <input type="" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="day2" class="form-control" id="pick2" placeholder="Date To">
+              </div>
+               <div class="form-group col-md-2">
+            <button style="margin-left: 30px; " type="button" onclick="filter_report()" name="filter" class="btn btn-warning hidden-print"><i class="fa fa-search "></i></button>
+               </div>
+            </div>
+          </div>  
+    </div> 
+
+		<div class="panel  col-md-12 print">
+      <span class="pull-right hidden-print" style="height: 50px; margin-top: 10px;">
+        <a href="javascript:;" onclick="window.print()" class="btn btn-sm btn-success m-b-10  hidden-print" ><i class="fa fa-print m-r-5"></i> Print</a>
+      </span>
+		<div class="panel-body">
+				<div id="filter_result" >
+					
+				</div>
+			</div>
+			</div>
+	</div>
+ 
+  <?php
+    include('../clude/foot.php');
+  ?>
+
+            <script>
+                 $(function() {
+                    $('#pick').datepicker({
+                        dateFormat:'yy-mm-dd',
+                    });
+
+                       $('#pick2').datepicker({
+                        dateFormat:'yy-mm-dd',
+                       });
+
+                      
+                   });
+              </script>
+ 
+<script type="text/javascript">
+		function filter_report(){
+		  from = document.getElementById('pick').value;
+      to = document.getElementById('pick2').value;
+      counter = document.getElementById('counter').value;
+      $("#filter_result").html("<img src=../../assets/img/loader/pwait.gif>");  
+		  xmlhttp = new XMLHttpRequest();
+		  xmlhttp.open("GET","counter_s_select_cont.php?from="+from+"&to="+to+"&counter="+counter,false);
+		  xmlhttp.send(null);
+		  document.getElementById("filter_result").innerHTML = xmlhttp.responseText;
+		  document.getElementById("filter_result").style.visibility = "visible";
+      
+                    TableManageFixedHeader.init();
+		}
+	</script>
+	
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="../../assets/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+<script src="../../assets/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+<script src="../../assets/plugins/DataTables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../assets/plugins/DataTables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
+<script src="../../assets/plugins/DataTables/extensions/Buttons/js/buttons.flash.min.js"></script>   
+<script src="../../assets/plugins/DataTables/extensions/ColReorder/js/dataTables.colReorder.min.js"></script> 
+<script src="../../assets/plugins/DataTables/extensions/Buttons/js/buttons.print.min.js"></script> 
+<script src="../../assets/js/demo/table-manage-combine.demo.min.js"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+  <script src="../../assets/plugins/DataTables/media/js/jquery.dataTables.js"></script>
+  <script src="../../assets/plugins/DataTables/media/js/dataTables.bootstrap.min.js"></script>
+  <script src="../../assets/plugins/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="../../assets/plugins/DataTables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../assets/js/demo/table-manage-fixed-header.demo.min.js"></script>
+  <!-- ================== END PAGE LEVEL JS ================== -->
+
+<script type="text/javascript">
+  $(document).ready(function() { 
+    App.init();     
+  }); 
+</script>  
+</body>
+</html>

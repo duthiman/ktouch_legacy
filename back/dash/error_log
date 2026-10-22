@@ -1,0 +1,398 @@
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 18:03:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 18:34:33 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[09-Jul-2025 18:43:26 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[09-Jul-2025 23:00:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Jul-2025 19:15:30 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 11:52:36 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 11:52:36 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 11:52:36 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 11:52:36 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 11:53:26 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 11:53:26 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 11:53:26 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 11:53:26 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:01:22 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:01:22 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:01:22 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:01:22 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:01:47 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:01:47 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:01:47 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:01:47 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:09:55 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:09:55 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:09:55 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:09:55 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:10:10 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:10:10 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:10:10 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:10:10 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:10:30 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:10:30 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:10:30 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:10:30 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:10:47 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:10:47 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:10:47 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:10:47 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:16:09 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:16:09 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:16:09 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:16:09 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:16:36 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:16:36 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:16:36 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:16:36 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:16:57 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:16:57 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:16:57 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:16:57 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 12:17:41 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:17:41 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[17-Aug-2025 12:17:41 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[17-Aug-2025 12:17:41 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Aug-2025 22:50:08 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Aug-2025 09:14:41 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[27-Aug-2025 09:14:41 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[27-Aug-2025 09:14:41 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[27-Aug-2025 09:14:41 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[14-Sep-2025 08:34:20 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[14-Sep-2025 08:34:20 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[14-Sep-2025 08:34:20 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[14-Sep-2025 08:34:20 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[14-Sep-2025 08:47:42 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[14-Sep-2025 08:47:42 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[14-Sep-2025 08:47:42 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[14-Sep-2025 08:47:42 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Sep-2025 10:28:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[27-Sep-2025 10:12:45 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 03:16:28 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[29-Sep-2025 22:13:55 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[30-Sep-2025 18:46:00 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[01-Oct-2025 01:00:21 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[01-Oct-2025 08:15:15 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[01-Oct-2025 08:15:15 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[01-Oct-2025 08:15:15 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[01-Oct-2025 08:15:15 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[10-Oct-2025 13:13:37 UTC] PHP Warning:  mysqli_connect(): (HY000/2002): No such file or directory in /home/ksoftcok/ktouch/chase/inc/connection.php on line 14
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[12-Oct-2025 15:27:32 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 08:38:05 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[13-Oct-2025 08:38:05 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[13-Oct-2025 08:38:05 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[13-Oct-2025 08:38:05 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[13-Oct-2025 13:43:57 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[16-Oct-2025 01:15:12 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[17-Oct-2025 23:17:29 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[22-Oct-2025 09:26:51 Africa/Nairobi] PHP Notice:  Undefined variable: purchase in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[22-Oct-2025 09:26:51 Africa/Nairobi] PHP Warning:  mysqli_num_rows() expects parameter 1 to be mysqli_result, null given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 129
+[22-Oct-2025 09:26:51 Africa/Nairobi] PHP Notice:  Undefined variable: sum in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 152
+[22-Oct-2025 09:26:51 Africa/Nairobi] PHP Warning:  mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in /home/ksoftcok/ktouch/chase/back/dash/admin_dash.php on line 258
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[23-Oct-2025 21:35:35 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[26-Oct-2025 17:13:18 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:55 Africa/Nairobi] PHP Notice:  Undefined index: username in /home/ksoftcok/ktouch/chase/back/clude/header.php on line 59
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Undefined index: user_id in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 108
+[28-Oct-2025 18:20:56 Africa/Nairobi] PHP Notice:  Trying to access array offset on value of type null in /home/ksoftcok/ktouch/chase/inc/gen_funcs.php on line 111

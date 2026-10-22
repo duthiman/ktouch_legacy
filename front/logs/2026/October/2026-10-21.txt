@@ -1,0 +1,16 @@
+21-Oct-2026 12:07:50pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:08:28pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:09:01pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:12:00pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:14:48pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:33:57pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:38:29pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:41:19pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:42:36pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:43:23pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:46:36pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:48:26pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 12:57:21pm|HARUN|LOGGED OUT|SHIFT=2026-10-17|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 01:09:40pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 01:22:55pm|PETER|LOGGED OUT|SHIFT=2026-10-21|USER_ID=2|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
+21-Oct-2026 06:14:44pm|PETER|LOGGED OUT|SHIFT=2026-10-21|USER_ID=2|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1
