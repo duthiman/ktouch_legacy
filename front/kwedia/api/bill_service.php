@@ -1880,6 +1880,23 @@ if (!function_exists('bill_service_open_fresh_each')) {
             throw new RuntimeException('Invalid sale selected.');
         }
 
+        // EACH closes the current round as a child bill. Keep the parent
+        // reference-only: use a temporary print snapshot for this child,
+        // never kp_shift_sale_open_items.
+        if (!mysqli_query($connection, "DELETE FROM kp_sale_print WHERE sale_id='" . $sale_id . "' AND session_flag=2")) {
+            throw new RuntimeException('Could not prepare fresh EACH print rows.');
+        }
+        if (!mysqli_query(
+            $connection,
+            "INSERT INTO kp_sale_print
+                (sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,session_flag)
+             SELECT sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,2
+             FROM kp_sale_items_live
+             WHERE sale_id='" . $sale_id . "' AND session_flag=2"
+        )) {
+            throw new RuntimeException('Could not create fresh EACH print rows.');
+        }
+
         $identifier = repo_normalize_open_identifier($params);
         $queued_jobs = bill_service_queue_open_prints($context, $params, 'fresh_open_each');
         $result = bill_service_finalize_sale_steps($context, $params, [
