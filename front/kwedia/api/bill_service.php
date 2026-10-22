@@ -1462,7 +1462,7 @@ if (!function_exists('bill_service_queue_open_prints')) {
         // session-flagged delta rows. Previously sent rows are session_flag=1.
         $session_flag = 2;
 
-        if (in_array($scenario, ['fresh_open_last', 'fresh_open_each', 'open_active_last', 'open_active_each'], true)
+        if (in_array($scenario, ['fresh_open_last', 'open_active_last', 'open_active_each'], true)
             && !bill_service_snapshot_shift_open_items($sale_id, $user_id)) {
             throw new RuntimeException('Could not create the shift open-order item snapshot.');
         }
@@ -1478,11 +1478,13 @@ if (!function_exists('bill_service_queue_open_prints')) {
             ),
         ]);
 
-        if (!bill_service_snapshot_shift_open_items($sale_id, $user_id)) {
-            throw new RuntimeException('Could not move live items to shift open items.');
-        }
-        if (!mysqli_query($connection, "DELETE FROM kp_sale_items_live WHERE sale_id='" . (int)$sale_id . "' AND session_flag=2")) {
-            throw new RuntimeException('Could not remove moved live open items.');
+        if ($scenario !== 'fresh_open_each') {
+            if (!bill_service_snapshot_shift_open_items($sale_id, $user_id)) {
+                throw new RuntimeException('Could not move live items to shift open items.');
+            }
+            if (!mysqli_query($connection, "DELETE FROM kp_sale_items_live WHERE sale_id='" . (int)$sale_id . "' AND session_flag=2")) {
+                throw new RuntimeException('Could not remove moved live open items.');
+            }
         }
 
         if (in_array($scenario, ['fresh_open_each', 'open_active_each'], true)) {
@@ -1871,28 +1873,23 @@ if (!function_exists('bill_service_open_fresh_each')) {
         $queued_jobs = bill_service_queue_open_prints($context, $params, 'fresh_open_each');
         $result = bill_service_finalize_sale_steps($context, $params, [
             'parent_sale_id' => 0,
-            // fresh_open_each has already moved the live rows into the
-            // shift-open snapshot. The print rows are therefore no longer a
-            // valid source for the bill amount/items.
-            'source_open_items' => true,
             'clear_print' => true,
             'clear_status' => true,
             'reset_thesion' => true,
         ]);
 
-        // The EACH portion is now a finalized sale. Do not leave its copied
-        // snapshot behind, otherwise a later continuation can print/count it
-        // a second time. This is deliberately limited to fresh EACH; LAST and
-        // all existing close flows retain their current open-item lifecycle.
+        // EACH creates a closed child bill. Its live rows are consumed by the
+        // finalized sale and must not remain as a second pending order. The
+        // parent itself is represented only by kp_shift_sales_open.
         $snapshot_sale_id = (int)$sale_id;
         if (!mysqli_query(
             $connection,
-            "DELETE FROM kp_shift_sale_open_items WHERE sale_id='" . $snapshot_sale_id . "'"
+            "DELETE FROM kp_sale_items_live WHERE sale_id='" . $snapshot_sale_id . "' AND session_flag=2"
         )) {
-            throw new RuntimeException('Could not clear fresh EACH open items.');
+            throw new RuntimeException('Could not clear fresh EACH live items.');
         }
         bill_log(
-            'OPEN_FRESH_EACH_FINALIZED_SOURCE_OPEN',
+            'OPEN_FRESH_EACH_FINALIZED_CHILD',
             'sale_id=' . $snapshot_sale_id . '|user_id=' . $user_id
         );
 
