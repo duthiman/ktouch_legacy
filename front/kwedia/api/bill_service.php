@@ -1476,7 +1476,8 @@ if (!function_exists('bill_service_finalize_sale_steps')) {
         $parent_sale_id = (int)($options['parent_sale_id'] ?? ($status_row['parent_sale_id'] ?? 0));
         $counter_id = bill_service_resolve_counter_id($context, $params);
         $shift = repo_get_shift();
-        $amount = repo_sum_sale_print($sale_id);
+        $source_open = !empty($options['source_open_items']);
+        $amount = $source_open ? repo_sum_shift_open_items($sale_id) : repo_sum_sale_print($sale_id);
 
         if ($sale_id < 1) {
             throw new RuntimeException('No active sale selected.');
@@ -1503,7 +1504,10 @@ if (!function_exists('bill_service_finalize_sale_steps')) {
             throw new RuntimeException('Could not insert sale.');
         }
 
-        if (!repo_insert_sale_items($sale_id)) {
+        $items_saved = $source_open
+            ? repo_insert_sale_items_from_shift_open($sale_id)
+            : repo_insert_sale_items($sale_id);
+        if (!$items_saved) {
             throw new RuntimeException('Could not insert sale items.');
         }
 
@@ -1744,6 +1748,7 @@ if (!function_exists('bill_service_close_closed_parent')) {
 
         $result = bill_service_finalize_sale_steps($child_context, $params, [
             'parent_sale_id' => $parent_sale_id,
+            'source_open_items' => true,
             'clear_print' => true,
             'clear_status' => true,
             'clear_sale_open' => $mode === 'last',

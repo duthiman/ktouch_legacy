@@ -1361,6 +1361,34 @@ if (!function_exists('repo_insert_sale_items_from_print')) {
     }
 }
 
+if (!function_exists('repo_sum_shift_open_items')) {
+    function repo_sum_shift_open_items($sale_id) {
+        global $connection;
+        $sale_id = (int)$sale_id;
+        $result = mysqli_query($connection, "SELECT COALESCE(SUM(total), 0) AS total_amount FROM kp_shift_sale_open_items WHERE sale_id='$sale_id'");
+        $row = $result ? mysqli_fetch_assoc($result) : null;
+        return (float)($row['total_amount'] ?? 0);
+    }
+}
+
+if (!function_exists('repo_insert_sale_items_from_shift_open')) {
+    function repo_insert_sale_items_from_shift_open($sale_id) {
+        global $connection;
+        $sale_id = (int)$sale_id;
+        if ($sale_id < 1) return false;
+        if (function_exists('kw_schema_ensure_column')) {
+            kw_schema_ensure_column('kp_sale_items', 'accompaniment_json', "LONGTEXT NULL AFTER attr_id");
+            kw_schema_ensure_column('kp_sale_items', 'session_flag', "TINYINT(1) NOT NULL DEFAULT 2 AFTER accompaniment_json");
+        }
+        mysqli_query($connection, "DELETE FROM kp_sale_items WHERE sale_id='$sale_id'");
+        return mysqli_query($connection,
+            "INSERT INTO kp_sale_items (sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,session_flag)
+             SELECT sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,session_flag
+             FROM kp_shift_sale_open_items WHERE sale_id='$sale_id'"
+        );
+    }
+}
+
 if (!function_exists('repo_update_sale_family_context')) {
     function repo_update_sale_family_context($sale_id, $parent_sale_id = 0) {
         global $connection;
