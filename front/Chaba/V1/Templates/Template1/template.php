@@ -50,6 +50,7 @@ html,body{width:79mm;max-width:79mm;margin:0;padding:0;background:<?= $type === 
         <div class="stars">***********************************************************</div>
         <h1 class="title docket-heading"><?= $esc(($header['counter_name'] ?? $header['counter_id'] ?? '') . ' ' . ($header['docket_type'] ?? $type)) ?></h1>
         <h2 style="margin:2px 0"><?= $esc($header['waiter_name'] ?? $header['served_by'] ?? $header['user'] ?? '') ?></h2>
+        <h3 style="margin:2px 0">SALE ID: <?= $esc($header['sale_id'] ?? $header['order_id'] ?? '') ?></h3>
         <h3 style="margin:2px 0">SHIFT: <?= $esc($header['shift'] ?? $header['shift_date'] ?? '') ?></h3>
         <h4 style="margin:2px 0">PRINT TIME: <?= $esc($header['print_time'] ?? $header['order_time'] ?? '') ?></h4>
         <div class="stars">***********************************************************</div>

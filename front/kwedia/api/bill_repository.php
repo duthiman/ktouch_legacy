@@ -975,7 +975,7 @@ if (!function_exists('repo_fetch_sale_print_grouped')) {
             $connection,
             "SELECT SUM(qty) AS qty, item_id, SUM(total) AS total, MAX(attr_id) AS attr_id,
                     GROUP_CONCAT(COALESCE(accompaniment_json, '') SEPARATOR '|||') AS accompaniment_json,
-                    MAX(dpt) AS dpt, hour
+                    MAX(dpt) AS dpt, MAX(price) AS price, hour
              FROM $source_table
              WHERE sale_id='$sale_id'$where_flag
              GROUP BY item_id, hour
@@ -1029,6 +1029,7 @@ if (!function_exists('repo_fetch_sale_print_grouped')) {
                 'attributes' => $attributes,
                 'total' => (float)($row['total'] ?? 0),
                 'dpt' => (int)($row['dpt'] ?? 0),
+                'price' => (float)($row['price'] ?? 0),
                 'attr_id' => $attr_id > 0 ? $attr_id : null,
                 'accompaniment_json' => (string)($row['accompaniment_json'] ?? ''),
                 'hour' => (int)($row['hour'] ?? 0),
