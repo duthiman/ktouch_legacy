@@ -1149,7 +1149,8 @@ if (!function_exists('bill_service_create_print_ticket_batch')) {
         }
 
         mysqli_query($connection, "DELETE FROM kp_print_ticket_items WHERE batch_id='$batch_id' AND item_id=0");
-        $source_table = $source_table === 'kp_shift_sale_open_items' ? $source_table : 'kp_sale_print';
+        $source_table = in_array($source_table, ['kp_sale_print', 'kp_sale_items_live', 'kp_shift_sale_open_items'], true)
+            ? $source_table : 'kp_sale_print';
         $where_flag = $session_flag === null ? '' : " AND session_flag='" . (int)$session_flag . "'";
         mysqli_query(
             $connection,
@@ -1174,9 +1175,10 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
         $include_cashier_order = !array_key_exists('include_cashier_order', $options) || !empty($options['include_cashier_order']);
         $delta_only = !empty($options['delta_only']);
         $session_flag = array_key_exists('session_flag', $options) ? $options['session_flag'] : null;
+        $live_source = !empty($options['live_source']);
         $open_source = !empty($options['open_source']);
         $delta_rows = $delta_only
-            ? ($open_source ? bill_service_fetch_shift_open_items($sale_id, $session_flag) : repo_fetch_sale_print($sale_id, $session_flag))
+            ? ($live_source ? repo_fetch_sale_print_grouped($sale_id, $session_flag, 'kp_sale_items_live') : ($open_source ? bill_service_fetch_shift_open_items($sale_id, $session_flag) : repo_fetch_sale_print($sale_id, $session_flag)))
             : [];
         $departments = $options['departments'] ?? bill_service_detect_print_departments($sale_id, $session_flag);
 
@@ -1197,7 +1199,8 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
 
         $batch_id = 0;
         if ($delta_only) {
-            $batch_id = bill_service_create_print_ticket_batch($sale_id, $session_flag, $open_source ? 'kp_shift_sale_open_items' : 'kp_sale_print');
+            $batchSource = $live_source ? 'kp_sale_items_live' : ($open_source ? 'kp_shift_sale_open_items' : 'kp_sale_print');
+            $batch_id = bill_service_create_print_ticket_batch($sale_id, $session_flag, $batchSource);
             bill_log(
                 'PRINT_QUEUE_DELTA_BATCH',
                 'sale_id=' . $sale_id
@@ -1362,6 +1365,12 @@ if (!function_exists('bill_service_queue_open_prints')) {
 
         $openId = (int)get_column('kp_shift_sales_open', 'id', "sale_id='$sale_id' AND user_id='$user_id' AND status=1 ORDER BY id DESC LIMIT 1");
         if ($openId < 1) $openId = 0;
+        mysqli_query($connection, "UPDATE kp_shift_sale_open_items o
+            INNER JOIN kp_sale_items_live l ON l.id=o.source_live_id
+            SET o.open_id='$openId', o.qty=l.qty, o.price=l.price, o.total=l.total,
+                o.dpt=l.dpt, o.shift=l.shift, o.counter=l.counter, o.stock_counter=l.stock_counter,
+                o.attr_id=l.attr_id, o.accompaniment_json=l.accompaniment_json
+            WHERE l.sale_id='$sale_id' AND l.user_id='$user_id'");
         $sql = "INSERT INTO kp_shift_sale_open_items
             (source_live_id,sale_id,open_id,item_id,user_id,qty,price,total,dpt,shift,counter,stock_counter,attr_id,accompaniment_json,session_flag)
             SELECT l.id,l.sale_id,'$openId',l.item_id,l.user_id,l.qty,l.price,l.total,l.dpt,l.shift,l.counter,l.stock_counter,l.attr_id,l.accompaniment_json,2
@@ -1375,6 +1384,7 @@ if (!function_exists('bill_service_queue_open_prints')) {
     }
 
     function bill_service_queue_open_prints($context, $params = [], $scenario = '') {
+        global $connection;
         $params = is_array($params) ? $params : [];
         $sale_id = (int)($context['sale_id'] ?? 0);
         $user_id = (int)($context['user_id'] ?? 0);
@@ -1393,11 +1403,18 @@ if (!function_exists('bill_service_queue_open_prints')) {
             'delta_only' => true,
             'session_flag' => $session_flag,
             'sale_counter_id' => (int)($context['counter_id'] ?? 0),
-            'open_source' => true,
+            'live_source' => true,
             'departments' => bill_service_detect_print_departments_from_items(
-                bill_service_fetch_shift_open_items($sale_id, 2)
+                repo_fetch_sale_print_grouped($sale_id, 2, 'kp_sale_items_live')
             ),
         ]);
+
+        if (!bill_service_snapshot_shift_open_items($sale_id, $user_id)) {
+            throw new RuntimeException('Could not move live items to shift open items.');
+        }
+        if (!mysqli_query($connection, "UPDATE kp_sale_items_live SET session_flag=1 WHERE sale_id='" . (int)$sale_id . "' AND session_flag=2")) {
+            throw new RuntimeException('Could not mark live open items as moved.');
+        }
 
         if (in_array($scenario, ['fresh_open_each', 'open_active_each'], true)) {
             $queued_jobs = array_merge($queued_jobs, bill_service_queue_full_bill($sale_id, $user_id, $counter_id));
