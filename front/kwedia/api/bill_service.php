@@ -1196,13 +1196,35 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
             $amount += $item['total'];
         }
         unset($item);
+        $sale = function_exists('repo_get_sales_header') ? (repo_get_sales_header($sale_id) ?: []) : [];
+        $waiter_id = (int)($sale['user_id'] ?? $sale['waiter_id'] ?? $user_id);
+        $header = [
+            'sale_id' => $sale_id,
+            'counter_id' => $sale_counter_id > 0 ? $sale_counter_id : $counter_id,
+            'counter_name' => function_exists('get_counter') ? (string)get_counter($sale_counter_id > 0 ? $sale_counter_id : $counter_id) : '',
+            'waiter_id' => $waiter_id,
+            'waiter_name' => function_exists('get_user') ? (string)get_user($waiter_id) : '',
+            'served_by' => function_exists('get_user') ? (string)get_user($waiter_id) : '',
+            'shift' => (string)($sale['shift'] ?? repo_get_shift()),
+            'shift_date' => (string)($sale['shift'] ?? repo_get_shift()),
+            'order_time' => date('Y-m-d H:i:s'),
+            'print_time' => date('Y-m-d H:i:s'),
+        ];
+        $company = mysqli_query($connection, "SELECT company_name,company_tag,address,phone1,phone2,image_path,thermal_logo_path FROM kp_settings_gen LIMIT 1");
+        if ($company && ($company_row = mysqli_fetch_assoc($company))) {
+            $header['company_name'] = (string)($company_row['company_name'] ?? '');
+            $header['company_tagline'] = (string)($company_row['company_tag'] ?? '');
+            $header['company_address'] = (string)($company_row['address'] ?? '');
+            $header['company_phone'] = trim((string)($company_row['phone1'] ?? '') . ' ' . (string)($company_row['phone2'] ?? ''));
+            $header['logo_src'] = (string)($company_row['thermal_logo_path'] ?? $company_row['image_path'] ?? '');
+        }
         $payload = json_encode([
             'payload_version' => 1,
             'document_type' => $type,
             'title' => $type,
             'items' => $items,
             'summary' => ['item_count' => count($items), 'amount' => $amount, 'total' => $amount],
-            'header' => ['sale_id' => $sale_id, 'counter_id' => $sale_counter_id > 0 ? $sale_counter_id : $counter_id],
+            'header' => $header,
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if ($payload === false) return 0;
         $shift = mysqli_real_escape_string($connection, (string)repo_get_shift());
