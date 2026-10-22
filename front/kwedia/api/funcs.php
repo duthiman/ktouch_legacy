@@ -258,6 +258,7 @@ if (!function_exists('kw_ensure_bill_schema')) {
 
         mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_shift_sale_open_items (
             id INT NOT NULL AUTO_INCREMENT,
+            source_live_id INT NOT NULL DEFAULT 0,
             sale_id INT NOT NULL DEFAULT 0,
             open_id INT NOT NULL DEFAULT 0,
             item_id INT NOT NULL DEFAULT 0,
@@ -275,9 +276,11 @@ if (!function_exists('kw_ensure_bill_schema')) {
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             KEY idx_open_sale (sale_id, open_id),
+            KEY idx_source_live (sale_id, source_live_id),
             KEY idx_open_pending (sale_id, session_flag),
             KEY idx_open_dpt (sale_id, dpt)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        kw_schema_ensure_column('kp_shift_sale_open_items', 'source_live_id', "INT NOT NULL DEFAULT 0 AFTER id");
 
         // Keep the older registry name compatible with the shift-scoped
         // registry used by the open-order code.

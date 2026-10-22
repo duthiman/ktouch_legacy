@@ -1363,13 +1363,13 @@ if (!function_exists('bill_service_queue_open_prints')) {
         $openId = (int)get_column('kp_shift_sales_open', 'id', "sale_id='$sale_id' AND user_id='$user_id' AND status=1 ORDER BY id DESC LIMIT 1");
         if ($openId < 1) $openId = 0;
         $sql = "INSERT INTO kp_shift_sale_open_items
-            (sale_id,open_id,item_id,user_id,qty,price,total,dpt,shift,counter,stock_counter,attr_id,accompaniment_json,session_flag)
-            SELECT l.sale_id,'$openId',l.item_id,l.user_id,l.qty,l.price,l.total,l.dpt,l.shift,l.counter,l.stock_counter,l.attr_id,l.accompaniment_json,2
+            (source_live_id,sale_id,open_id,item_id,user_id,qty,price,total,dpt,shift,counter,stock_counter,attr_id,accompaniment_json,session_flag)
+            SELECT l.id,l.sale_id,'$openId',l.item_id,l.user_id,l.qty,l.price,l.total,l.dpt,l.shift,l.counter,l.stock_counter,l.attr_id,l.accompaniment_json,2
             FROM kp_sale_items_live l
             WHERE l.sale_id='$sale_id' AND l.user_id='$user_id' AND l.session_flag=2
               AND NOT EXISTS (
                 SELECT 1 FROM kp_shift_sale_open_items o
-                WHERE o.sale_id=l.sale_id AND o.item_id=l.item_id AND o.qty=l.qty AND o.total=l.total AND o.session_flag=2
+                WHERE o.sale_id=l.sale_id AND o.source_live_id=l.id
               )";
         return mysqli_query($connection, $sql) !== false;
     }
