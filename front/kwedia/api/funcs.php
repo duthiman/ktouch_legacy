@@ -334,25 +334,6 @@ if (!function_exists('kw_ensure_bill_schema')) {
         kw_schema_ensure_column('kp_sales', 'current_total', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER previous_balance");
         kw_schema_ensure_column('kp_sales', 'current_balance', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER current_total");
 
-        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_print_ticket_items (
-            id INT NOT NULL AUTO_INCREMENT,
-            batch_id INT NOT NULL DEFAULT 0,
-            sale_id INT NOT NULL DEFAULT 0,
-            user_id INT NOT NULL DEFAULT 0,
-            item_id INT NOT NULL DEFAULT 0,
-            attr_id INT NOT NULL DEFAULT 0,
-            qty DECIMAL(10,2) NOT NULL DEFAULT 0,
-            price DECIMAL(10,2) NOT NULL DEFAULT 0,
-            total DECIMAL(10,2) NOT NULL DEFAULT 0,
-            dpt INT NOT NULL DEFAULT 0,
-            counter INT NOT NULL DEFAULT 0,
-            stock_counter INT NOT NULL DEFAULT 0,
-            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
-            KEY idx_batch_sale (batch_id, sale_id),
-            KEY idx_batch_dpt (batch_id, dpt)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-
         $checked = true;
         return true;
     }

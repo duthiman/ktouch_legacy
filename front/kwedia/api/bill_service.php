@@ -1120,63 +1120,6 @@ if (!function_exists('bill_service_detect_print_departments')) {
     }
 }
 
-if (!function_exists('bill_service_ensure_print_ticket_batch_table')) {
-    function bill_service_ensure_print_ticket_batch_table() {
-        global $connection;
-
-        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_print_ticket_items (
-            id INT NOT NULL AUTO_INCREMENT,
-            batch_id INT NOT NULL DEFAULT 0,
-            sale_id INT NOT NULL DEFAULT 0,
-            user_id INT NOT NULL DEFAULT 0,
-            item_id INT NOT NULL DEFAULT 0,
-            attr_id INT NOT NULL DEFAULT 0,
-            qty DECIMAL(10,2) NOT NULL DEFAULT 0,
-            price DECIMAL(10,2) NOT NULL DEFAULT 0,
-            total DECIMAL(10,2) NOT NULL DEFAULT 0,
-            dpt INT NOT NULL DEFAULT 0,
-            counter INT NOT NULL DEFAULT 0,
-            stock_counter INT NOT NULL DEFAULT 0,
-            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id),
-            KEY idx_batch_sale (batch_id, sale_id),
-            KEY idx_batch_dpt (batch_id, dpt)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-    }
-}
-
-if (!function_exists('bill_service_create_print_ticket_batch')) {
-    function bill_service_create_print_ticket_batch($sale_id, $session_flag = null, $source_table = 'kp_sale_print') {
-        global $connection;
-
-        $sale_id = (int)$sale_id;
-        if ($sale_id < 1) {
-            return 0;
-        }
-
-        bill_service_ensure_print_ticket_batch_table();
-        mysqli_query($connection, "INSERT INTO kp_print_ticket_items(batch_id, sale_id) VALUES(0, '$sale_id')");
-        $batch_id = (int)mysqli_insert_id($connection);
-        if ($batch_id < 1) {
-            return 0;
-        }
-
-        mysqli_query($connection, "DELETE FROM kp_print_ticket_items WHERE batch_id='$batch_id' AND item_id=0");
-        $source_table = in_array($source_table, ['kp_sale_print', 'kp_sale_items_live', 'kp_shift_sale_open_items'], true)
-            ? $source_table : 'kp_sale_print';
-        $where_flag = $session_flag === null ? '' : " AND session_flag='" . (int)$session_flag . "'";
-        mysqli_query(
-            $connection,
-            "INSERT INTO kp_print_ticket_items(batch_id, sale_id, user_id, item_id, attr_id, qty, price, total, dpt, counter, stock_counter)
-             SELECT '$batch_id', sale_id, user_id, item_id, COALESCE(attr_id, 0), qty, price, total, dpt, counter, stock_counter
-             FROM {$source_table}
-             WHERE sale_id='$sale_id'$where_flag"
-        );
-
-        return $batch_id;
-    }
-}
-
 if (!function_exists('bill_service_queue_unprinted_tickets')) {
     function bill_service_queue_snapshot_job($sale_id, $user_id, $counter_id, $type, $items, $sale_counter_id = 0) {
         global $connection;
