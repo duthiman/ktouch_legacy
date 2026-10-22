@@ -1826,7 +1826,7 @@ if (!function_exists('bill_service_open_fresh_each')) {
             'sale_id' => $sale_id,
             'amount' => (float)$result['amount'],
             'queued_jobs' => $queued_jobs,
-            'redirect' => '../open/index.php',
+            'redirect' => 'index.php',
         ];
     }
 }
@@ -1879,7 +1879,7 @@ if (!function_exists('bill_service_open_fresh_last')) {
             'queued_jobs' => $queued_jobs,
             //'redirect' => '../kwedia/index.php',
             
-            'redirect' => '../log_out.php',
+            'redirect' => 'index.php',
         ];
     }
 }
