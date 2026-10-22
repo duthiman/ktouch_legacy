@@ -51,7 +51,7 @@ if (!function_exists('kw_open_parent_owner')) {
 		$query = mysqli_query(
 			$connection,
 			"SELECT user_id
-			 FROM kp_sales_open
+			 FROM kp_shift_sales_open
 			 WHERE sale_id='$parent_sale_id' AND status=1
 			 ORDER BY open_id DESC
 			 LIMIT 1"
@@ -226,8 +226,8 @@ if (!function_exists('kw_ensure_bill_schema')) {
         kw_schema_ensure_column('kp_sale_status', 'parent_status', "TINYINT(1) NOT NULL DEFAULT 2 AFTER mode");
         kw_schema_ensure_column('kp_sale_status', 'parent_sale_id', "INT NOT NULL DEFAULT 0 AFTER parent_status");
 
-        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sales_open (
-            open_id INT NOT NULL AUTO_INCREMENT,
+        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_shift_sales_open (
+            id INT NOT NULL AUTO_INCREMENT,
             sale_id INT NOT NULL DEFAULT 0,
             child_sale_id INT NOT NULL DEFAULT 0,
             parent_sale_id INT NOT NULL DEFAULT 0,
@@ -247,32 +247,27 @@ if (!function_exists('kw_ensure_bill_schema')) {
             family_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
             status TINYINT(1) NOT NULL DEFAULT 1,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (open_id),
+            PRIMARY KEY (id),
             KEY idx_sale_user (sale_id, user_id),
             KEY idx_parent_user (parent_sale_id, user_id),
             KEY idx_child_user (child_sale_id, user_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        kw_schema_ensure_column('kp_shift_sales_open', 'sale_mode', "VARCHAR(20) NOT NULL DEFAULT 'open' AFTER bill_mode");
+        kw_schema_ensure_column('kp_shift_sales_open', 'order_stage', "VARCHAR(20) NOT NULL DEFAULT 'FRESH' AFTER sale_mode");
+        kw_schema_ensure_column('kp_shift_sales_open', 'updated_at', "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER created_at");
 
-        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sales_closed_opened (
-            closed_open_id INT NOT NULL AUTO_INCREMENT,
-            sale_id INT NOT NULL DEFAULT 0,
-            user_id INT NOT NULL DEFAULT 0,
-            identifier_type VARCHAR(55) NOT NULL DEFAULT '',
-            identifier_value VARCHAR(255) NOT NULL DEFAULT '',
-            identifier_label VARCHAR(255) NOT NULL DEFAULT '',
-            identifier_hex VARCHAR(40) NOT NULL DEFAULT '',
-            bill_mode VARCHAR(20) NOT NULL DEFAULT 'each',
-            counter_id INT NOT NULL DEFAULT 0,
-            print_cntr_id INT NOT NULL DEFAULT 0,
-            shift VARCHAR(60) NOT NULL DEFAULT '',
-            status TINYINT(1) NOT NULL DEFAULT 1,
-            family_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-            closed_at TIMESTAMP NULL DEFAULT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (closed_open_id),
-            KEY idx_sale_user (sale_id, user_id),
-            KEY idx_status (status)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        // Keep the older registry name compatible with the shift-scoped
+        // registry used by the open-order code.
+        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sales_open LIKE kp_shift_sales_open");
+        $legacyOpenIdCheck = mysqli_query($connection, "SHOW COLUMNS FROM kp_sales_open LIKE 'open_id'");
+        if ($legacyOpenIdCheck && mysqli_num_rows($legacyOpenIdCheck) === 0) {
+            $legacyPrimaryCheck = mysqli_query($connection, "SHOW INDEX FROM kp_sales_open WHERE Key_name='PRIMARY'");
+            if ($legacyPrimaryCheck && mysqli_num_rows($legacyPrimaryCheck) > 0) {
+                mysqli_query($connection, "ALTER TABLE kp_sales_open ADD COLUMN open_id INT NOT NULL AUTO_INCREMENT UNIQUE FIRST");
+            } else {
+                mysqli_query($connection, "ALTER TABLE kp_sales_open ADD COLUMN open_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+            }
+        }
 
         mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_open_color (
             id INT NOT NULL AUTO_INCREMENT,
@@ -561,3 +556,4 @@ if (!function_exists('kw_api_fetch_items')) {
         return $items;
     }
 }
+

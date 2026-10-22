@@ -696,10 +696,10 @@ if (!function_exists('bill_service_open_list_sales')) {
                            COALESCE(SUM(child.amount), 0) AS child_total,
                            GROUP_CONCAT(DISTINCT child.sale_id ORDER BY child.sale_id DESC SEPARATOR ',') AS child_ids,
                            COALESCE(MAX(active_child.sale_id), 0) AS current_open_child
-                    FROM kp_sales_closed_opened sco
+                    FROM kp_shift_sales_open sco
                     LEFT JOIN kp_sales parent_sale ON parent_sale.sale_id = sco.sale_id
                     LEFT JOIN kp_sales child ON child.parent = sco.sale_id AND child.sale_id <> sco.sale_id
-                    LEFT JOIN kp_sales_open active_child ON active_child.parent_sale_id = sco.sale_id AND active_child.user_id = sco.user_id AND active_child.status = 1
+                    LEFT JOIN kp_shift_sales_open active_child ON active_child.parent_sale_id = sco.sale_id AND active_child.user_id = sco.user_id AND active_child.status = 1
                     WHERE " . implode(' AND ', $where) . "
                     GROUP BY sco.sale_id, sco.user_id, sco.identifier_label, sco.identifier_type, sco.identifier_hex,
                              sco.bill_mode, sco.counter_id, sco.print_cntr_id, parent_sale.amount
@@ -737,7 +737,7 @@ if (!function_exists('bill_service_open_list_sales')) {
 
             $open_sql = "SELECT so.sale_id, so.user_id, so.identifier_label, so.identifier_type, so.identifier_hex,
                                 so.bill_mode, so.counter_id, so.print_cntr_id
-                         FROM kp_sales_open so
+                         FROM kp_shift_sales_open so
                          WHERE " . implode(' AND ', $open_where) . "
                          ORDER BY so.sale_id DESC";
             $open_query = mysqli_query($connection, $open_sql);
@@ -787,7 +787,7 @@ if (!function_exists('bill_service_open_list_sales')) {
                            COALESCE(SUM(c.amount), 0) AS child_total
                     FROM kp_sales s
                     LEFT JOIN kp_sales c ON c.parent = s.sale_id AND c.sale_id <> s.sale_id
-                    LEFT JOIN kp_sales_closed_opened sco ON sco.sale_id = s.sale_id
+                    LEFT JOIN kp_shift_sales_open sco ON sco.sale_id = s.sale_id
                     WHERE " . implode(' AND ', $where) . " AND sco.sale_id IS NULL AND s.parent = 0
                     GROUP BY s.sale_id, s.amount, s.counter, s.bill_role
                     ORDER BY s.sale_id DESC";
@@ -1333,16 +1333,44 @@ if (!function_exists('bill_service_queue_customer_bill')) {
 }
 
 if (!function_exists('bill_service_queue_open_prints')) {
+    function bill_service_snapshot_fresh_open_items($sale_id) {
+        global $connection;
+
+        $sale_id = (int)$sale_id;
+        if ($sale_id < 1) {
+            return false;
+        }
+
+        $existing = mysqli_query($connection, "SELECT 1 FROM kp_sale_print WHERE sale_id='$sale_id' LIMIT 1");
+        if ($existing && mysqli_num_rows($existing) > 0) {
+            return true;
+        }
+
+        $sql = "INSERT INTO kp_sale_print
+            (sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,session_flag)
+            SELECT sale_id,item_id,user_id,qty,dpt,price,total,shift,counter,hour,stock_counter,attr_id,accompaniment_json,2
+            FROM kp_sale_items_live
+            WHERE sale_id='$sale_id' AND session_flag=2";
+        return mysqli_query($connection, $sql) !== false;
+    }
+
     function bill_service_queue_open_prints($context, $params = [], $scenario = '') {
         $params = is_array($params) ? $params : [];
         $sale_id = (int)($context['sale_id'] ?? 0);
         $user_id = (int)($context['user_id'] ?? 0);
         $counter_id = bill_service_resolve_counter_id($context, $params);
-        $session_flag = in_array($scenario, ['fresh_open_last', 'open_active_last'], true) ? 2 : null;
+        $is_active_last = $scenario === 'open_active_last';
+        // A fresh LAST order is the first snapshot and may not yet have
+        // session_flag=2. Continuation LAST orders use the delta flag.
+        $session_flag = $is_active_last ? 2 : null;
+
+        if ($scenario === 'fresh_open_last' && !bill_service_snapshot_fresh_open_items($sale_id)) {
+            throw new RuntimeException('Could not create the fresh open-order print snapshot.');
+        }
 
         $queued_jobs = bill_service_queue_unprinted_tickets($sale_id, $user_id, $counter_id, [
             'include_cashier_order' => false,
-            'delta_only' => in_array($scenario, ['fresh_open_last', 'open_active_last'], true),
+            'delta_only' => $is_active_last,
             'session_flag' => $session_flag,
             'sale_counter_id' => (int)($context['counter_id'] ?? 0),
         ]);
@@ -2154,6 +2182,22 @@ if (!function_exists('bill_service_open_order')) {
                     throw new RuntimeException('Unsupported open scenario.');
             }
 
+            // Once an open order has been handed off to the open-sale
+            // registry and its print snapshot, it must no longer block a new
+            // K-wedia session through kp_sale_status. The open-sale tables
+            // remain the source of truth for reopening it.
+            $statusSaleIds = [
+                (int)($context['sale_id'] ?? 0),
+                (int)($result['sale_id'] ?? 0),
+                (int)($result['child_sale_id'] ?? 0),
+                (int)($result['parent_sale_id'] ?? 0),
+            ];
+            foreach (array_unique($statusSaleIds) as $statusSaleId) {
+                if ($statusSaleId > 0 && !repo_clear_sale_status($user_id, $statusSaleId)) {
+                    throw new RuntimeException('Could not clear the placed open-sale status.');
+                }
+            }
+
             mysqli_commit($connection);
             return [
                 'ok' => true,
@@ -2709,3 +2753,4 @@ if (!function_exists('bill_service_cancel_order')) {
 }
 
 ?>
+

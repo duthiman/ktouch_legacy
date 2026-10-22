@@ -61,13 +61,11 @@ $read_only_actions = [
     'load_counter_print_modal',
 ];
 if (!in_array($action, $read_only_actions, true)) {
-    $schema_cache_file = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR)
-        . DIRECTORY_SEPARATOR . 'mvure_kwedia_schema_' . md5(__DIR__) . '.stamp';
-    $schema_cache_time = @filemtime($schema_cache_file);
-    if ($schema_cache_time === false || (time() - $schema_cache_time) >= 300) {
-        kw_ensure_bill_schema();
-        @touch($schema_cache_file);
-    }
+    // Always heal the sale/open-sale schema before a mutating request.
+    // The helper is guarded per request, so this does not repeat work inside
+    // one request and it prevents a missing table from remaining hidden for
+    // the duration of the old five-minute cache window.
+    kw_ensure_bill_schema();
 } elseif (session_status() === PHP_SESSION_ACTIVE) {
     // These modal reads only consume the authenticated user id; do not hold
     // the session file lock while their database work is running.

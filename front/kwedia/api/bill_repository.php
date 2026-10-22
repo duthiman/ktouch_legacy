@@ -633,7 +633,7 @@ if (!function_exists('repo_get_closed_opened_parent')) {
         global $connection;
 
         $parent_sale_id = (int)$parent_sale_id;
-        $result = mysqli_query($connection, "SELECT * FROM kp_sales_closed_opened WHERE sale_id='$parent_sale_id' ORDER BY closed_open_id DESC LIMIT 1");
+        $result = mysqli_query($connection, "SELECT * FROM kp_shift_sales_open WHERE sale_id='$parent_sale_id' AND status=1 ORDER BY updated_at DESC, id DESC LIMIT 1");
 
         return $result ? mysqli_fetch_assoc($result) : null;
     }
@@ -672,12 +672,12 @@ if (!function_exists('repo_find_active_last_child')) {
         $result = mysqli_query(
             $connection,
             "SELECT sale_id, child_sale_id
-             FROM kp_sales_open
+             FROM kp_shift_sales_open
              WHERE parent_sale_id='$parent_sale_id'
                AND user_id='$user_id'
                AND bill_mode='last'
                AND status=1
-             ORDER BY open_id DESC
+             ORDER BY id DESC
              LIMIT 1"
         );
         $row = $result ? mysqli_fetch_assoc($result) : null;
@@ -710,11 +710,11 @@ if (!function_exists('bill_repo_get_sales_open_registry')) {
         $result = mysqli_query(
             $connection,
             "SELECT *
-             FROM kp_sales_open
+             FROM kp_shift_sales_open
              WHERE (sale_id='$sale_id' OR parent_sale_id='$sale_id' OR child_sale_id='$sale_id')
                AND user_id='$user_id'
                AND status=1
-             ORDER BY open_id DESC
+             ORDER BY id DESC
              LIMIT 1"
         );
 
@@ -871,12 +871,12 @@ if (!function_exists('bill_repo_is_parent_locked')) {
             return false;
         }
 
-        $open_result = mysqli_query($connection, "SELECT open_id FROM kp_sales_open WHERE parent_sale_id='$sale_id' AND status=1 LIMIT 1");
+        $open_result = mysqli_query($connection, "SELECT id FROM kp_shift_sales_open WHERE parent_sale_id='$sale_id' AND status=1 LIMIT 1");
         if ($open_result && mysqli_num_rows($open_result) > 0) {
             return true;
         }
 
-        $closed_result = mysqli_query($connection, "SELECT closed_open_id FROM kp_sales_closed_opened WHERE sale_id='$sale_id' AND status=1 LIMIT 1");
+        $closed_result = mysqli_query($connection, "SELECT id FROM kp_shift_sales_open WHERE sale_id='$sale_id' AND status=1 LIMIT 1");
 
         return $closed_result && mysqli_num_rows($closed_result) > 0;
     }
@@ -1194,6 +1194,16 @@ if (!function_exists('repo_enforce_single_sale_status')) {
             if ($sale_id < 1 || $sale_id === $keep_sale_id) {
                 continue;
             }
+            // An open sale is stored in kp_shift_sales_open and may retain print
+            // snapshot rows for later continuation. Those snapshots must not
+            // make its kp_sale_status row block a new order.
+            $open_registry = function_exists('bill_repo_get_sales_open_registry')
+                ? bill_repo_get_sales_open_registry($sale_id, $user_id)
+                : null;
+            if (is_array($open_registry) && !empty($open_registry)) {
+                mysqli_query($connection, "DELETE FROM kp_sale_status WHERE user_id='$user_id' AND sale_id='$sale_id'");
+                continue;
+            }
             $live_count = (int)column_count('kp_sale_items_live', 'item_id', "sale_id='$sale_id'");
             $print_count = (int)column_count('kp_sale_print', 'item_id', "sale_id='$sale_id' AND session_flag=2");
             if (($live_count + $print_count) > 0) {
@@ -1444,13 +1454,13 @@ if (!function_exists('repo_register_parent_closed_opened')) {
         $identifier_hex = mysqli_real_escape_string($connection, (string)$identifier['hex']);
 
         if (function_exists('kw_schema_ensure_column')) {
-            kw_schema_ensure_column('kp_sales_closed_opened', 'shift', "VARCHAR(40) NOT NULL DEFAULT '' AFTER bill_mode");
+            kw_schema_ensure_column('kp_shift_sales_open', 'shift', "VARCHAR(40) NOT NULL DEFAULT '' AFTER bill_mode");
         }
 
         return mysqli_query(
             $connection,
-            "INSERT INTO kp_sales_closed_opened (sale_id, user_id, identifier_type, identifier_value, identifier_label, identifier_hex, bill_mode, shift, status)
-             VALUES ('$parent_sale_id', '$user_id', '$identifier_type', '$identifier_value', '$identifier_label', '$identifier_hex', '$mode', '$shift', 1)
+            "INSERT INTO kp_shift_sales_open (sale_id, parent_sale_id, user_id, identifier_type, identifier_value, identifier_label, identifier_hex, bill_mode, sale_mode, order_stage, shift, status)
+             VALUES ('$parent_sale_id', '$parent_sale_id', '$user_id', '$identifier_type', '$identifier_value', '$identifier_label', '$identifier_hex', '$mode', 'open', 'FRESH', '$shift', 1)
              ON DUPLICATE KEY UPDATE
                 user_id=VALUES(user_id),
                 identifier_type=VALUES(identifier_type),
@@ -1458,6 +1468,8 @@ if (!function_exists('repo_register_parent_closed_opened')) {
                 identifier_label=VALUES(identifier_label),
                 identifier_hex=VALUES(identifier_hex),
                 bill_mode=VALUES(bill_mode),
+                sale_mode='open',
+                order_stage='FRESH',
                 shift=VALUES(shift),
                 status=1"
         );
@@ -1482,15 +1494,15 @@ if (!function_exists('repo_sync_sales_open_identifier')) {
         }
 
         if (function_exists('kw_schema_ensure_column')) {
-            kw_schema_ensure_column('kp_sales_open', 'identifier_type', "VARCHAR(55) NOT NULL DEFAULT '' AFTER bill_mode");
-            kw_schema_ensure_column('kp_sales_open', 'identifier_value', "VARCHAR(255) NOT NULL DEFAULT '' AFTER identifier_type");
-            kw_schema_ensure_column('kp_sales_open', 'identifier_label', "VARCHAR(255) NOT NULL DEFAULT '' AFTER identifier_value");
-            kw_schema_ensure_column('kp_sales_open', 'identifier_hex', "VARCHAR(40) NOT NULL DEFAULT '' AFTER identifier_label");
+            kw_schema_ensure_column('kp_shift_sales_open', 'identifier_type', "VARCHAR(55) NOT NULL DEFAULT '' AFTER bill_mode");
+            kw_schema_ensure_column('kp_shift_sales_open', 'identifier_value', "VARCHAR(255) NOT NULL DEFAULT '' AFTER identifier_type");
+            kw_schema_ensure_column('kp_shift_sales_open', 'identifier_label', "VARCHAR(255) NOT NULL DEFAULT '' AFTER identifier_value");
+            kw_schema_ensure_column('kp_shift_sales_open', 'identifier_hex', "VARCHAR(40) NOT NULL DEFAULT '' AFTER identifier_label");
         }
 
         return mysqli_query(
             $connection,
-            "UPDATE kp_sales_open
+            "UPDATE kp_shift_sales_open
              SET identifier_type='$identifier_type',
                  identifier_value='$identifier_value',
                  identifier_label='$identifier_label',
@@ -1521,7 +1533,7 @@ if (!function_exists('repo_upsert_sales_open')) {
 
         return mysqli_query(
             $connection,
-            "INSERT INTO kp_sales_open (sale_id, parent_sale_id, child_sale_id, user_id, bill_mode, identifier_type, identifier_value, identifier_label, identifier_hex, counter_id, print_cntr_id, shift, status)
+            "INSERT INTO kp_shift_sales_open (sale_id, parent_sale_id, child_sale_id, user_id, bill_mode, identifier_type, identifier_value, identifier_label, identifier_hex, counter_id, print_cntr_id, shift, status)
              VALUES ('$sale_id', '$parent_sale_id', '$child_sale_id', '$user_id', '$bill_mode', '$identifier_type', '$identifier_value', '$identifier_label', '$identifier_hex', '$counter_id', '$print_cntr_id', '$shift', '$status')
              ON DUPLICATE KEY UPDATE
                 parent_sale_id=VALUES(parent_sale_id),
@@ -1553,7 +1565,7 @@ if (!function_exists('repo_update_sales_open_family_total')) {
         }
 
         if (function_exists('kw_schema_ensure_column')) {
-            kw_schema_ensure_column('kp_sales_open', 'family_total', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER shift");
+            kw_schema_ensure_column('kp_shift_sales_open', 'family_total', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER shift");
         }
 
         $where = [];
@@ -1570,7 +1582,7 @@ if (!function_exists('repo_update_sales_open_family_total')) {
 
         return mysqli_query(
             $connection,
-            "UPDATE kp_sales_open
+            "UPDATE kp_shift_sales_open
              SET family_total='$family_total'
              WHERE " . implode(' OR ', $where)
         );
@@ -1586,7 +1598,7 @@ if (!function_exists('repo_clear_sales_open')) {
 
         return mysqli_query(
             $connection,
-            "DELETE FROM kp_sales_open WHERE sale_id='$sale_id' OR child_sale_id='$sale_id' OR parent_sale_id='$parent_sale_id'"
+            "DELETE FROM kp_shift_sales_open WHERE sale_id='$sale_id' OR child_sale_id='$sale_id' OR parent_sale_id='$parent_sale_id'"
         );
     }
 }
@@ -1596,7 +1608,7 @@ if (!function_exists('repo_clear_closed_opened_parent')) {
         global $connection;
 
         $parent_sale_id = (int)$parent_sale_id;
-        return mysqli_query($connection, "DELETE FROM kp_sales_closed_opened WHERE sale_id='$parent_sale_id'");
+        return mysqli_query($connection, "DELETE FROM kp_shift_sales_open WHERE sale_id='$parent_sale_id'");
     }
 }
 
@@ -1612,12 +1624,12 @@ if (!function_exists('repo_update_closed_opened_family_total')) {
         }
 
         if (function_exists('kw_schema_ensure_column')) {
-            kw_schema_ensure_column('kp_sales_closed_opened', 'family_total', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER status");
+            kw_schema_ensure_column('kp_shift_sales_open', 'family_total', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER status");
         }
 
         return mysqli_query(
             $connection,
-            "UPDATE kp_sales_closed_opened
+            "UPDATE kp_shift_sales_open
              SET family_total='$family_total'
              WHERE sale_id='$parent_sale_id'"
         );
@@ -1976,3 +1988,4 @@ if (!function_exists('bill_repo_cancel_order')) {
 }
 
 ?>
+
