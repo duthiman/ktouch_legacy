@@ -366,7 +366,7 @@ function submitPlaceSale(params) {
         window.location.href = 'index.php';
       };
       var cancelSale = function() {
-        $.post(window.KWEDIA_API_URL, { action: 'cancel_order' }).done(function(cancel) {
+        $.post(window.KWEDIA_API_URL, { action: 'sales.cancel' }).done(function(cancel) {
           if (cancel && cancel.ok) {
             submitPlaceSale(params);
           } else if (window.Swal) {
@@ -399,7 +399,7 @@ function submitPlaceSale(params) {
 window.confirmSubmitBill = function(openState, counterId, openMode, billMode, identifierData) {
   var bill_cntr = counterId || $('#bill_cntr_select').val() || 0;
   submitPlaceSale({
-    action: 'open_order',
+    action: 'sale.open_order',
     bill_cntr: bill_cntr,
     open_state: openState || '',
     open_mode: openMode || '',
@@ -413,7 +413,7 @@ window.confirmSubmitBill = function(openState, counterId, openMode, billMode, id
 };
 window.confirmDirectSubmitBill = function(openMode, billMode, openState, identifierData) {
   submitPlaceSale({
-    action: 'open_order',
+    action: 'sale.open_order',
     open_state: openState || '',
     open_mode: openMode || '',
     bill_mode: billMode || '',
@@ -435,7 +435,7 @@ window.confirmCloseOpenOrder = function(parentSaleId, printFinal, billCounterId)
     url: window.KWEDIA_API_URL,
     type: 'POST',
     data: {
-      action: 'close_order',
+      action: 'continue.open.close',
       close_parent_sale_id: parentSaleId,
       print_final: printFinal ? 1 : 0,
       bill_cntr: billCounterId,
@@ -462,7 +462,7 @@ window.confirmCloseCurrentOrder = function(billCounterId) {
     url: window.KWEDIA_API_URL,
     type: 'POST',
     data: {
-      action: 'close_order',
+      action: 'sale.close_order',
       sale_id: activeSaleId,
       bill_cntr: billCounterId,
       close_current_bill: 1,
@@ -501,7 +501,7 @@ function recp(id) {
   window.__kwAddLock[id] = true; // Lock before AJAX call
   var qty = 1;
   $.post(window.KWEDIA_API_URL, {
-    action: 'add_item',
+    action: 'sales.item.add',
     id: id,
     qty: qty,
     amount_override: window.KWEDIA_AMOUNT_OVERRIDE || ''
@@ -530,7 +530,7 @@ function recp(id) {
 function orderWithAttribute(item_id, attr_id, price_modifier,qty) {
     //var qty = 1;
     $.post(window.KWEDIA_API_URL, {
-      action: 'add_item',
+      action: 'sales.item.add',
       id: item_id,
       qty: qty,
       attr_id: attr_id,
@@ -588,7 +588,7 @@ function order(button){
   var qty = (typeof getFinalQty === 'function') ? getFinalQty() : $("#deci_qty").val();
   var id = $("#item_id").val();
   $.post(window.KWEDIA_API_URL, {
-    action: 'add_item',
+    action: 'sales.item.add',
     id: id,
     qty: qty,
     amount_override: window.KWEDIA_AMOUNT_OVERRIDE || ''
@@ -621,7 +621,7 @@ function order(button){
 function del_item(item_id, hhr, attr_id, accompaniment_json) {
   var accompanimentPayload = accompaniment_json ? decodeURIComponent(accompaniment_json) : '';
   $.post(window.KWEDIA_API_URL, {
-    action: 'remove_item',
+    action: 'sales.item.remove',
     item_id: item_id,
     hhr: hhr,
     attr_id: attr_id,
@@ -641,7 +641,7 @@ function del_item(item_id, hhr, attr_id, accompaniment_json) {
 }
 function cancelCurrentSale() {
   $.post(window.KWEDIA_API_URL, {
-    action: 'cancel_order'
+    action: 'sales.cancel'
   }).done(function(data) {
     if (data.ok) {
       kwNotify('Sale Cancelled', data.message);

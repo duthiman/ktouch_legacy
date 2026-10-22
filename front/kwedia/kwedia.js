@@ -249,7 +249,7 @@ window.confirmSubmitBill = function(openState, counterId, openMode, billMode, id
               // The draft is already saved. Reopen it without placing the items again.
               window.location.href = 'index.php';
             } else if (result.isDenied) {
-              jQuery.post(kwApiUrl(), { action: 'cancel_order' }).done(function(cancel) {
+              jQuery.post(kwApiUrl(), { action: 'sales.cancel' }).done(function(cancel) {
                 if (cancel && cancel.ok) window.confirmSubmitBill(openState, counterId, openMode, billMode, identifierData);
               });
             }

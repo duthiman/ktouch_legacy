@@ -49,9 +49,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
             </div>
             <div id="screen" style="overflow-y:scroll; height: 80%; width: auto; background-color: #fff; padding:5px;"></div>
               <div class="wrapper kw-desktop-order-actions" style="background-color: transparent; padding: 10px 0px 2px 0px;">
-                <button onclick="openCloseCurrentCounterModal()" class="btn btn_ord">CLOSE ORDER</button>
-                <button onclick="openOpenBillModeModal()" class="btn btn_ord">OPEN ORDER</button>
-                <button type="button" class="btn btn_ord" id="cancel" style="display:none;">CANCEL</button>
+                <button onclick="openCloseCurrentCounterModal()" class="btn btn_ord" data-sales-action="sale.close_order">CLOSE SALE</button>
+                <button onclick="openOpenBillModeModal()" class="btn btn_ord" data-sales-action="sale.open_order">OPEN SALE</button>
+                <button type="button" class="btn btn_ord" id="cancel" data-sales-action="sales.cancel" style="display:none;">CANCEL SALE</button>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
           </div>
           <div class="kw-top-actions">
             <button onclick="location.reload();" class="kw-top-btn" type="button">Refresh</button>
-              <button type="button" class="kw-top-btn cancel-order-btn" style="display:none;">CANCEL</button>
+              <button type="button" class="kw-top-btn cancel-order-btn" data-sales-action="sales.cancel" style="display:none;">CANCEL SALE</button>
             <div class="mode-switch-card mobile-mode-switch mobile-inline-switch">
               <div class="switch-holder">
                 <div class="switch-copy">
@@ -123,7 +123,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
           </div>
           <div id="screen_mobile"></div>
           <div class="kw-order-actions" style="grid-template-columns: 1fr;">
-            <button onclick="complete();" class="kw-order-btn kw-order-send" type="button">Close Bill</button> 
+            <button onclick="complete();" class="kw-order-btn kw-order-send" data-sales-action="sale.close_order" type="button">Close Sale</button>
           </div>
         </div>
       </div>

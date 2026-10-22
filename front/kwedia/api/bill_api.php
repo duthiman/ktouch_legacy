@@ -15,6 +15,30 @@ if ($action === '' && isset($_REQUEST['counter'], $_REQUEST['st'])) {
     $action = 'initialise';
 }
 
+// Sales V1 is now the public action vocabulary. These aliases keep the
+// existing page handlers behind one stable V1 contract while the remaining
+// UI is migrated incrementally.
+$sales_action_aliases = [
+    'sales.initialize' => 'initialise',
+    'sales.initialize_open' => 'initialise',
+    'sales.item.add' => 'add_item',
+    'sale.item.add' => 'add_item',
+    'sales.item.remove' => 'remove_item',
+    'sale.item.remove' => 'remove_item',
+    'sales.cancel' => 'cancel_order',
+    'sale.open_order' => 'open_order',
+    'sales.open_order' => 'open_order',
+    'sales.place_order' => 'close_order',
+    'sale.close_order' => 'close_order',
+    'sales.close' => 'close_order',
+    'sales.current' => 'get_current_cart',
+    'sales.get' => 'get_order_details',
+    'sale.load' => 'page_bootstrap',
+];
+if (isset($sales_action_aliases[$action])) {
+    $action = $sales_action_aliases[$action];
+}
+
 // Explicit continuation aliases. The legacy services already contain the
 // parent/child and print-queue rules; these aliases expose the same clear
 // actions used by the newer sales flow.
