@@ -1727,6 +1727,19 @@ if (!function_exists('bill_repo_print_queue')) {
                 'attributes' => $attributes,
             ];
         }
+        if (strtoupper((string)($data['print_type'] ?? '')) === 'BILL' && count($items) > 1) {
+            $merged = [];
+            foreach ($items as $item) {
+                $key = (int)$item['item_id'] . '|' . (int)($item['attr_id'] ?? 0) . '|' . json_encode($item['attributes'] ?? []);
+                if (!isset($merged[$key])) {
+                    $merged[$key] = $item;
+                    continue;
+                }
+                $merged[$key]['qty'] = (float)$merged[$key]['qty'] + (float)$item['qty'];
+                $merged[$key]['total'] = (float)$merged[$key]['total'] + (float)$item['total'];
+            }
+            $items = array_values($merged);
+        }
         if (!$items) return 0;
 
         $amount = 0.0;
