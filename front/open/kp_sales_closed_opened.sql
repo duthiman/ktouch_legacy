@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS kp_sales_closed_opened (
+CREATE TABLE IF NOT EXISTS kp_shift_sales_open (
     id INT NOT NULL AUTO_INCREMENT,
     original_sale_id INT NOT NULL,
     user_id INT NOT NULL,

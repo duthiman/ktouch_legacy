@@ -95,7 +95,7 @@ switch ($action) {
         ], $result['ok'] ? 200 : 400);
         break;
 
-    case 'load_open_identifier_modal':
+    case 'load_identifier_modal':
         $result = open_service_identifier($user_id, $_REQUEST);
         open_api_response($result['ok'], $result['message'], [
             'sale_id' => (int)($result['sale_id'] ?? 0),
@@ -108,7 +108,7 @@ switch ($action) {
         ], $result['ok'] ? 200 : 400);
         break;
 
-    case 'save_open_identifier':
+    case 'save_identifier':
         $result = open_service_save_identifier($user_id, $_REQUEST);
         open_api_response($result['ok'], $result['message'], [
             'identifier' => $result['identifier'] ?? null,
@@ -158,3 +158,4 @@ switch ($action) {
     default:
         open_api_response(false, 'Unknown open-orders action.', ['action' => $action], 400);
 }
+

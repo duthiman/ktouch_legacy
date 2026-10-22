@@ -17,7 +17,7 @@ $read_only_modal_actions = [
     'continue_type',
     'bill_modal',
     'counter',
-    'load_open_identifier_modal',
+    'load_identifier_modal',
     'load_counter_print_modal',
 ];
 
@@ -67,3 +67,4 @@ function open_api_session()
         ? ['ok' => true, 'user_id' => $user_id]
         : ['ok' => false, 'user_id' => 0, 'message' => 'Session expired. Please login again.'];
 }
+

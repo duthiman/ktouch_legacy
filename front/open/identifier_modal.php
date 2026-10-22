@@ -164,7 +164,7 @@
     });
     document.getElementById('oid-save-btn').addEventListener('click', function() {
       var payload = {
-        action: 'save_open_identifier',
+        action: 'save_identifier',
         sale_id: saleId,
         type: currentType,
         bill_mode: billMode,
@@ -233,7 +233,7 @@
     });
   }
   $.getJSON('api/open_api.php', {
-    action:'load_open_identifier_modal',
+    action:'load_identifier_modal',
     sale_id:saleId,
     counter_id:counterId,
     bill_mode:billMode,
@@ -249,3 +249,4 @@
   });
 })();
 </script>
+

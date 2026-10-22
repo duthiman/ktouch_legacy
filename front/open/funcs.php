@@ -11,11 +11,11 @@ if (file_exists($filename)) {
 
 if (!function_exists('open_ensure_closed_opened_table')) {
     function open_ensure_closed_opened_table($connection) {
-        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sales_closed_opened (id INT NOT NULL AUTO_INCREMENT, original_sale_id INT NOT NULL, user_id INT NOT NULL, reopened_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, bill_mode VARCHAR(20) NOT NULL DEFAULT 'each', is_fresh_open TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY (id), UNIQUE KEY uniq_original_sale_id (original_sale_id))");
+        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_shift_sales_open (id INT NOT NULL AUTO_INCREMENT, original_sale_id INT NOT NULL, user_id INT NOT NULL, reopened_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, bill_mode VARCHAR(20) NOT NULL DEFAULT 'each', is_fresh_open TINYINT(1) NOT NULL DEFAULT 0, PRIMARY KEY (id), UNIQUE KEY uniq_original_sale_id (original_sale_id))");
     }
 }
-if (!function_exists('open_identifier_colors')) {
-    function open_identifier_colors() {
+if (!function_exists('identifier_colors')) {
+    function identifier_colors() {
         return [
             ['key' => 'green',    'label' => 'Green',    'hex' => '#61b846'],
             ['key' => 'orange',   'label' => 'Orange',   'hex' => '#f36c26'],
@@ -46,7 +46,7 @@ if (!function_exists('open_ensure_identifier_table')) {
     function open_ensure_identifier_table($connection) {
         mysqli_query(
             $connection,
-            "CREATE TABLE IF NOT EXISTS kp_open_identifier_preset (
+            "CREATE TABLE IF NOT EXISTS kp_identifier_preset (
                 id INT NOT NULL AUTO_INCREMENT,
                 user_id INT NOT NULL DEFAULT 0,
                 preset_name VARCHAR(80) NOT NULL,
@@ -60,8 +60,8 @@ if (!function_exists('open_ensure_identifier_table')) {
     }
 }
 
-if (!function_exists('open_identifier_presets')) {
-    function open_identifier_presets($connection, $user_id, $limit = 8) {
+if (!function_exists('identifier_presets')) {
+    function identifier_presets($connection, $user_id, $limit = 8) {
         open_ensure_identifier_table($connection);
         $items = [];
         $limit = (int)$limit;
@@ -71,7 +71,7 @@ if (!function_exists('open_identifier_presets')) {
         $query = mysqli_query(
             $connection,
             "SELECT preset_name
-             FROM kp_open_identifier_preset
+             FROM kp_identifier_preset
              WHERE user_id='" . (int)$user_id . "'
              ORDER BY COALESCE(last_used_at, created_at) DESC, id DESC
              LIMIT $limit"
@@ -186,7 +186,7 @@ if (!function_exists('open_ensure_color_table')) {
             mysqli_query($connection, "ALTER TABLE kp_open_color ADD UNIQUE KEY uniq_color_key (color_key)");
         }
 
-        foreach (open_identifier_colors() as $color) {
+        foreach (identifier_colors() as $color) {
             $color_key = mysqli_real_escape_string($connection, $color['key']);
             $hex = mysqli_real_escape_string($connection, $color['hex']);
             $label = mysqli_real_escape_string($connection, $color['label']);
@@ -204,8 +204,8 @@ if (!function_exists('open_ensure_sales_closed_opened_table')) {
     function open_ensure_sales_closed_opened_table($connection) {
         mysqli_query(
             $connection,
-            "CREATE TABLE IF NOT EXISTS kp_sales_closed_opened (
-                closed_open_id INT NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE IF NOT EXISTS kp_shift_sales_open (
+                id INT NOT NULL AUTO_INCREMENT,
                 sale_id INT NOT NULL DEFAULT 0,
                 user_id INT NOT NULL DEFAULT 0,
                 color INT NOT NULL DEFAULT 0,
@@ -220,31 +220,31 @@ if (!function_exists('open_ensure_sales_closed_opened_table')) {
                 status TINYINT(1) NOT NULL DEFAULT 1,
                 closed_at TIMESTAMP NULL DEFAULT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (closed_open_id),
+                PRIMARY KEY (id),
                 KEY idx_sale_id (sale_id),
                 KEY idx_user_id (user_id),
                 KEY idx_status (status)
             )"
         );
 
-        if (!open_column_exists($connection, 'kp_sales_closed_opened', 'closed_open_id')) {
-            $primary_columns = open_primary_key_columns($connection, 'kp_sales_closed_opened');
+        if (!open_column_exists($connection, 'kp_shift_sales_open', 'id')) {
+            $primary_columns = open_primary_key_columns($connection, 'kp_shift_sales_open');
             if (count($primary_columns) > 0) {
-                mysqli_query($connection, "ALTER TABLE kp_sales_closed_opened ADD COLUMN closed_open_id INT NOT NULL AUTO_INCREMENT UNIQUE FIRST");
+                mysqli_query($connection, "ALTER TABLE kp_shift_sales_open ADD COLUMN id INT NOT NULL AUTO_INCREMENT UNIQUE FIRST");
             } else {
-                mysqli_query($connection, "ALTER TABLE kp_sales_closed_opened ADD COLUMN closed_open_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+                mysqli_query($connection, "ALTER TABLE kp_shift_sales_open ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
             }
         }
 
         $columns = [
-            'bill_mode' => "ALTER TABLE kp_sales_closed_opened ADD COLUMN bill_mode VARCHAR(20) NOT NULL DEFAULT 'each'",
-            'print_cntr_id' => "ALTER TABLE kp_sales_closed_opened ADD COLUMN print_cntr_id INT NOT NULL DEFAULT 0",
-            'status' => "ALTER TABLE kp_sales_closed_opened ADD COLUMN status TINYINT(1) NOT NULL DEFAULT 1",
-            'closed_at' => "ALTER TABLE kp_sales_closed_opened ADD COLUMN closed_at TIMESTAMP NULL DEFAULT NULL",
-            'created_at' => "ALTER TABLE kp_sales_closed_opened ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+            'bill_mode' => "ALTER TABLE kp_shift_sales_open ADD COLUMN bill_mode VARCHAR(20) NOT NULL DEFAULT 'each'",
+            'print_cntr_id' => "ALTER TABLE kp_shift_sales_open ADD COLUMN print_cntr_id INT NOT NULL DEFAULT 0",
+            'status' => "ALTER TABLE kp_shift_sales_open ADD COLUMN status TINYINT(1) NOT NULL DEFAULT 1",
+            'closed_at' => "ALTER TABLE kp_shift_sales_open ADD COLUMN closed_at TIMESTAMP NULL DEFAULT NULL",
+            'created_at' => "ALTER TABLE kp_shift_sales_open ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
         ];
         foreach ($columns as $column => $statement) {
-            if (!open_column_exists($connection, 'kp_sales_closed_opened', $column)) {
+            if (!open_column_exists($connection, 'kp_shift_sales_open', $column)) {
                 mysqli_query($connection, $statement);
             }
         }
@@ -255,8 +255,8 @@ if (!function_exists('open_ensure_sales_open_table')) {
     function open_ensure_sales_open_table($connection) {
         mysqli_query(
             $connection,
-            "CREATE TABLE IF NOT EXISTS kp_sales_open (
-                open_id INT NOT NULL AUTO_INCREMENT,
+            "CREATE TABLE IF NOT EXISTS kp_shift_sales_open (
+                id INT NOT NULL AUTO_INCREMENT,
                 sale_id INT NOT NULL DEFAULT 0,
                 user_id INT NOT NULL DEFAULT 0,
                 color INT NOT NULL DEFAULT 0,
@@ -267,7 +267,7 @@ if (!function_exists('open_ensure_sales_open_table')) {
                 child_sale_id INT NOT NULL DEFAULT 0,
                 last_bill INT NOT NULL DEFAULT 0,
                 bill_count INT NOT NULL DEFAULT 0,
-                parent_closed_open_id INT NOT NULL DEFAULT 0,
+                parent_sale_id INT NOT NULL DEFAULT 0,
                 counter_id INT NOT NULL DEFAULT 0,
                 print_cntr_id INT NOT NULL DEFAULT 0,
                 shift VARCHAR(60) NOT NULL DEFAULT '',
@@ -275,58 +275,58 @@ if (!function_exists('open_ensure_sales_open_table')) {
                 open_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
                 status TINYINT(1) NOT NULL DEFAULT 1,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (open_id),
+                PRIMARY KEY (id),
                 KEY idx_sale_id (sale_id),
-                KEY idx_parent_closed_open_id (parent_closed_open_id),
+                KEY idx_parent_sale_id (parent_sale_id),
                 KEY idx_user_shift (user_id, shift)
             )"
         );
 
-        if (!open_column_exists($connection, 'kp_sales_open', 'open_id')) {
-            $primary_columns = open_primary_key_columns($connection, 'kp_sales_open');
+        if (!open_column_exists($connection, 'kp_shift_sales_open', 'id')) {
+            $primary_columns = open_primary_key_columns($connection, 'kp_shift_sales_open');
             if (count($primary_columns) > 0) {
-                mysqli_query($connection, "ALTER TABLE kp_sales_open ADD COLUMN open_id INT NOT NULL AUTO_INCREMENT UNIQUE FIRST");
+                mysqli_query($connection, "ALTER TABLE kp_shift_sales_open ADD COLUMN id INT NOT NULL AUTO_INCREMENT UNIQUE FIRST");
             } else {
-                mysqli_query($connection, "ALTER TABLE kp_sales_open ADD COLUMN open_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+                mysqli_query($connection, "ALTER TABLE kp_shift_sales_open ADD COLUMN id INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
             }
         }
 
         $columns = [
-            'identifier_type' => "ALTER TABLE kp_sales_open ADD COLUMN identifier_type VARCHAR(20) NOT NULL DEFAULT 'color'",
-            'identifier_value' => "ALTER TABLE kp_sales_open ADD COLUMN identifier_value VARCHAR(120) NOT NULL DEFAULT ''",
-            'identifier_label' => "ALTER TABLE kp_sales_open ADD COLUMN identifier_label VARCHAR(120) NOT NULL DEFAULT ''",
-            'identifier_hex' => "ALTER TABLE kp_sales_open ADD COLUMN identifier_hex VARCHAR(20) NOT NULL DEFAULT ''",
-            'parent_closed_open_id' => "ALTER TABLE kp_sales_open ADD COLUMN parent_closed_open_id INT NOT NULL DEFAULT 0",
-            'counter_id' => "ALTER TABLE kp_sales_open ADD COLUMN counter_id INT NOT NULL DEFAULT 0",
-            'print_cntr_id' => "ALTER TABLE kp_sales_open ADD COLUMN print_cntr_id INT NOT NULL DEFAULT 0",
-            'open_amount' => "ALTER TABLE kp_sales_open ADD COLUMN open_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00",
-            'bill_mode' => "ALTER TABLE kp_sales_open ADD COLUMN bill_mode VARCHAR(20) NOT NULL DEFAULT 'last'",
-            'status' => "ALTER TABLE kp_sales_open ADD COLUMN status TINYINT(1) NOT NULL DEFAULT 1",
-            'created_at' => "ALTER TABLE kp_sales_open ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+            'identifier_type' => "ALTER TABLE kp_shift_sales_open ADD COLUMN identifier_type VARCHAR(20) NOT NULL DEFAULT 'color'",
+            'identifier_value' => "ALTER TABLE kp_shift_sales_open ADD COLUMN identifier_value VARCHAR(120) NOT NULL DEFAULT ''",
+            'identifier_label' => "ALTER TABLE kp_shift_sales_open ADD COLUMN identifier_label VARCHAR(120) NOT NULL DEFAULT ''",
+            'identifier_hex' => "ALTER TABLE kp_shift_sales_open ADD COLUMN identifier_hex VARCHAR(20) NOT NULL DEFAULT ''",
+            'parent_sale_id' => "ALTER TABLE kp_shift_sales_open ADD COLUMN parent_sale_id INT NOT NULL DEFAULT 0",
+            'counter_id' => "ALTER TABLE kp_shift_sales_open ADD COLUMN counter_id INT NOT NULL DEFAULT 0",
+            'print_cntr_id' => "ALTER TABLE kp_shift_sales_open ADD COLUMN print_cntr_id INT NOT NULL DEFAULT 0",
+            'open_amount' => "ALTER TABLE kp_shift_sales_open ADD COLUMN open_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00",
+            'bill_mode' => "ALTER TABLE kp_shift_sales_open ADD COLUMN bill_mode VARCHAR(20) NOT NULL DEFAULT 'last'",
+            'status' => "ALTER TABLE kp_shift_sales_open ADD COLUMN status TINYINT(1) NOT NULL DEFAULT 1",
+            'created_at' => "ALTER TABLE kp_shift_sales_open ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
         ];
         foreach ($columns as $column => $statement) {
-            if (!open_column_exists($connection, 'kp_sales_open', $column)) {
+            if (!open_column_exists($connection, 'kp_shift_sales_open', $column)) {
                 mysqli_query($connection, $statement);
             }
         }
 
-        mysqli_query($connection, "UPDATE kp_sales_open SET counter_id=0 WHERE counter_id IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET print_cntr_id=0 WHERE print_cntr_id IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET open_amount=0.00 WHERE open_amount IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET identifier_type='color' WHERE identifier_type=''");
-        mysqli_query($connection, "UPDATE kp_sales_open SET identifier_value='' WHERE identifier_value IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET identifier_label='' WHERE identifier_label IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET identifier_hex='' WHERE identifier_hex IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET parent_closed_open_id=0 WHERE parent_closed_open_id IS NULL");
-        mysqli_query($connection, "UPDATE kp_sales_open SET bill_mode='last' WHERE bill_mode IS NULL OR bill_mode=''");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET counter_id=0 WHERE counter_id IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET print_cntr_id=0 WHERE print_cntr_id IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET open_amount=0.00 WHERE open_amount IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET identifier_type='color' WHERE identifier_type=''");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET identifier_value='' WHERE identifier_value IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET identifier_label='' WHERE identifier_label IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET identifier_hex='' WHERE identifier_hex IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET parent_sale_id=0 WHERE parent_sale_id IS NULL");
+        mysqli_query($connection, "UPDATE kp_shift_sales_open SET bill_mode='last' WHERE bill_mode IS NULL OR bill_mode=''");
 
         // A sale is one open workspace. Older versions allowed duplicate
         // rows because they matched on both sale_id and user_id. Keep the
         // newest row for each sale before adding the database-level guard.
         $duplicates = mysqli_query(
             $connection,
-            "SELECT sale_id, MAX(open_id) AS keep_open_id
-             FROM kp_sales_open
+            "SELECT sale_id, MAX(id) AS keep_id
+             FROM kp_shift_sales_open
              WHERE sale_id > 0
              GROUP BY sale_id
              HAVING COUNT(*) > 1"
@@ -334,23 +334,23 @@ if (!function_exists('open_ensure_sales_open_table')) {
         if ($duplicates) {
             while ($duplicate = mysqli_fetch_assoc($duplicates)) {
                 $duplicate_sale_id = (int)$duplicate['sale_id'];
-                $keep_open_id = (int)$duplicate['keep_open_id'];
+                $keep_id = (int)$duplicate['keep_id'];
                 mysqli_query(
                     $connection,
-                    "DELETE FROM kp_sales_open
-                     WHERE sale_id='$duplicate_sale_id' AND open_id <> '$keep_open_id'"
+                    "DELETE FROM kp_shift_sales_open
+                     WHERE sale_id='$duplicate_sale_id' AND id <> '$keep_id'"
                 );
             }
         }
 
         $unique_index = mysqli_query(
             $connection,
-            "SHOW INDEX FROM kp_sales_open WHERE Key_name='uniq_kp_sales_open_sale_id'"
+            "SHOW INDEX FROM kp_shift_sales_open WHERE Key_name='uniq_kp_shift_sales_open_sale_id'"
         );
         if (!$unique_index || mysqli_num_rows($unique_index) === 0) {
             mysqli_query(
                 $connection,
-                "ALTER TABLE kp_sales_open ADD UNIQUE KEY uniq_kp_sales_open_sale_id (sale_id)"
+                "ALTER TABLE kp_shift_sales_open ADD UNIQUE KEY uniq_kp_shift_sales_open_sale_id (sale_id)"
             );
         }
     }
@@ -362,7 +362,7 @@ if (!function_exists('open_upsert_bill_registry_row')) {
 
         $sale_id = (int)($payload['sale_id'] ?? 0);
         $parent_sale_id = (int)($payload['parent_sale_id'] ?? 0);
-        $parent_closed_open_id = (int)($payload['parent_closed_open_id'] ?? 0);
+        $parent_sale_id = (int)($payload['parent_sale_id'] ?? 0);
         $user_id = (int)($payload['user_id'] ?? 0);
         $color = (int)($payload['color'] ?? 0);
         $identifier_type = mysqli_real_escape_string($connection, (string)($payload['identifier_type'] ?? 'color'));
@@ -380,15 +380,15 @@ if (!function_exists('open_upsert_bill_registry_row')) {
             return;
         }
 
-        if ($parent_closed_open_id < 1 && $parent_sale_id > 0) {
-            $parent_closed_open_id = (int)get_column(
-                'kp_sales_closed_opened',
-                'closed_open_id',
+        if ($parent_sale_id < 1 && $parent_sale_id > 0) {
+            $parent_sale_id = (int)get_column(
+                'kp_shift_sales_open',
+                'id',
                 "sale_id='$parent_sale_id' AND user_id='$user_id' AND status=1"
             );
         }
 
-        $existing = mysqli_query($connection, "SELECT open_id, user_id FROM kp_sales_open WHERE sale_id='$sale_id' LIMIT 1");
+        $existing = mysqli_query($connection, "SELECT id, user_id FROM kp_shift_sales_open WHERE sale_id='$sale_id' LIMIT 1");
         if ($existing && mysqli_num_rows($existing) > 0) {
             $existing_row = mysqli_fetch_assoc($existing);
             if ((int)($existing_row['user_id'] ?? 0) !== $user_id) {
@@ -396,8 +396,8 @@ if (!function_exists('open_upsert_bill_registry_row')) {
             }
             mysqli_query(
                 $connection,
-                "UPDATE kp_sales_open
-                 SET parent_closed_open_id='$parent_closed_open_id',
+                "UPDATE kp_shift_sales_open
+                 SET parent_sale_id='$parent_sale_id',
                      color='$color',
                      identifier_type='$identifier_type',
                      identifier_value='$identifier_value',
@@ -414,10 +414,10 @@ if (!function_exists('open_upsert_bill_registry_row')) {
         } else {
             $inserted = mysqli_query(
                 $connection,
-                "INSERT INTO kp_sales_open
-                 (sale_id, parent_closed_open_id, user_id,  counter_id, print_cntr_id, open_amount, shift, bill_mode, status)
+                "INSERT INTO kp_shift_sales_open
+                 (sale_id, parent_sale_id, user_id,  counter_id, print_cntr_id, open_amount, shift, bill_mode, status)
                  VALUES
-                 ('$sale_id', '$parent_closed_open_id', '$user_id',  '$counter_id', '$print_cntr_id', '$open_amount', '$shift', '$bill_mode', '$status')"
+                 ('$sale_id', '$parent_sale_id', '$user_id',  '$counter_id', '$print_cntr_id', '$open_amount', '$shift', '$bill_mode', '$status')"
             );
             if (!$inserted) {
                 return false;
@@ -439,9 +439,9 @@ if (!function_exists('open_parent_registry_row')) {
         $query = mysqli_query(
             $connection,
             "SELECT *
-             FROM kp_sales_open
+             FROM kp_shift_sales_open
              WHERE sale_id='$parent_sale_id'$user_filter
-             ORDER BY open_id DESC
+             ORDER BY id DESC
              LIMIT 1"
         );
         if ($query && mysqli_num_rows($query) > 0) {
@@ -450,10 +450,10 @@ if (!function_exists('open_parent_registry_row')) {
 
         $closed_query = mysqli_query(
             $connection,
-            "SELECT closed_open_id, sale_id, user_id, counter_id, print_cntr_id, shift, bill_mode, status
-             FROM kp_sales_closed_opened
+            "SELECT id, sale_id, user_id, counter_id, print_cntr_id, shift, bill_mode, status
+             FROM kp_shift_sales_open
              WHERE sale_id='$parent_sale_id'$user_filter
-             ORDER BY closed_open_id DESC
+             ORDER BY id DESC
              LIMIT 1"
         );
         if (!$closed_query || mysqli_num_rows($closed_query) < 1) {
@@ -475,8 +475,8 @@ if (!function_exists('open_parent_registry_row')) {
         }
 
         return [
-            'open_id' => 0,
-            'closed_open_id' => (int)($closed_row['closed_open_id'] ?? 0),
+            'id' => 0,
+            'id' => (int)($closed_row['id'] ?? 0),
             'sale_id' => $parent_sale_id,
             'parent_sale_id' => $parent_sale_id,
             'user_id' => (int)($closed_row['user_id'] ?? 0),
@@ -514,11 +514,11 @@ if (!function_exists('open_parent_bill_mode')) {
         }
         $mode = 'each';
         
-        // First try to get from kp_sales_closed_opened (closed parents)
+        // First try to get from kp_shift_sales_open (closed parents)
         $query = mysqli_query(
             $connection,
             "SELECT bill_mode
-             FROM kp_sales_closed_opened
+             FROM kp_shift_sales_open
              WHERE $where
              LIMIT 1"
         );
@@ -546,9 +546,9 @@ if (!function_exists('open_parent_bill_mode')) {
                 $query = mysqli_query(
                     $connection,
                     "SELECT bill_mode
-                     FROM kp_sales_open
+                     FROM kp_shift_sales_open
                      WHERE $where
-                     ORDER BY open_id DESC
+                     ORDER BY id DESC
                      LIMIT 1"
                 );
                 if ($query && mysqli_num_rows($query) > 0) {
@@ -715,7 +715,7 @@ if (!function_exists('open_register_parent_bill')) {
         if ($counter_id < 1) {
             $counter_id = (int)($parent_sale['counter'] ?? 0);
         }
-        $last_bill = (int)get_column('kp_sales_open', 'last_bill', "sale_id='$parent_sale_id' AND user_id='$user_id'");
+        $last_bill = (int)get_column('kp_shift_sales_open', 'last_bill', "sale_id='$parent_sale_id' AND user_id='$user_id'");
         if ($last_bill < 1) {
             $last_bill = $parent_sale_id;
         }
@@ -782,10 +782,10 @@ if (!function_exists('open_clear_bill_registry')) {
             return;
         }
         
-        // Get the closed_open_id for this sale_id from kp_sales_closed_opened
-        $closed_open_query = mysqli_query($connection, "SELECT closed_open_id FROM kp_sales_closed_opened WHERE sale_id='$sale_id' LIMIT 1");
+        // Get the id for this sale_id from kp_shift_sales_open
+        $closed_open_query = mysqli_query($connection, "SELECT id FROM kp_shift_sales_open WHERE sale_id='$sale_id' LIMIT 1");
         $closed_open = $closed_open_query ? mysqli_fetch_assoc($closed_open_query) : null;
-        $closed_open_id = $closed_open ? (int)$closed_open['closed_open_id'] : 0;
+        $id = $closed_open ? (int)$closed_open['id'] : 0;
 
         $candidate_ids = [$sale_id];
 
@@ -807,7 +807,7 @@ if (!function_exists('open_clear_bill_registry')) {
         $open_family_q = mysqli_query(
             $connection,
             "SELECT sale_id, child_sale_id, last_bill
-             FROM kp_sales_open
+             FROM kp_shift_sales_open
              WHERE (sale_id='$sale_id' OR child_sale_id='$sale_id' OR last_bill='$sale_id')" . ($user_id > 0 ? " AND user_id='$user_id'" : '')
         );
         if ($open_family_q) {
@@ -828,13 +828,13 @@ if (!function_exists('open_clear_bill_registry')) {
         $where = "sale_id IN ('$id_list')";
         $where .= " OR child_sale_id IN ('$id_list')";
         $where .= " OR last_bill IN ('$id_list')";
-        if ($closed_open_id > 0) {
-            $where .= " OR parent_closed_open_id='$closed_open_id'";
+        if ($id > 0) {
+            $where .= " OR parent_sale_id='$id'";
         }
         if ($user_id > 0) {
             $where = "($where) AND user_id='$user_id'";
         }
-        mysqli_query($connection, "DELETE FROM kp_sales_open WHERE $where");
+        mysqli_query($connection, "DELETE FROM kp_shift_sales_open WHERE $where");
     }
 }
 
@@ -858,7 +858,7 @@ if (!function_exists('open_purge_stale_bill_registry')) {
         }
         mysqli_query(
             $connection,
-            "DELETE FROM kp_sales_open
+            "DELETE FROM kp_shift_sales_open
              WHERE sale_id NOT IN (
                  SELECT sale_id
                  FROM kp_sale_status
@@ -868,17 +868,17 @@ if (!function_exists('open_purge_stale_bill_registry')) {
     }
 }
 
-if (!function_exists('open_identifier_from_parent')) {
-    function open_identifier_from_parent($connection, $parent_sale_id, $user_id = 0) {
+if (!function_exists('identifier_from_parent')) {
+    function identifier_from_parent($connection, $parent_sale_id, $user_id = 0) {
         open_ensure_sales_closed_opened_table($connection);
         $parent_sale_id = (int)$parent_sale_id;
         $user_filter = $user_id > 0 ? " AND user_id='" . (int)$user_id . "'" : '';
         
-        // First try to get from kp_sales_closed_opened (closed parents)
+        // First try to get from kp_shift_sales_open (closed parents)
         $query = mysqli_query(
             $connection,
             "SELECT identifier_type, identifier_value, identifier_label, identifier_hex
-             FROM kp_sales_closed_opened
+             FROM kp_shift_sales_open
              WHERE sale_id='$parent_sale_id'$user_filter
              LIMIT 1"
         );
@@ -892,11 +892,11 @@ if (!function_exists('open_identifier_from_parent')) {
             ];
         }
         
-        // Fallback to kp_sales_open (for backward compatibility)
+        // Fallback to kp_shift_sales_open (for backward compatibility)
         $query = mysqli_query(
             $connection,
             "SELECT identifier_type, identifier_value, identifier_label, identifier_hex
-             FROM kp_sales_open
+             FROM kp_shift_sales_open
              WHERE sale_id='$parent_sale_id'$user_filter
              ORDER BY child_sale_id DESC, bill_count DESC
              LIMIT 1"
@@ -924,7 +924,7 @@ if (!function_exists('open_parent_sale_owner_id')) {
         if ($sale_owner > 0) {
             return $sale_owner;
         }
-        $open_owner = (int)get_column('kp_sales_open', 'user_id', "sale_id='$parent_sale_id'");
+        $open_owner = (int)get_column('kp_shift_sales_open', 'user_id', "sale_id='$parent_sale_id'");
         return $open_owner;
     }
 }
@@ -953,14 +953,14 @@ if (!function_exists('open_start_child_sale')) {
         $user_id = (int)$user_id;
         $parent_sale_id = (int)$parent_sale_id;
         
-        // Get parent from kp_sales_closed_opened (closed parents)
-        $parent_closed_open_query = mysqli_query($connection, "SELECT closed_open_id, user_id, counter_id, print_cntr_id, shift, color, identifier_type, identifier_value, identifier_label, identifier_hex, bill_mode FROM kp_sales_closed_opened WHERE sale_id='$parent_sale_id' AND user_id='$user_id' LIMIT 1");
+        // Get parent from kp_shift_sales_open (closed parents)
+        $parent_closed_open_query = mysqli_query($connection, "SELECT id, user_id, counter_id, print_cntr_id, shift, color, identifier_type, identifier_value, identifier_label, identifier_hex, bill_mode FROM kp_shift_sales_open WHERE sale_id='$parent_sale_id' AND user_id='$user_id' LIMIT 1");
         $parent_closed_open = $parent_closed_open_query ? mysqli_fetch_assoc($parent_closed_open_query) : null;
         
-        // Fallback to kp_sales_open for open last mode bills
+        // Fallback to kp_shift_sales_open for open last mode bills
         $parent_open = null;
         if (!$parent_closed_open) {
-            $parent_open_query = mysqli_query($connection, "SELECT open_id, user_id, counter_id, print_cntr_id, shift, color, identifier_type, identifier_value, identifier_label, identifier_hex, bill_mode FROM kp_sales_open WHERE sale_id='$parent_sale_id' AND user_id='$user_id' AND parent_closed_open_id=0 LIMIT 1");
+            $parent_open_query = mysqli_query($connection, "SELECT id, user_id, counter_id, print_cntr_id, shift, color, identifier_type, identifier_value, identifier_label, identifier_hex, bill_mode FROM kp_shift_sales_open WHERE sale_id='$parent_sale_id' AND user_id='$user_id' AND parent_sale_id=0 LIMIT 1");
             $parent_open = $parent_open_query ? mysqli_fetch_assoc($parent_open_query) : null;
         }
         
@@ -968,7 +968,7 @@ if (!function_exists('open_start_child_sale')) {
             return ['ok' => false, 'err' => 'The selected parent bill no longer exists.'];
         }
         
-        $parent_closed_open_id = $parent_closed_open ? (int)$parent_closed_open['closed_open_id'] : 0;
+        $parent_sale_id = $parent_closed_open ? (int)$parent_closed_open['id'] : 0;
         $parent_owner_id = $parent_closed_open ? (int)$parent_closed_open['user_id'] : (int)$parent_open['user_id'];
         $parent_info = $parent_closed_open ?: $parent_open;
         
@@ -1033,12 +1033,12 @@ if (!function_exists('open_start_child_sale')) {
         }
         $total_open_amount = round($parent_amount + $children_amount, 2);
         
-        // Only live open-last workspaces should keep child rows in kp_sales_open.
-        if ($parent_closed_open_id < 1 && $parent_mode === 'last') {
+        // Only live open-last workspaces should keep child rows in kp_shift_sales_open.
+        if ($parent_sale_id < 1 && $parent_mode === 'last') {
             $child_amount = (float)column_total('kp_sale_print', 'total', "sale_id='$child_sale_id'");
             open_upsert_bill_registry_row($connection, [
                 'sale_id' => $child_sale_id,
-                'parent_closed_open_id' => $parent_closed_open_id,
+                'parent_sale_id' => $parent_sale_id,
                 'user_id' => $user_id,
                 'color' => $color_id,
                 'identifier_type' => $identifier['type'],
@@ -1081,7 +1081,7 @@ if (!function_exists('open_start_child_sale')) {
 
 if (!function_exists('open_resume_child_sale')) {
     function open_resume_child_sale($connection, $user_id, $parent_sale_id) {
-        $identifier = open_identifier_from_parent($connection, $parent_sale_id, $user_id); //
+        $identifier = identifier_from_parent($connection, $parent_sale_id, $user_id); //
         if (!$identifier) {
             return ['ok' => false, 'err' => 'No identifier was found for that parent bill.'];
         }
@@ -1263,7 +1263,7 @@ if (!function_exists('open_resume_parent_sale_for_last')) {
         // Ensure parent record is flagged correctly
         mysqli_query($connection, "UPDATE kp_sales SET bill_role='parent' WHERE sale_id='$parent_sale_id'");
 
-        $identifier = open_identifier_from_parent($connection, $parent_sale_id, $user_id) ?: [
+        $identifier = identifier_from_parent($connection, $parent_sale_id, $user_id) ?: [
             'type' => 'name',
             'value' => '',
             'label' => '',
@@ -1276,7 +1276,7 @@ if (!function_exists('open_resume_parent_sale_for_last')) {
         // Update Parent Registry Entry
         mysqli_query(
             $connection,
-            "UPDATE kp_sales_open 
+            "UPDATE kp_shift_sales_open 
              SET last_bill='$child_sale_id', 
                  bill_count='$bill_count',
                  status=1,
@@ -1368,7 +1368,7 @@ if (!function_exists('open_close_parent_bill')) {
 
         mysqli_query(
             $connection,
-            "UPDATE kp_sales_open
+            "UPDATE kp_shift_sales_open
              SET status=2,
                  last_bill='$last_bill',
                  bill_count='$bill_count'
@@ -1377,7 +1377,7 @@ if (!function_exists('open_close_parent_bill')) {
 
         mysqli_query(
             $connection,
-            "DELETE FROM kp_sales_closed_opened
+            "DELETE FROM kp_shift_sales_open
              WHERE sale_id='$parent_sale_id' AND user_id='$user_id'"
         );
 
@@ -1437,3 +1437,5 @@ if (!function_exists('open_get_family_indicators')) {
     }
 }
 ?>
+
+
