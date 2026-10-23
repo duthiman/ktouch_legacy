@@ -643,11 +643,11 @@ body.modal-open #kw-cart-toggle,
   color: #fff;
 }
 .kw-close-open-action {
-  background: linear-gradient(135deg, #8b1f1f 0%, #d24848 100%) !important;
+  background: linear-gradient(135deg, #c46a08 0%, #f4a62a 100%) !important;
   color: #fff !important;
 }
 .kw-continue-action {
-  background: linear-gradient(135deg, #2f6f9f 0%, #48a9df 100%) !important;
+  background: linear-gradient(135deg, #2f7d32 0%, #66bb6a 100%) !important;
   color: #fff !important;
 }
 #modal.kw-jq-visible {
