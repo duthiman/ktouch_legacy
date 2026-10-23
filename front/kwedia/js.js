@@ -481,6 +481,7 @@ window.confirmSubmitBill = function(openState, counterId, openMode, billMode, id
 window.confirmDirectSubmitBill = function(openMode, billMode, openState, identifierData) {
   submitPlaceSale({
     action: 'sale.open_order',
+    bill_cntr: identifierData && identifierData.counter ? identifierData.counter : ($('#bill_cntr_select').val() || 0),
     open_state: openState || '',
     open_mode: openMode || '',
     bill_mode: billMode || '',
@@ -869,12 +870,26 @@ function updateOpenOrderButtons(data) {
   $('#kw-desktop-close-btn, #kw-desktop-open-btn, #kw-mobile-close-btn, #kw-mobile-open-btn').toggle(!isOpenChild);
   $('#kw-desktop-continue-btn, #kw-desktop-close-open-btn, #kw-mobile-continue-btn, #kw-mobile-close-open-btn').toggle(isOpenChild);
   if (isOpenChild) {
-    $('#kw-desktop-continue-btn, #kw-mobile-continue-btn').off('click.kwOpen').on('click.kwOpen', function() { complete(); });
+    window.__kwOpenBillMode = mode;
+    $('#kw-desktop-continue-btn, #kw-mobile-continue-btn').off('click.kwOpen').on('click.kwOpen', function() {
+      kwContinueOpen(this.id === 'kw-desktop-continue-btn');
+    });
     $('#kw-desktop-close-open-btn, #kw-mobile-close-open-btn').off('click.kwOpen').on('click.kwOpen', function() {
       openCloseParentCounterModal(parentId, mode === 'last', 'open', mode);
     });
   }
 }
+window.kwContinueOpen = function(desktopConfirm) {
+  var mode = String(window.__kwOpenBillMode || 'last').toLowerCase();
+  if (mode !== 'last' && mode !== 'each') mode = 'last';
+  if (desktopConfirm && !window.confirm('Continue this open ' + mode.toUpperCase() + ' bill?')) {
+    return;
+  }
+  var counterId = Number(window.__kwCounterId || $('#bill_cntr_select').val() || 0);
+  confirmDirectSubmitBill('open', mode, 'continue', {
+    counter: counterId
+  });
+};
 function updateOrderModeBadge(data) {
   var row = data && data.status_row ? data.status_row : {};
   var mode = String(row.mode || '').toLowerCase();
