@@ -1173,8 +1173,8 @@ if (!function_exists('repo_set_sale_status')) {
 
         return mysqli_query(
             $connection,
-            "INSERT INTO kp_sale_status (user_id, sale_id, status, mode, parent_status, parent_sale_id, counter_id, sale_type)
-             VALUES ('$user_id', '$sale_id', '$status', '$mode', '$parent_status', '$parent_sale_id', '$counter_id', '$sale_type')
+            "INSERT INTO kp_sale_status (user_id, sale_id, status, mode, parent_status, parent_sale_id, counter_id, counter, sale_type)
+             VALUES ('$user_id', '$sale_id', '$status', '$mode', '$parent_status', '$parent_sale_id', '$counter_id', '$counter_id', '$sale_type')
              ON DUPLICATE KEY UPDATE
                 user_id=VALUES(user_id),
                 sale_id=VALUES(sale_id),
@@ -1183,6 +1183,7 @@ if (!function_exists('repo_set_sale_status')) {
                 parent_status=VALUES(parent_status),
                 parent_sale_id=VALUES(parent_sale_id),
                 counter_id=VALUES(counter_id),
+                counter=VALUES(counter),
                 sale_type=VALUES(sale_type)"
         );
     }
