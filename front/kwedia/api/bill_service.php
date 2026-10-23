@@ -1893,6 +1893,8 @@ if (!function_exists('bill_service_close_closed_parent')) {
 
         // Queue the final bill from the consolidated open-item ledger, so it
         // cannot lose names by reading an incomplete kp_sale_print snapshot.
+        // The returned id is only the immediate INSERT result. Do not query
+        // kp_print_queue afterward because the print worker may consume it.
         $bill_queue_id = bill_service_queue_snapshot_job($child_sale_id, $user_id, $counter_id, 'BILL', $open_rows, $counter_id);
         if ($bill_queue_id < 1) {
             throw new RuntimeException('Could not queue the final open LAST bill.');
