@@ -1,2 +1,0 @@
-02-Jul-2026 08:53:50am|KTOUCH_ADMIN|RETURNED|1|DESPERADO|FROM ORDER NO|62|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1
-02-Jul-2026 08:53:54am|KTOUCH_ADMIN|FINISHED RETURN|-|-|ORDER NO|62|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/ret/API|URI=/clients/ktouch/mvure/front/ret/API/ret_api.php|IP=::1
