@@ -2748,6 +2748,26 @@ if (!function_exists('bill_service_initialise')) {
                     $status_parent_status = $status_parent_sale_id > 0 ? 1 : 2;
                 }
 
+                // Keep the sale header in the same open state as its parent.
+                // Child sessions can otherwise retain the default normal/
+                // closed header metadata even though sale_status says EACH.
+                if ($status_parent_sale_id > 0) {
+                    if (function_exists('kw_schema_ensure_column')) {
+                        kw_schema_ensure_column('kp_sales', 'bill_role', "VARCHAR(20) NOT NULL DEFAULT 'closed' AFTER is_child_bill");
+                        kw_schema_ensure_column('kp_sales', 'bill_status', "TINYINT(1) NOT NULL DEFAULT 2 AFTER bill_role");
+                    }
+                    if (!mysqli_query(
+                        $connection,
+                        "UPDATE kp_sales
+                         SET parent='" . $status_parent_sale_id . "',
+                             bill_role='child',
+                             bill_status=1
+                         WHERE sale_id='" . $sale_id . "'"
+                    )) {
+                        throw new RuntimeException('Could not mark child sale as open: ' . mysqli_error($connection));
+                    }
+                }
+
                 if (!repo_set_sale_status($user_id, $sale_id, $status, $status_mode, $status_parent_status, $status_parent_sale_id, $counter)) {
                     throw new RuntimeException('Could not save sale status for continued order: ' . mysqli_error($connection));
                 }
