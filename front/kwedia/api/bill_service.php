@@ -319,13 +319,16 @@ if (!function_exists('bill_service_load_submit_confirm_modal')) {
         $status_row = $live_context['status_row'] ?? [];
         $parent_bill = (int)($status_row['parent_sale_id'] ?? 0);
         $sales_open_row = $live_context['sales_open_row'] ?? [];
-        // A fresh LAST open order intentionally has no parent_sale_id in
-        // kp_sale_status. Its open registry is the parent reference, so use
-        // that registry here to keep the submit buttons in the open-order
-        // flow instead of falling back to place_closed_order.
-        if ($parent_bill < 1 && !empty($sales_open_row)
-            && (string)($live_context['scenario'] ?? '') === 'open_active_last') {
+        // Some open orders intentionally have no parent_sale_id in
+        // kp_sale_status. Their open registry is the parent reference, so use
+        // it for fresh LAST orders and EACH child continuations alike. This
+        // keeps the submit buttons in the open-order flow instead of falling
+        // back to place_closed_order.
+        if ($parent_bill < 1 && !empty($sales_open_row)) {
             $parent_bill = (int)($sales_open_row['parent_sale_id'] ?? $sales_open_row['sale_id'] ?? $sale_id);
+        }
+        if ($parent_bill < 1 && !empty($live_context['closed_open_row'])) {
+            $parent_bill = (int)($live_context['closed_open_row']['sale_id'] ?? 0);
         }
         $open_parent = $parent_bill > 0 ? repo_get_closed_opened_parent($parent_bill) : null;
         $parent_bill_mode = $parent_bill > 0
