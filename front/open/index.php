@@ -375,6 +375,27 @@ include("../clude/head.php");
     box-shadow: 0 12px 22px rgba(79, 58, 24, 0.1);
     outline: none;
   }
+  .open-sale-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    background: rgba(47, 122, 49, .1);
+    color: #2f7a31;
+  }
+  .open-sale-total small {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .05em;
+  }
+  .open-sale-total strong {
+    font-size: 17px;
+    font-weight: 900;
+    color: #8a1232;
+  }
   .open-sale-no {
     display: inline-block;
     margin-top: 0;
@@ -848,8 +869,8 @@ include("../clude/head.php");
               html += '<div class="open-sale-head"><span class="open-sale-no">#' + sale.sale_id + '</span></div>';
               html += '<div class="open-id-chip-row"><span class="open-id-chip">' + label + '</span><span class="open-id-chip">Children ' + sale.child_count + '</span>';
               if (sale.current_open_child > 0) html += '<span class="open-id-chip">Open Child #' + sale.current_open_child + '</span>';
-              html += '</div><div class="open-sale-meta">';
-              html += '<span><b>Parent</b><i>' + Number(sale.parent_amount || 0).toFixed(2) + '</i></span><span><b>Children</b><i>' + Number(sale.children_total || 0).toFixed(2) + '</i></span><span><b>Family</b><i>' + Number(sale.family_total || 0).toFixed(2) + '</i></span><span><b>Counter</b><i>' + (sale.counter_name || '') + '</i></span><span><b>Type</b><i>' + typeLabel + '</i></span></div>';
+              html += '</div><div class="open-sale-total"><small>' + (sale.bill_mode === 'last' ? 'OPEN ITEMS TOTAL' : 'FAMILY TOTAL') + '</small><strong>' + Number(sale.bill_mode === 'last' ? (sale.open_items_total || 0) : (sale.family_total || 0)).toFixed(2) + '</strong></div><div class="open-sale-meta">';
+              html += '<span><b>Parent</b><i>' + Number(sale.parent_amount || 0).toFixed(2) + '</i></span><span><b>Children</b><i>' + Number(sale.children_total || 0).toFixed(2) + '</i></span><span><b>Counter</b><i>' + (sale.counter_name || '') + '</i></span><span><b>Type</b><i>' + typeLabel + '</i></span></div>';
               if (Array.isArray(sale.child_bills) && sale.child_bills.length) {
                 html += '<div class="open-child-list"><b>CHILD BILLS</b>';
                 sale.child_bills.forEach(function(child) { html += '<span>#' + child.sale_id + ' · ' + Number(child.amount || 0).toFixed(2) + ' · ' + (child.counter_name || 'Counter') + '</span>'; });
