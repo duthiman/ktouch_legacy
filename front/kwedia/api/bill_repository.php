@@ -1278,6 +1278,14 @@ if (!function_exists('repo_set_sale_position')) {
     }
 }
 
+if (!function_exists('repo_set_sale_lineage')) {
+    function repo_set_sale_lineage($user_id, $sale_id, $position, $previous_sale_id = 0, $previous_balance = 0, $bill_count = 0) {
+        global $connection;
+        if (function_exists('kw_ensure_sale_status_schema')) kw_ensure_sale_status_schema($connection);
+        return mysqli_query($connection, "UPDATE kp_sale_status SET bill_position='" . (int)$position . "', previous_sale_id='" . (int)$previous_sale_id . "', previous_balance='" . (float)$previous_balance . "', bill_count='" . (int)$bill_count . "' WHERE user_id='" . (int)$user_id . "' AND sale_id='" . (int)$sale_id . "'");
+    }
+}
+
 if (!function_exists('repo_clear_sale_status')) {
     function repo_clear_sale_status($user_id, $sale_id = 0) {
         global $connection;

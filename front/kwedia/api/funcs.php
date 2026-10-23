@@ -140,6 +140,9 @@ if (!function_exists('kw_ensure_sale_status_schema')) {
         if ($position_check && mysqli_num_rows($position_check) === 0) {
             mysqli_query($connection, "ALTER TABLE kp_sale_status ADD bill_position INT NOT NULL DEFAULT '0' AFTER parent_sale_id");
         }
+        kw_schema_ensure_column('kp_sale_status', 'previous_sale_id', "INT NOT NULL DEFAULT '0' AFTER bill_position");
+        kw_schema_ensure_column('kp_sale_status', 'previous_balance', "DECIMAL(10,2) NOT NULL DEFAULT '0.00' AFTER previous_sale_id");
+        kw_schema_ensure_column('kp_sale_status', 'bill_count', "INT NOT NULL DEFAULT '0' AFTER previous_balance");
         mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_sale_items_live LIKE kp_sale_items");
         kw_schema_ensure_column('kp_sale_items_live', 'accompaniment_json', "LONGTEXT NULL AFTER attr_id");
         kw_schema_ensure_column('kp_sale_items_live', 'session_flag', "TINYINT(1) NOT NULL DEFAULT 2 AFTER accompaniment_json");

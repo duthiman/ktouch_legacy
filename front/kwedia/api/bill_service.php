@@ -1542,16 +1542,17 @@ if (!function_exists('bill_service_open_each_bill_header')) {
         $mode = bill_clean_bill_mode($status['mode'] ?? $status['bill_mode'] ?? '');
         if ($sale_id < 1 || $parent_id < 1 || $mode !== 'each' || $sale_id === $parent_id) return [];
 
-        $previous_total = 0.0;
+        $previous_total = (float)($status['previous_balance'] ?? 0);
         $query = mysqli_query($connection, "SELECT COALESCE(SUM(amount),0) total FROM kp_sales WHERE (sale_id='" . $parent_id . "' OR parent='" . $parent_id . "') AND sale_id<>'" . $sale_id . "'");
-        if ($query && ($row = mysqli_fetch_assoc($query))) $previous_total = (float)($row['total'] ?? 0);
+        if ($previous_total <= 0 && $query && ($row = mysqli_fetch_assoc($query))) $previous_total = (float)($row['total'] ?? 0);
 
         return [
             'bill_mode' => 'each',
             'parent_sale_id' => $parent_id,
-            'previous_bill_sale_id' => $parent_id,
+            'previous_bill_sale_id' => (int)($status['previous_sale_id'] ?? $parent_id),
             'previous_total' => $previous_total,
             'bill_position' => (int)($status['bill_position'] ?? 0),
+            'bill_count' => (int)($status['bill_count'] ?? $status['bill_position'] ?? 0),
         ];
     }
 }
@@ -1738,6 +1739,20 @@ if (!function_exists('bill_service_resolve_closed_parent_child')) {
         if ($mode === 'each' && !repo_set_sale_position($user_id, $child_sale_id, $child_position)) {
             throw new RuntimeException('Could not assign child bill position: ' . mysqli_error($connection));
         }
+        if ($mode === 'each') {
+            $previous_sale_id = 0;
+            $previous_query = mysqli_query($connection, "SELECT sale_id FROM kp_sales WHERE sale_id='" . $parent_sale_id . "' OR parent='" . $parent_sale_id . "' ORDER BY sale_id DESC");
+            while ($previous_query && ($previous_row = mysqli_fetch_assoc($previous_query))) {
+                if ((int)$previous_row['sale_id'] === $child_sale_id) continue;
+                $previous_sale_id = (int)$previous_row['sale_id'];
+                break;
+            }
+            $previous_balance = (float)bill_repo_get_sale_amount($parent_sale_id);
+            $previous_balance += (float)column_total('kp_sales', 'amount', "parent='" . $parent_sale_id . "' AND sale_id<'" . $child_sale_id . "'");
+            if (!repo_set_sale_lineage($user_id, $child_sale_id, $child_position, $previous_sale_id, $previous_balance, $child_position)) {
+                throw new RuntimeException('Could not preserve EACH bill lineage: ' . mysqli_error($connection));
+            }
+        }
 
         if ($mode === 'last') {
             $print_counter_id = (int)($options['print_counter_id'] ?? $counter_id);
@@ -1910,6 +1925,10 @@ if (!function_exists('bill_service_open_fresh_each')) {
 
         if ($sale_id < 1) {
             throw new RuntimeException('Invalid sale selected.');
+        }
+
+        if (function_exists('repo_set_sale_lineage')) {
+            repo_set_sale_lineage($user_id, $sale_id, 1, 0, 0, 1);
         }
 
         // EACH closes the current round as a child bill. Keep the parent
