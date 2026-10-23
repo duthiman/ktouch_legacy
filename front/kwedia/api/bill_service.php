@@ -2703,6 +2703,25 @@ if (!function_exists('bill_service_initialise')) {
 
                 $selected_parent_sale_id = $sale_id;
                 $closed_parent = repo_get_closed_opened_parent($selected_parent_sale_id);
+                $active_open_parent = bill_repo_get_sales_open_registry($selected_parent_sale_id, $user_id);
+                // A fresh EACH parent is stored in kp_shift_sales_open, not
+                // in the legacy closed-parent table. Continuing it must
+                // allocate a new child instead of reinitialising the parent.
+                if (!$closed_parent && $active_open_parent
+                    && (int)($active_open_parent['sale_id'] ?? 0) === $selected_parent_sale_id
+                    && (int)($active_open_parent['parent_sale_id'] ?? $selected_parent_sale_id) === $selected_parent_sale_id
+                    && bill_clean_bill_mode($active_open_parent['bill_mode'] ?? '') === 'each'
+                    && (int)($active_open_parent['child_sale_id'] ?? 0) < 1) {
+                    $closed_parent = [
+                        'sale_id' => $selected_parent_sale_id,
+                        'user_id' => $user_id,
+                        'bill_mode' => 'each',
+                        'identifier_type' => (string)($active_open_parent['identifier_type'] ?? ''),
+                        'identifier_value' => (string)($active_open_parent['identifier_value'] ?? ''),
+                        'identifier_label' => (string)($active_open_parent['identifier_label'] ?? ''),
+                        'identifier_hex' => (string)($active_open_parent['identifier_hex'] ?? ''),
+                    ];
+                }
                 if ($closed_parent) {
                     $resolved_child = bill_service_resolve_closed_parent_child($user_id, $selected_parent_sale_id, $counter, [
                         'counter' => $counter,
