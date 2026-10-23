@@ -238,6 +238,7 @@ switch ($action) {
             'counter_name' => (string)($result['counter_name'] ?? ''),
             'sale_id' => (int)($result['sale_id'] ?? 0),
             'status' => (int)($result['status'] ?? 0),
+            'status_row' => is_array($result['status_row'] ?? null) ? $result['status_row'] : [],
             'cart' => is_array($result['cart'] ?? null) ? $result['cart'] : [],
             'redirect' => (string)($result['redirect'] ?? ''),
         ], $result['ok'] ? 200 : 400);

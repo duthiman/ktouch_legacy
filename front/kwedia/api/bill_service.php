@@ -2413,6 +2413,7 @@ if (!function_exists('bill_service_get_order_details')) {
             'counter_name' => (string)($details['counter_name'] ?? ''),
             'sale_id' => (int)($details['sale_id'] ?? $sale_id),
             'status' => $status,
+            'status_row' => $truth ?: [],
             'cart' => $cart,
         ];
     }

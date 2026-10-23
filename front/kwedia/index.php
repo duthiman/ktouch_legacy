@@ -49,8 +49,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
             </div>
             <div id="screen" style="overflow-y:scroll; height: 80%; width: auto; background-color: #fff; padding:5px;"></div>
               <div class="wrapper kw-desktop-order-actions" style="background-color: transparent; padding: 10px 0px 2px 0px;">
-                <button onclick="openCloseCurrentCounterModal()" class="btn btn_ord" data-sales-action="sale.close_order">CLOSE SALE</button>
-                <button onclick="openOpenBillModeModal()" class="btn btn_ord" data-sales-action="sale.open_order">OPEN SALE</button>
+                <button id="kw-desktop-close-btn" onclick="openCloseCurrentCounterModal()" class="btn btn_ord" data-sales-action="sale.close_order">CLOSE SALE</button>
+                <button id="kw-desktop-open-btn" onclick="openOpenBillModeModal()" class="btn btn_ord" data-sales-action="sale.open_order">OPEN SALE</button>
+                <button id="kw-desktop-continue-btn" onclick="complete();" class="btn btn_ord" style="display:none;">CONTINUE</button>
+                <button id="kw-desktop-close-open-btn" onclick="complete();" class="btn btn_ord" style="display:none;">CLOSE OPEN</button>
                 <button type="button" class="btn btn_ord" id="cancel" data-sales-action="sales.cancel" style="display:none;">CANCEL SALE</button>
               </div>
             </div>
@@ -123,7 +125,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
           </div>
           <div id="screen_mobile"></div>
           <div class="kw-order-actions" style="grid-template-columns: 1fr;">
-            <button onclick="complete();" class="kw-order-btn kw-order-send" data-sales-action="sale.close_order" type="button">Close Sale</button>
+            <button id="kw-mobile-close-btn" onclick="complete();" class="kw-order-btn kw-order-send" data-sales-action="sale.close_order" type="button">Close Sale</button>
+            <button id="kw-mobile-continue-btn" onclick="complete();" class="kw-order-btn kw-order-send" style="display:none;" type="button">Continue</button>
+            <button id="kw-mobile-close-open-btn" onclick="complete();" class="kw-order-btn kw-order-send" style="display:none;" type="button">Close Open</button>
           </div>
         </div>
       </div>

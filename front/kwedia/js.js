@@ -837,6 +837,7 @@ function fetchPageBootstrap() {
       $('#kw-sale-id, #kw-sale-id-mobile, #kw-cart-sale-id, #kw-sale-id-hero').text(data.sale_id || 0);
       window.__kwCounterId = Number(data.counter_id || 0);
       $('.cancel-order-btn, #cancel').toggle(Number(data.status || 0) === 1);
+      updateOpenOrderButtons(data);
       if (data.cart) renderCurrentCart(data.cart);
       fetchCategories(window.__kwCounterId, false);
     })
@@ -846,6 +847,20 @@ function fetchPageBootstrap() {
       if (debugNoRedirect) return;
       window.location.replace(data.redirect || '../dash/index.php?redir=order_lost');
     });
+}
+function updateOpenOrderButtons(data) {
+  var statusRow = data && data.status_row ? data.status_row : {};
+  var parentId = Number(statusRow.parent_sale_id || 0);
+  var mode = String(statusRow.mode || '').toLowerCase();
+  var isOpenChild = Number(data && data.status || 0) === 3 && parentId > 0 && (mode === 'each' || mode === 'last');
+  $('#kw-desktop-close-btn, #kw-desktop-open-btn, #kw-mobile-close-btn').toggle(!isOpenChild);
+  $('#kw-desktop-continue-btn, #kw-desktop-close-open-btn, #kw-mobile-continue-btn, #kw-mobile-close-open-btn').toggle(isOpenChild);
+  if (isOpenChild) {
+    $('#kw-desktop-continue-btn, #kw-mobile-continue-btn').off('click.kwOpen').on('click.kwOpen', function() { complete(); });
+    $('#kw-desktop-close-open-btn, #kw-mobile-close-open-btn').off('click.kwOpen').on('click.kwOpen', function() {
+      openCloseParentCounterModal(parentId, mode === 'last', 'open', mode);
+    });
+  }
 }
 function fetchCategories(counterId, preserveSelection) {
   var oldCategoryId = window.__kwCurrentCategoryId;
