@@ -308,6 +308,99 @@ if (!function_exists('take_service_confirm_modal')) {
     }
 }
 
+if (!function_exists('take_queue_variance_report')) {
+    function take_queue_variance_report($connection, $counter, $user_id, $shift, array $rows) {
+        $counter = (int)$counter;
+        $user_id = (int)$user_id;
+        $shift = trim((string)$shift);
+        $variance_items = [];
+
+        foreach ($rows as $row) {
+            $opening = (float)($row['opening'] ?? 0);
+            $counted = (float)($row['counted'] ?? 0);
+            $variance = round($counted - $opening, 2);
+            if ($variance == 0.0) {
+                continue;
+            }
+            $variance_items[] = [
+                'item_id' => (int)($row['item_id'] ?? 0),
+                'name' => (string)($row['name'] ?? ('Item #' . (int)($row['item_id'] ?? 0))),
+                'opening' => $opening,
+                'counted' => $counted,
+                'variance' => $variance,
+            ];
+        }
+
+        if (!$variance_items || $counter < 1 || $user_id < 1 || $shift === '') {
+            return 0;
+        }
+
+        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_print_queue (
+            queue_id INT NOT NULL AUTO_INCREMENT,
+            sale_id INT NOT NULL DEFAULT 0,
+            ref_id INT NOT NULL DEFAULT 0,
+            print_type VARCHAR(55) NOT NULL DEFAULT 'bill',
+            label VARCHAR(120) NOT NULL DEFAULT '',
+            cntr_id INT NOT NULL DEFAULT 0,
+            route_path VARCHAR(255) NOT NULL DEFAULT '',
+            route_query MEDIUMTEXT NULL,
+            requested_by INT NOT NULL DEFAULT 0,
+            reprint_of INT NOT NULL DEFAULT 0,
+            status TINYINT(1) NOT NULL DEFAULT 0,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            shift VARCHAR(60) NOT NULL DEFAULT '',
+            payload_json LONGTEXT NULL,
+            items_json LONGTEXT NULL,
+            print_attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+            last_error VARCHAR(255) NOT NULL DEFAULT '',
+            printed_at DATETIME NULL,
+            PRIMARY KEY (queue_id),
+            KEY idx_queue_counter_status (cntr_id, status),
+            KEY idx_queue_status_created (status, created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        if (mysqli_errno($connection)) {
+            return 0;
+        }
+
+        $counter_name = function_exists('get_counter') ? (string)get_counter($counter) : ('COUNTER ' . $counter);
+        $payload = json_encode([
+            'payload_version' => 1,
+            'document_type' => 'SVP',
+            'title' => 'STOCK VARIANCE PRINT',
+            'header' => [
+                'counter_id' => $counter,
+                'counter_name' => $counter_name,
+                'shift' => $shift,
+                'print_time' => date('Y-m-d H:i:s'),
+            ],
+            'variance_summary' => [
+                'variance_count' => count($variance_items),
+                'variance_qty' => array_sum(array_map(static function ($item) {
+                    return abs((float)$item['variance']);
+                }, $variance_items)),
+            ],
+            'variance_items' => $variance_items,
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($payload === false) {
+            return 0;
+        }
+
+        $counter_sql = (int)$counter;
+        $user_sql = (int)$user_id;
+        $shift_sql = mysqli_real_escape_string($connection, $shift);
+        $payload_sql = mysqli_real_escape_string($connection, $payload);
+        $query_sql = mysqli_real_escape_string($connection, 'cntr_id=' . $counter . '&shift=' . urlencode($shift));
+        $sql = "INSERT INTO kp_print_queue
+            (sale_id, ref_id, print_type, label, cntr_id, route_path, route_query,
+             requested_by, reprint_of, status, shift, payload_json, items_json)
+            VALUES (0, {$counter_sql}, 'SVP', 'STOCK VARIANCE PRINT', {$counter_sql},
+                    'svp.php', '{$query_sql}', {$user_sql}, 0, 0, '{$shift_sql}',
+                    '{$payload_sql}', '')";
+
+        return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+    }
+}
+
 if (!function_exists('take_service_confirm_take')) {
     function take_service_confirm_take($user_id) {
         global $connection;
@@ -334,8 +427,9 @@ if (!function_exists('take_service_confirm_take')) {
             logs($action, '../logs');
         }
 
+        $take_rows = take_repo_fetch_take_rows($context['take_table'], $context['shift']);
         $has_variance = false;
-        foreach (take_repo_fetch_take_rows($context['take_table'], $context['shift']) as $row) {
+        foreach ($take_rows as $row) {
             if ((float)$row['opening'] != (float)$row['counted']) {
                 $has_variance = true;
                 break;
@@ -343,27 +437,11 @@ if (!function_exists('take_service_confirm_take')) {
         }
 
         if ($has_variance) {
-            $print_mode = function_exists('get_print_mode') ? (int)get_print_mode() : 0;
-            if ($print_mode == 1) {
-                return ['ok' => true, 'status' => 'success', 'message' => 'Stock take confirmed. Variance report is ready.', 'redirect' => '../chaba/render_variance.php?auto_print=1&return_to=' . urlencode('../log_out.php')];
+            $queue_id = take_queue_variance_report($connection, $counter, $user_id, $context['shift'], $take_rows);
+            if ($queue_id > 0) {
+                return ['ok' => true, 'status' => 'success', 'message' => 'Stock take confirmed. Variance report queued for printing.', 'redirect' => '../log_out.php'];
             }
-            if (function_exists('kp_print_enqueue')) {
-                $query = 'cntr_id=' . urlencode((string)$counter) . '&shift=' . urlencode((string)$context['shift']);
-                $queue_id = (int)kp_print_enqueue($connection, [
-                    'sale_id' => 0,
-                    'ref_id' => $counter,
-                    'print_type' => 'variance',
-                    'label' => 'VARIANCE',
-                    'cntr_id' => $counter,
-                    'route_path' => 'render_variance.php',
-                    'route_query' => $query,
-                    'requested_by' => $user_id,
-                ]);
-                if ($queue_id > 0) {
-                    return ['ok' => true, 'status' => 'success', 'message' => 'Stock take confirmed. Variance report queued for printing.', 'redirect' => '../log_out.php'];
-                }
-            }
-            return ['ok' => true, 'status' => 'success', 'message' => 'Stock take confirmed. Select where to collect the variance report.', 'redirect' => '../chaba/receipt_counter.php?type=variance&id=' . $counter . '&cntr_id=' . $counter . '&return_to=' . urlencode('../log_out.php')];
+            return ['ok' => false, 'status' => 'error', 'message' => 'Stock take confirmed, but the variance report could not be queued.', 'redirect' => '../log_out.php'];
         }
 
         return ['ok' => true, 'status' => 'success', 'message' => 'Stock take confirmed successfully.', 'redirect' => '../log_out.php'];
