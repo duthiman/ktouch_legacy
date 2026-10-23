@@ -66,6 +66,8 @@ $sum=0;
   <?php
     include('../clude/foot.php');
   ?>
+  <link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
+  <script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
 
             <script>
                  $(function() {
@@ -87,6 +89,18 @@ $sum=0;
       if (modal) modal.style.display = 'none';
     }
 
+    function ctrVarianceNotice(icon, title, text) {
+      if (window.Swal && typeof window.Swal.fire === 'function') {
+        return window.Swal.fire({
+          icon: icon,
+          title: title,
+          text: text,
+          confirmButtonText: 'OK'
+        });
+      }
+      alert(text);
+    }
+
     function ctrConfirmVarianceReprint(counter, shift) {
       var modal = document.getElementById('ctr-reprint-modal');
       var confirm = document.getElementById('ctr-reprint-confirm');
@@ -102,12 +116,12 @@ $sum=0;
           .done(function(response) {
             if (response && response.ok) {
               ctrCloseVarianceReprint();
-              alert('Variance report queued for printing.');
+              ctrVarianceNotice('success', 'Report queued', 'The variance report was added to the print queue.');
             } else {
-              alert(response && response.message ? response.message : 'Could not queue the variance report.');
+              ctrVarianceNotice('error', 'Queue failed', response && response.message ? response.message : 'Could not queue the variance report.');
             }
           })
-          .fail(function() { alert('Could not connect to the print queue.'); })
+          .fail(function() { ctrVarianceNotice('error', 'Connection failed', 'Could not connect to the print queue.'); })
           .always(function() {
             confirm.disabled = false;
             confirm.textContent = 'Yes, queue report';
