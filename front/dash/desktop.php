@@ -49,6 +49,7 @@
           <em>IN TODAY'S SALES</em>
         </div>
         <div class="profile-actions">
+          <button class="open-shift">☀ <span>OPEN SHIFT</span><b>›</b></button>
           <button class="open-counter">▣ <span>OPEN COUNTER</span><b>›</b></button>
           <button class="refresh">⟳ <span>REFRESH</span><b>›</b></button>
           <button class="logout">⇥ <span>LOG OUT</span><b>›</b></button>

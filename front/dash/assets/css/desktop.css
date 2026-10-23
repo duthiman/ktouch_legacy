@@ -80,6 +80,10 @@ body{background-image:radial-gradient(circle at 8% 18%,rgba(55,190,105,.24) 0 2p
   .orders td button { padding: 3px 8px; font-size: 10px; }
 }
 
+@media (min-width: 901px) {
+  .profile .profile-actions { grid-template-columns: repeat(4, 1fr); }
+}
+
 .action.featured i {
   display: grid;
   place-items: center;
