@@ -353,12 +353,15 @@ if (!function_exists('dash_build_payload')) {
         }
 
         $shift_has_date = $shift_date !== '' && $shift_date !== '0000-00-00' && $shift_date !== '0000-00-00 00:00:00';
-        $can_open_shift = !$shift_has_date && empty($shift) && (int)$djob === 1 && (int)$job === 2;
+        // A stale date column must not make the dashboard treat the shift as open.
+        // The active shift value is the source of truth.
+        $shift_is_open = trim((string)$shift) !== '' && $shift_has_date;
+        $can_open_shift = !$shift_is_open && (int)$djob === 1 && (int)$job === 2;
         $role_pending_counters = function_exists('front_role_pending_counter_count') ? (int)front_role_pending_counter_count($djob) : 0;
         // Counter visibility is based on the user's counter permission and
         // available counters. Opening a counter must not depend on a shift
         // already being open; the counter-open flow handles that separately.
-        $can_open_counter = $shift_has_date
+        $can_open_counter = $shift_is_open
             && in_array((int)$djob, [1, 3], true)
             && (int)$job === 2
             && $open_counters < $total_counters;
@@ -379,7 +382,7 @@ if (!function_exists('dash_build_payload')) {
             'shift' => [
                 'name' => $shift,
                 'date' => $shift_date,
-                'has_date' => $shift_has_date,
+                'has_date' => $shift_is_open,
                 'can_open_shift' => $can_open_shift,
                 'can_open_counter' => $can_open_counter,
                 'pending_counters' => $role_pending_counters,
