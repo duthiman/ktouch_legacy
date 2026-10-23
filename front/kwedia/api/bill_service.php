@@ -1865,8 +1865,24 @@ if (!function_exists('bill_service_close_closed_parent')) {
             throw new RuntimeException('Open LAST sale or counter was not found.');
         }
 
-        // First move the current live delta into the consolidated open-item
-        // ledger. Existing open rows remain untouched.
+        // BOT always reads the current unsent live delta. Open items already
+        // contain previously ticketed rows and must not be ticketed again.
+        $live_rows = repo_fetch_sale_print_grouped($child_sale_id, 2, 'kp_sale_items_live');
+        $departments = bill_service_detect_print_departments_from_items($live_rows);
+        if (!$departments['bot'] && !$departments['kot'] && !$departments['got'] && $live_rows) {
+            $departments['bot'] = true;
+        }
+        $queued_jobs = bill_service_queue_unprinted_tickets($child_sale_id, $user_id, $counter_id, [
+            'include_cashier_order' => false,
+            'delta_only' => true,
+            'session_flag' => 2,
+            'live_source' => true,
+            'sale_counter_id' => $counter_id,
+            'departments' => $departments,
+            'fallback_bot' => true,
+        ]);
+
+        // Move the same live delta into the consolidated open-item ledger.
         if (!bill_service_snapshot_shift_open_items($child_sale_id, $user_id)) {
             throw new RuntimeException('Could not upsert open LAST items.');
         }
@@ -1880,14 +1896,10 @@ if (!function_exists('bill_service_close_closed_parent')) {
         }
         unset($row);
 
-        // Customer bills show identical open items as one line. Keep
-        // different attributes/accompaniments separate, while summing qty
-        // and total for truly identical rows.
+        // Customer bills show identical open items as one line.
         $bill_rows = [];
         foreach ($open_rows as $row) {
-            $key = (int)($row['item_id'] ?? 0)
-                . '|' . (int)($row['attr_id'] ?? 0)
-                . '|' . (string)($row['accompaniment_json'] ?? '');
+            $key = (int)($row['item_id'] ?? 0) . '|' . (int)($row['attr_id'] ?? 0) . '|' . (string)($row['accompaniment_json'] ?? '');
             if (!isset($bill_rows[$key])) {
                 $bill_rows[$key] = $row;
                 continue;
@@ -1895,27 +1907,9 @@ if (!function_exists('bill_service_close_closed_parent')) {
             $bill_rows[$key]['qty'] = (float)($bill_rows[$key]['qty'] ?? 0) + (float)($row['qty'] ?? 0);
             $bill_rows[$key]['total'] = (float)($bill_rows[$key]['total'] ?? 0) + (float)($row['total'] ?? 0);
             $qty = (float)$bill_rows[$key]['qty'];
-            $bill_rows[$key]['price'] = $qty > 0
-                ? (float)$bill_rows[$key]['total'] / $qty
-                : (float)($bill_rows[$key]['price'] ?? 0);
+            $bill_rows[$key]['price'] = $qty > 0 ? (float)$bill_rows[$key]['total'] / $qty : (float)($bill_rows[$key]['price'] ?? 0);
         }
         $bill_rows = array_values($bill_rows);
-
-        // Queue only the newly-added BOT delta first.
-        $new_rows = bill_service_fetch_shift_open_items($child_sale_id, 2);
-        $departments = bill_service_detect_print_departments_from_items($new_rows);
-        if (!$departments['bot'] && !$departments['kot'] && !$departments['got'] && $new_rows) {
-            $departments['bot'] = true;
-        }
-        $queued_jobs = bill_service_queue_unprinted_tickets($child_sale_id, $user_id, $counter_id, [
-            'include_cashier_order' => false,
-            'delta_only' => true,
-            'session_flag' => 2,
-            'open_source' => true,
-            'sale_counter_id' => $counter_id,
-            'departments' => $departments,
-            'fallback_bot' => true,
-        ]);
 
         // Queue the final bill from the consolidated open-item ledger, so it
         // cannot lose names by reading an incomplete kp_sale_print snapshot.
