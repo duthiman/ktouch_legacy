@@ -444,6 +444,11 @@ body {
   font-size: 24px;
   gap: 2px;
 }
+/* Keep the checkout/confirmation modal clear of the floating cart control. */
+body.modal-open #kw-cart-toggle,
+#modal.show ~ #kw-cart-toggle {
+  display: none !important;
+}
 .kw-cart-fab.kw-cart-dragging { cursor: grabbing; }
 .kw-cart-badge {
   position: absolute;
@@ -495,6 +500,9 @@ body {
   font-weight: 900;
   line-height: 38px;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .kw-order-btn {
   min-height: 62px;
