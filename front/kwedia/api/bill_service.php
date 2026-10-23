@@ -1843,6 +1843,28 @@ if (!function_exists('bill_service_close_closed_parent')) {
             : repo_find_active_each_child($parent_sale_id, $user_id);
 
         if ($child_sale_id < 1) {
+            // An EACH parent may be closed directly from the Open page before
+            // a new child is initialised. In that case there is no child bill
+            // to finalize or print; close only the open-family registry.
+            if ($mode === 'each') {
+                if (!repo_clear_sale_closed_open($parent_sale_id)) {
+                    throw new RuntimeException('Could not close the open EACH parent.');
+                }
+                if (function_exists('repo_clear_open_family_status')) {
+                    repo_clear_open_family_status($user_id, $parent_sale_id);
+                }
+                if (function_exists('repo_reset_thesion_front')) {
+                    repo_reset_thesion_front($user_id);
+                }
+                return [
+                    'sale_id' => $parent_sale_id,
+                    'amount' => 0,
+                    'queued_jobs' => [],
+                    'parent_sale_id' => $parent_sale_id,
+                    'mode' => $mode,
+                    'redirect' => '../log_out.php',
+                ];
+            }
             throw new RuntimeException('No active child was found for this parent.');
         }
 
