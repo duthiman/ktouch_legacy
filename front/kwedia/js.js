@@ -956,7 +956,7 @@ function renderItems(items) {
     var stockColor = qty <= 0 ? 'red' : (qty <= reorder ? 'orange' : 'green');
     var disabled = qty <= 0 ? 'disabled aria-disabled="true"' : '';
     var click = qty > 0 ? ' onclick="kwOrderItem(\'' + item.item_id + '\',\'' + item.has_attributes + '\')"' : '';
-    html += '<button ' + disabled + ' data-stock-qty="' + qty + '" data-id="' + item.item_id + '" data-attri="' + item.has_attributes + '"' + click + ' type="button" class="btn btn-inverse m-r-5 m-b-5 additem stock-' + stockColor + '" title="' + (qty <= 0 ? 'Out of stock' : ('Available: ' + qty)) + '" style="font-family: \'comic sans ms\'; font-weight: bold; color: #FFFFFF !important; font-size: 12px; word-wrap:break-word; width: 80px; white-space:normal; height:80px; background: ' + stockColor + '; border: 2px solid ' + stockColor + '; padding-left: 0px; padding-right: 0px; margin: 5px 5px 5px 5px; border-radius: 10px;">' + escapeHtml(item.name) + '</button>';
+    html += '<button ' + disabled + ' data-stock-qty="' + qty + '" data-id="' + item.item_id + '" data-attri="' + item.has_attributes + '"' + click + ' type="button" class="kw-item-button btn btn-inverse m-r-5 m-b-5 additem stock-' + stockColor + '" title="' + (qty <= 0 ? 'Out of stock' : ('Available: ' + qty)) + '">' + escapeHtml(item.name) + '</button>';
   }
   $('#menu').html(html);
   $('#menu_mobile').html(html);

@@ -40,7 +40,7 @@ function kwRenderFoodButtons(items) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     var disabled = Number(item.qty) <= 0 ? 'disabled' : '';
-    html += '<button ' + disabled + ' data-id="' + item.item_id + '" data-attri="' + item.has_attributes + '" onclick="kwOrderItem(\'' + item.item_id + '\',\'' + item.has_attributes + '\')" type="button" class="btn btn-inverse m-r-5 m-b-5 additem" style="font-family: \'comic sans ms\'; font-weight: bold; color: #FFFFFF !important; font-size: 12px; word-wrap:break-word; width: 80px; white-space:normal; height:80px; background: ' + item.stock_color + '; border: 2px solid ' + item.stock_color + '; padding-left: 0px; padding-right: 0px; margin: 5px 5px 5px 5px; border-radius: 10px;">' + kwEscapeHtml(item.name) + '</button>';
+    html += '<button ' + disabled + ' data-id="' + item.item_id + '" data-attri="' + item.has_attributes + '" onclick="kwOrderItem(\'' + item.item_id + '\',\'' + item.has_attributes + '\')" type="button" class="kw-item-button btn btn-inverse m-r-5 m-b-5 additem">' + kwEscapeHtml(item.name) + '</button>';
   }
   return html;
 }

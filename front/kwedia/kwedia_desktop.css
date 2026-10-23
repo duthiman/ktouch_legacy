@@ -444,6 +444,25 @@ body {
   font-size: 24px;
   gap: 2px;
 }
+.kw-item-button {
+  width: 80px;
+  height: 80px;
+  margin: 5px;
+  padding-left: 0;
+  padding-right: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  color: #fff !important;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.kw-item-button.stock-green { background: #008000; border-color: #008000; }
+.kw-item-button.stock-orange { background: #ffa500; border-color: #ffa500; }
+.kw-item-button.stock-red { background: #ff0000; border-color: #ff0000; }
 /* Keep the checkout/confirmation modal clear of the floating cart control. */
 body.modal-open #kw-cart-toggle,
 #modal.show ~ #kw-cart-toggle {
