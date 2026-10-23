@@ -1608,11 +1608,12 @@ if (!function_exists('repo_upsert_sales_open')) {
         $identifier_label = mysqli_real_escape_string($connection, (string)($data['identifier_label'] ?? ''));
         $identifier_hex = mysqli_real_escape_string($connection, (string)($data['identifier_hex'] ?? ''));
         $status = (int)($data['status'] ?? 1);
+        $bill_position = (int)($data['bill_position'] ?? 0);
 
         return mysqli_query(
             $connection,
-            "INSERT INTO kp_shift_sales_open (sale_id, parent_sale_id, child_sale_id, user_id, bill_mode, identifier_type, identifier_value, identifier_label, identifier_hex, counter_id, print_cntr_id, shift, status)
-             VALUES ('$sale_id', '$parent_sale_id', '$child_sale_id', '$user_id', '$bill_mode', '$identifier_type', '$identifier_value', '$identifier_label', '$identifier_hex', '$counter_id', '$print_cntr_id', '$shift', '$status')
+            "INSERT INTO kp_shift_sales_open (sale_id, parent_sale_id, child_sale_id, user_id, bill_mode, identifier_type, identifier_value, identifier_label, identifier_hex, counter_id, print_cntr_id, shift, bill_position, status)
+             VALUES ('$sale_id', '$parent_sale_id', '$child_sale_id', '$user_id', '$bill_mode', '$identifier_type', '$identifier_value', '$identifier_label', '$identifier_hex', '$counter_id', '$print_cntr_id', '$shift', '$bill_position', '$status')
              ON DUPLICATE KEY UPDATE
                 parent_sale_id=VALUES(parent_sale_id),
                 child_sale_id=VALUES(child_sale_id),
@@ -1625,8 +1626,16 @@ if (!function_exists('repo_upsert_sales_open')) {
                 counter_id=VALUES(counter_id),
                 print_cntr_id=VALUES(print_cntr_id),
                 shift=VALUES(shift),
+                bill_position=IF(VALUES(bill_position)>0, VALUES(bill_position), bill_position),
                 status=VALUES(status)"
         );
+    }
+}
+
+if (!function_exists('repo_set_sales_open_bill_position')) {
+    function repo_set_sales_open_bill_position($parent_sale_id, $user_id, $position) {
+        global $connection;
+        return mysqli_query($connection, "UPDATE kp_shift_sales_open SET bill_position='" . (int)$position . "', bill_count='" . (int)$position . "' WHERE sale_id='" . (int)$parent_sale_id . "' AND user_id='" . (int)$user_id . "' AND status=1");
     }
 }
 

@@ -259,6 +259,7 @@ if (!function_exists('kw_ensure_bill_schema')) {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
         kw_schema_ensure_column('kp_shift_sales_open', 'sale_mode', "VARCHAR(20) NOT NULL DEFAULT 'open' AFTER bill_mode");
         kw_schema_ensure_column('kp_shift_sales_open', 'order_stage', "VARCHAR(20) NOT NULL DEFAULT 'FRESH' AFTER sale_mode");
+        kw_schema_ensure_column('kp_shift_sales_open', 'bill_position', "INT NOT NULL DEFAULT '0' AFTER bill_count");
         kw_schema_ensure_column('kp_shift_sales_open', 'updated_at', "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER created_at");
 
         mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_shift_sale_open_items (

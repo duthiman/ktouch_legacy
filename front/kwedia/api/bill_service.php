@@ -1539,6 +1539,12 @@ if (!function_exists('bill_service_open_each_bill_header')) {
         $context = is_array($context) ? $context : [];
         $status = is_array($context['status_row'] ?? null) ? $context['status_row'] : [];
         $sale_id = (int)($context['sale_id'] ?? 0);
+        // The context may have been created before initialization updated the
+        // position. Always use the persisted status for the printable header.
+        $fresh_status = repo_get_sale_status_for_sale((int)($context['user_id'] ?? 0), $sale_id);
+        if (is_array($fresh_status)) {
+            $status = array_replace($status, $fresh_status);
+        }
         $parent_id = (int)($status['parent_sale_id'] ?? 0);
         $mode = bill_clean_bill_mode($status['mode'] ?? $status['bill_mode'] ?? '');
         if ($sale_id < 1 || $parent_id < 1 || $mode !== 'each' || $sale_id === $parent_id) return [];
@@ -1997,6 +2003,9 @@ if (!function_exists('bill_service_open_fresh_each')) {
 
         if (!repo_register_parent_closed_opened($sale_id, 'each', $identifier, $user_id)) {
             throw new RuntimeException('Could not register open EACH parent.');
+        }
+        if (!repo_set_sales_open_bill_position($sale_id, $user_id, 1)) {
+            throw new RuntimeException('Could not initialize open EACH bill position.');
         }
 
         return [
@@ -3018,17 +3027,13 @@ if (!function_exists('bill_service_initialise_open')) {
                 if ($sale_id < 1) {
                     throw new RuntimeException('Could not allocate a new open child sale.');
                 }
-                $position_result = mysqli_query(
-                    $connection,
-                    "SELECT COALESCE(MAX(bill_position), 0) AS last_position
-                     FROM kp_sale_status
-                     WHERE user_id='$user_id' AND parent_sale_id='$parent_sale_id'"
-                );
-                $position_row = $position_result ? mysqli_fetch_assoc($position_result) : null;
-                $bill_position = ((int)($position_row['last_position'] ?? 0)) + 1;
+                $bill_position = ((int)($open_parent['bill_position'] ?? 0)) + 1;
                 if (!repo_set_sale_status($user_id, $sale_id, 3, 'each', 1, $parent_sale_id, $counter_id)
                     || !repo_set_sale_position($user_id, $sale_id, $bill_position)) {
                     throw new RuntimeException('Could not create the open child sale status.');
+                }
+                if (!repo_set_sales_open_bill_position($parent_sale_id, $user_id, $bill_position)) {
+                    throw new RuntimeException('Could not advance the open bill position.');
                 }
             } else {
                 $sale_id = $parent_sale_id;
@@ -3049,6 +3054,9 @@ if (!function_exists('bill_service_initialise_open')) {
             }
             if (!repo_set_sale_status($user_id, $sale_id, 3, $mode, 1, $parent_sale_id, $counter_id)) {
                 throw new RuntimeException('Could not save the open working sale status.');
+            }
+            if ($mode === 'each' && !repo_set_sale_lineage($user_id, $sale_id, $bill_position, 0, 0, $bill_position)) {
+                throw new RuntimeException('Could not save the open bill lineage.');
             }
             if (!repo_set_active_sale_id($user_id, $sale_id, 3)) {
                 throw new RuntimeException('Could not activate the open working sale.');
