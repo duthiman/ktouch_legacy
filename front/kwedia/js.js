@@ -65,7 +65,16 @@ $(document).ready(function(){
   }
   initMovableCart();
   var kwEventNs = '.kwTap';
+  function setKwCartFabVisible(visible) {
+    $('#kw-cart-toggle').toggle(visible);
+  }
+  $('#modal').on('show.bs.modal', function() {
+    setKwCartFabVisible(false);
+  }).on('hidden.bs.modal', function() {
+    setKwCartFabVisible(true);
+  });
   function showKwModalHtml(data) {
+    setKwCartFabVisible(false);
     $('#load').html('');
     $('#load').html(data);
     $('#modal').modal('show');
