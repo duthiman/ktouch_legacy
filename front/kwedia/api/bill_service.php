@@ -318,12 +318,21 @@ if (!function_exists('bill_service_load_submit_confirm_modal')) {
         $sale_id = (int)($live_context['sale_id'] ?? 0);
         $status_row = $live_context['status_row'] ?? [];
         $parent_bill = (int)($status_row['parent_sale_id'] ?? 0);
+        $sales_open_row = $live_context['sales_open_row'] ?? [];
+        // A fresh LAST open order intentionally has no parent_sale_id in
+        // kp_sale_status. Its open registry is the parent reference, so use
+        // that registry here to keep the submit buttons in the open-order
+        // flow instead of falling back to place_closed_order.
+        if ($parent_bill < 1 && !empty($sales_open_row)
+            && (string)($live_context['scenario'] ?? '') === 'open_active_last') {
+            $parent_bill = (int)($sales_open_row['parent_sale_id'] ?? $sales_open_row['sale_id'] ?? $sale_id);
+        }
         $open_parent = $parent_bill > 0 ? repo_get_closed_opened_parent($parent_bill) : null;
         $parent_bill_mode = $parent_bill > 0
-            ? bill_clean_bill_mode($open_parent['bill_mode'] ?? $status_row['mode'] ?? 'each')
+            ? bill_clean_bill_mode($open_parent['bill_mode'] ?? $sales_open_row['bill_mode'] ?? $status_row['mode'] ?? 'each')
             : 'each';
         $items = repo_fetch_sale_print_grouped($sale_id, 2, 'kp_sale_items_live');
-        $parent_sale_id = (int)($sale_status['parent_sale_id'] ?? 0);
+        $parent_sale_id = (int)($status_row['parent_sale_id'] ?? $parent_bill);
         $open_items = $parent_sale_id > 0
             ? repo_fetch_sale_print_grouped($parent_sale_id, 1, 'kp_sale_print')
             : [];
