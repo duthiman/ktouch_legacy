@@ -362,6 +362,28 @@ if (!function_exists('take_queue_variance_report')) {
             return 0;
         }
 
+        // Older installations already have kp_print_queue, so CREATE TABLE
+        // does not add columns introduced by the V1 queue. Heal those columns
+        // before the insert instead of failing on a production schema mismatch.
+        $queue_columns = [
+            'shift' => "ALTER TABLE kp_print_queue ADD COLUMN shift VARCHAR(60) NOT NULL DEFAULT ''",
+            'payload_json' => "ALTER TABLE kp_print_queue ADD COLUMN payload_json LONGTEXT NULL",
+            'items_json' => "ALTER TABLE kp_print_queue ADD COLUMN items_json LONGTEXT NULL",
+            'print_attempts' => "ALTER TABLE kp_print_queue ADD COLUMN print_attempts TINYINT UNSIGNED NOT NULL DEFAULT 0",
+            'last_error' => "ALTER TABLE kp_print_queue ADD COLUMN last_error VARCHAR(255) NOT NULL DEFAULT ''",
+            'printed_at' => "ALTER TABLE kp_print_queue ADD COLUMN printed_at DATETIME NULL",
+        ];
+        foreach ($queue_columns as $column => $alter_sql) {
+            $column_sql = mysqli_real_escape_string($connection, $column);
+            $column_result = mysqli_query($connection, "SHOW COLUMNS FROM kp_print_queue LIKE '{$column_sql}'");
+            if (!$column_result) {
+                return 0;
+            }
+            if (mysqli_num_rows($column_result) === 0 && !mysqli_query($connection, $alter_sql)) {
+                return 0;
+            }
+        }
+
         $counter_name = function_exists('get_counter') ? (string)get_counter($counter) : ('COUNTER ' . $counter);
         $payload = json_encode([
             'payload_version' => 1,
