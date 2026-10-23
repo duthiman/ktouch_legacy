@@ -84,7 +84,9 @@ if (!function_exists('bill_service_get_live_context')) {
             ];
         }
 
-        $scenario = bill_service_map_scenario($normalized_status, $thesion, $sales_open_row, $closed_open_row);
+        // Scenario selection is driven by kp_sale_status. Thesion is returned
+        // only for compatibility/debugging and must not influence the flow.
+        $scenario = bill_service_map_scenario($normalized_status, null, $sales_open_row, $closed_open_row);
 
         return [
             'ok' => true,
@@ -2152,11 +2154,8 @@ if (!function_exists('bill_service_resolve_close_context')) {
 
         if ($status_row) {
             $status_row = bill_normalize_sale_status_row($status_row);
-            $scenario = bill_service_map_scenario($status_row, [
-                'sale_id' => $sale_id,
-                'status' => 2,
-                'cntr_id' => $counter_id,
-            ], $sales_open_row, $closed_open_row);
+            $counter_id = (int)($status_row['counter_id'] ?? $status_row['counter'] ?? $counter_id);
+            $scenario = bill_service_map_scenario($status_row, null, $sales_open_row, $closed_open_row);
 
             if ($closed_open_row && $mode === 'last') {
                 $status_parent_sale_id = (int)($status_row['parent_sale_id'] ?? 0);
