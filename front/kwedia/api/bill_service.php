@@ -2570,6 +2570,37 @@ if (!function_exists('bill_service_initialise')) {
             ];
         }
 
+        // Before enforcing the single-status rule, inspect both possible
+        // draft stores. A draft may still be in the live table or may already
+        // be an open-order parent snapshot.
+        $active_status_before = repo_get_sale_status_by_user($user_id);
+        $active_sale_before = (int)($active_status_before['sale_id'] ?? 0);
+        $active_counter_before = (int)($active_status_before['counter_id'] ?? 0);
+        $active_live_items = $active_sale_before > 0
+            ? repo_fetch_sale_print_grouped($active_sale_before, 2, 'kp_sale_items_live')
+            : [];
+        $active_open_items = $active_sale_before > 0 && function_exists('bill_service_fetch_shift_open_items')
+            ? bill_service_fetch_shift_open_items($active_sale_before)
+            : [];
+        $active_draft_items = $active_live_items ?: $active_open_items;
+        $active_items_source = $active_live_items ? 'live' : ($active_open_items ? 'open' : '');
+
+        if ($status === 1 && $sale_id < 1 && $active_sale_before > 0
+            && (int)($active_status_before['status'] ?? 0) === 2
+            && $active_draft_items) {
+            return [
+                'ok' => false,
+                'message' => 'An existing sale has items and must be continued or cancelled.',
+                'status' => 409,
+                'ongoing_sale' => true,
+                'sale_id' => $active_sale_before,
+                'counter' => $active_counter_before,
+                'counter_name' => $active_counter_before > 0 ? get_counter($active_counter_before) : 'Unknown counter',
+                'items_source' => $active_items_source,
+                'items' => $active_draft_items,
+            ];
+        }
+
         $single_status = repo_enforce_single_sale_status($user_id, $sale_id);
         if (empty($single_status['ok'])) {
             return [
@@ -2578,15 +2609,17 @@ if (!function_exists('bill_service_initialise')) {
                 'status' => 409,
                 'ongoing_sale' => true,
                 'sale_id' => (int)($single_status['sale_id'] ?? 0),
+                'items' => $active_draft_items,
+                'items_source' => $active_items_source,
             ];
         }
 
         // kp_sale_status is the only source of truth for an existing draft.
         if ($status === 1 && $sale_id < 1) {
-            $active_status = repo_get_sale_status_by_user($user_id);
-            $active_sale_id = (int)($active_status['sale_id'] ?? 0);
-            $active_counter = (int)($active_status['counter_id'] ?? 0);
-            $draft_items = $active_sale_id > 0 ? repo_fetch_sale_print_grouped($active_sale_id, 2) : [];
+            $active_status = $active_status_before ?: repo_get_sale_status_by_user($user_id);
+            $active_sale_id = (int)($active_status['sale_id'] ?? $active_sale_before);
+            $active_counter = (int)($active_status['counter_id'] ?? $active_counter_before);
+            $draft_items = $active_sale_id === $active_sale_before ? $active_draft_items : repo_fetch_sale_print_grouped($active_sale_id, 2);
 
             // Repair legacy drafts created before counter_id was stored in sale status.
             // After this one-time repair, sale status remains the source of truth.

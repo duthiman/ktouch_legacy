@@ -64,9 +64,10 @@ $counter_select_single = count($counter_select_rows) === 1 ? $counter_select_row
   function showDraft(xhr,requestedCounter){
     var res=(xhr&&xhr.responseJSON)||xhr||{},data=res.data||res,items=Array.isArray(data.items)?data.items:[];
     var counterName=data.counter_name||('Counter '+(data.counter||''));
+    var sourceLabel=data.items_source==='open'?'Open-order items':'Live draft items';
     var list=items.length?'<ul style="text-align:left;padding-left:22px">'+items.map(function(item){item=item||{};var name=item.item_name||item.name||'Item',qty=item.qty||item.quantity||0;return '<li><strong>'+esc(name)+'</strong> &times; '+esc(qty)+'</li>';}).join('')+'</ul>':'<p>No draft items found.</p>';
     unlock();
-    var overlay=$('<div class="local-draft-overlay"><div class="local-draft-modal"><div class="local-draft-icon">!</div><h3>Draft sale already open</h3><div class="local-draft-sale">SALE #'+esc(data.sale_id||'')+' · '+esc(counterName)+'</div><p>Choose whether to continue or cancel this bill.</p>'+list+'<div class="local-draft-actions"><button type="button" class="local-draft-cancel">Cancel sale</button><button type="button" class="local-draft-continue">Continue sale</button></div></div></div>');
+    var overlay=$('<div class="local-draft-overlay"><div class="local-draft-modal"><div class="local-draft-icon">!</div><h3>Draft sale already open</h3><div class="local-draft-sale">SALE #'+esc(data.sale_id||'')+' · '+esc(counterName)+'</div><p>'+esc(sourceLabel)+' are attached to this bill. Choose whether to continue or cancel it.</p>'+list+'<div class="local-draft-actions"><button type="button" class="local-draft-cancel">Cancel sale</button><button type="button" class="local-draft-continue">Continue sale</button></div></div></div>');
     $('body').append(overlay);
     overlay.find('.local-draft-continue').on('click',function(){overlay.remove();if(data.sale_id&&data.counter)submit(data.counter,2,data.sale_id);});
     overlay.find('.local-draft-cancel').on('click',function(){var button=$(this).prop('disabled',true).text('Cancelling...');$.post(root.getAttribute('data-init-api'),{action:'cancel_order'}).done(function(cancel){if(cancel&&cancel.ok){overlay.remove();submit(requestedCounter,1,0);}else{button.prop('disabled',false).text('Cancel sale');}});});

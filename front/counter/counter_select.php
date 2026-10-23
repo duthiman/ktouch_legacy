@@ -197,12 +197,13 @@ $init_api = "../kwedia/api/bill_api.php";
         var data = response.data || response;
         var items = Array.isArray(data.items) ? data.items : [];
         var counterName = data.counter_name || ('Counter ' + (data.counter || ''));
+        var sourceLabel = data.items_source === 'open' ? 'Open-order items' : 'Live draft items';
         var list = items.length ? '<ul style="text-align:left;padding-left:22px">' + items.map(function(item) {
           item = item || {};
           return '<li><strong>' + esc(item.item_name || item.name || 'Item') + '</strong> &times; ' + esc(item.qty || item.quantity || 0) + '</li>';
         }).join('') + '</ul>' : '<p>No draft items found.</p>';
         unlockButtons();
-        var overlay = $('<div class="local-draft-overlay"><div class="local-draft-modal"><div class="local-draft-icon">!</div><h3>Draft sale already open</h3><div class="local-draft-sale">SALE #' + esc(data.sale_id || '') + ' · ' + esc(counterName) + '</div><p>Choose whether to continue or cancel this bill.</p>' + list + '<div class="local-draft-actions"><button type="button" class="local-draft-cancel">Cancel sale</button><button type="button" class="local-draft-continue">Continue sale</button></div></div></div>');
+        var overlay = $('<div class="local-draft-overlay"><div class="local-draft-modal"><div class="local-draft-icon">!</div><h3>Draft sale already open</h3><div class="local-draft-sale">SALE #' + esc(data.sale_id || '') + ' · ' + esc(counterName) + '</div><p>' + esc(sourceLabel) + ' are attached to this bill. Choose whether to continue or cancel it.</p>' + list + '<div class="local-draft-actions"><button type="button" class="local-draft-cancel">Cancel sale</button><button type="button" class="local-draft-continue">Continue sale</button></div></div></div>');
         $('body').append(overlay);
         overlay.find('.local-draft-continue').on('click', function() {
           overlay.remove();
