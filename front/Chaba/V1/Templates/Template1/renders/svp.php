@@ -97,6 +97,14 @@ $varianceTotal = array_reduce(
             font-weight: 800;
         }
 
+        .logo {
+            display: block;
+            max-width: 100%;
+            max-height: 60px;
+            margin: 4px auto;
+            object-fit: contain;
+        }
+
         .summary {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -174,11 +182,11 @@ $varianceTotal = array_reduce(
         }
 
         .up {
-            color: #0d6b2f;
+            color: #000;
         }
 
         .down {
-            color: #9c1f1f;
+            color: #000;
         }
 
         .empty {
@@ -194,6 +202,9 @@ $varianceTotal = array_reduce(
         <div class="border">
             <header class="header center">
                 <div class="divider">***********************************************************</div>
+                <?php if (!empty($header['logo_src'])): ?>
+                    <img class="logo" src="<?= $escape($header['logo_src']) ?>" alt="Logo">
+                <?php endif; ?>
                 <h2>
                     <?= $escape(strtoupper($header['counter_name'] ?? '') . ' VARIANCE REPORT') ?>
                 </h2>
