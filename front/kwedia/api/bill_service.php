@@ -1416,7 +1416,7 @@ if (!function_exists('bill_service_queue_open_prints')) {
         $sale_id = (int)$sale_id;
         $where = $session_flag === null ? '' : " AND session_flag='" . (int)$session_flag . "'";
         $rows = [];
-        $result = mysqli_query($connection, "SELECT item_id,qty,price,total,dpt,attr_id,accompaniment_json FROM kp_shift_sale_open_items WHERE sale_id='$sale_id'$where ORDER BY id ASC");
+        $result = mysqli_query($connection, "SELECT item_id,qty,price,total,dpt,counter,stock_counter,attr_id,accompaniment_json FROM kp_shift_sale_open_items WHERE sale_id='$sale_id'$where ORDER BY id ASC");
         if ($result) while ($row = mysqli_fetch_assoc($result)) $rows[] = $row;
         return $rows;
     }
