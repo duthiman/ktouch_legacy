@@ -3,7 +3,6 @@ session_start();
 include_once('../../inc/connection.php');
 include_once('funcs.php');
 include_once('../../back/counter/funcs.php');
-include_once('../chaba/funcs.php');
 $is_ajax_close = isset($_POST['ajax']) && (int)$_POST['ajax'] === 1;
 
 if (!function_exists('close_counter_alert_redirect')) {
