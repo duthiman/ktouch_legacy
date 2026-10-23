@@ -113,10 +113,22 @@ if (!function_exists('dash_ensure_merge_request_table')) {
 }
 
 if (!function_exists('dash_build_payload')) {
+    function dash_ensure_runtime_tables() {
+        foreach (['kp_users', 'kp_sales', 'kp_sale_status', 'kp_items', 'kp_staff_token_entries', 'kp_staff_token_wallet', 'kp_print_queue'] as $table) {
+            if (function_exists('ensure_runtime_table')) {
+                ensure_runtime_table($table);
+            }
+        }
+        if (function_exists('get_print_mode')) {
+            get_print_mode();
+        }
+    }
+
     function dash_build_payload($user_id) {
         global $connection;
 
         $user_id = (int)$user_id;
+        dash_ensure_runtime_tables();
         $job = get_column('kp_users', 'job', "user_id='$user_id'");
         $djob = get_column('kp_users', 'drole', "user_id='$user_id'");
         $role = get_column('kp_users', 'role_id', "user_id='$user_id'");
@@ -346,7 +358,8 @@ if (!function_exists('dash_build_payload')) {
         // Counter visibility is based on the user's counter permission and
         // available counters. Opening a counter must not depend on a shift
         // already being open; the counter-open flow handles that separately.
-        $can_open_counter = in_array((int)$djob, [1, 3], true)
+        $can_open_counter = $shift_has_date
+            && in_array((int)$djob, [1, 3], true)
             && (int)$job === 2
             && $open_counters < $total_counters;
 
