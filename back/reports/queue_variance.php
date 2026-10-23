@@ -92,9 +92,11 @@ if ($itemsJsonColumn && mysqli_num_rows($itemsJsonColumn) === 0) {
     mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN items_json LONGTEXT NULL AFTER payload_json");
 }
 $itemsJsonSql = mysqli_real_escape_string($connection, json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+$routePath = mysqli_real_escape_string($connection, 'render_variance.php');
+$routeQuery = mysqli_real_escape_string($connection, 'cntr_id=' . $counter . '&shift=' . rawurlencode($shift));
 $ok = mysqli_query($connection, "INSERT INTO kp_print_queue
     (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json)
-    VALUES (0,0,'SVP','{$label}','{$counter}','','','{$requestedBy}',0,0,0,'','{$shiftSql}','{$payloadSql}','{$itemsJsonSql}')");
+    VALUES (0,0,'SVP','{$label}','{$counter}','{$routePath}','{$routeQuery}','{$requestedBy}',0,0,0,'','{$shiftSql}','{$payloadSql}','{$itemsJsonSql}')");
 if (!$ok) {
     echo json_encode(['ok' => false, 'message' => 'Could not queue the variance report.']);
     exit;
