@@ -44,9 +44,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
           </div>
           <div class="vertical-box-column "  style=" width: 28% !important; height: 90%; position: absolute; padding-right: 2px;">
             <div class="kw-desktop-order-header">
-              <div class="kw-desktop-account-line">ACCOUNT <strong id="kw-account-name"></strong></div>
-              <div class="kw-desktop-bill-line"><strong id="kw-counter-name"></strong><span>COUNTER</span><span>BILL NO</span><strong id="kw-sale-id">0</strong></div>
-              <div class="kw-order-mode-badge" id="kw-order-mode-desktop">FRESH ORDER</div>
+              <div class="kw-desktop-header-row">
+                <div class="kw-desktop-counter"><strong id="kw-counter-name"></strong><span>COUNTER</span></div>
+                <div class="kw-order-mode-badge" id="kw-order-mode-desktop">FRESH ORDER</div>
+              </div>
+              <div class="kw-desktop-header-row kw-desktop-header-row-bottom">
+                <div class="kw-desktop-account-line">WAITER <strong id="kw-account-name"></strong></div>
+                <div class="kw-desktop-bill-line"><span>BILL NO</span><strong id="kw-sale-id">0</strong></div>
+              </div>
             </div>
             <div id="screen" style="overflow-y:scroll; height: 80%; width: auto; background-color: #fff; padding:5px;"></div>
               <div class="wrapper kw-desktop-order-actions" style="background-color: transparent; padding: 10px 0px 2px 0px;">

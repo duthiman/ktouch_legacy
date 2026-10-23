@@ -483,9 +483,31 @@ body {
   text-align: center;
   box-shadow: 0 8px 18px rgba(80, 16, 25, .2);
 }
+.kw-desktop-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.kw-desktop-header-row-bottom {
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,.28);
+}
+.kw-desktop-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  text-align: left;
+  text-transform: uppercase;
+}
+.kw-desktop-counter strong { font-size: 18px; letter-spacing: .02em; }
+.kw-desktop-counter span,
+.kw-desktop-bill-line span { font-size: 10px; font-weight: 800; letter-spacing: .08em; }
 .kw-desktop-account-line {
   font-size: 13px;
   font-weight: 800;
+  text-align: left;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -505,6 +527,7 @@ body {
   letter-spacing: .06em;
   text-transform: uppercase;
 }
+.kw-desktop-header-row-bottom .kw-desktop-bill-line { margin-top: 0; }
 .kw-desktop-bill-line strong:first-child { font-size: 16px; letter-spacing: .02em; }
 .kw-desktop-bill-line strong:last-child { font-size: 18px; color: #ffe58a; }
 .kw-local-confirm-backdrop {
