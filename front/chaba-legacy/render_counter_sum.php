@@ -167,7 +167,7 @@ if (!function_exists('kp_counter_kpesa_totals')) {
 }
 
 $summary_id = (int)($_GET['summary_id'] ?? 0);
-$counter = (int)($_GET['cntr_id'] ?? $_GET['id'] ?? 0);
+$counter = 1;//(int)($_GET['cntr_id'] ?? $_GET['id'] ?? 0);
 $shift = mysqli_real_escape_string($connection, $_GET['shift'] ?? '');
 $closeSummaryRow = null;
 if ($summary_id > 0) {
@@ -610,7 +610,7 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <?php endif; ?>
     /* Keep every summary table compact and use the full receipt width. */
     #receipt-body > table { width: 100% !important; max-width: 100% !important; table-layout: fixed !important; }
-    #receipt-body > table th, #receipt-body > table td { padding: 3px 4px !important; vertical-align: middle; overflow-wrap: anywhere; word-break: normal; }
+    #receipt-body > table th, #receipt-body > table td { padding: 3px 4px !important; vertical-align: middle; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; word-break: normal; }
     #receipt-body > table td.compact-right, #receipt-body > table th.compact-right { text-align: right !important; white-space: nowrap; }
     #receipt-body > table td.compact-center, #receipt-body > table th.compact-center { text-align: center !important; }
     #receipt-body > table:nth-of-type(1) td:first-child { width: 72%; }
