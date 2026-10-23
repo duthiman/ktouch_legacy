@@ -1846,6 +1846,91 @@ if (!function_exists('bill_service_continue_closed_parent')) {
 }
 
 if (!function_exists('bill_service_close_closed_parent')) {
+    function bill_service_close_open_last_parent_service($context, $params = []) {
+        global $connection;
+        $params = is_array($params) ? $params : [];
+        $user_id = (int)($context['user_id'] ?? 0);
+        $parent_sale_id = (int)($context['closed_open_row']['sale_id'] ?? $context['sale_id'] ?? 0);
+        $counter_id = bill_service_resolve_counter_id($context, $params);
+        $child_sale_id = repo_find_active_last_child($parent_sale_id, $user_id);
+        if ($child_sale_id < 1) {
+            $child_sale_id = $parent_sale_id;
+        }
+        if ($parent_sale_id < 1 || $child_sale_id < 1 || $counter_id < 1) {
+            throw new RuntimeException('Open LAST sale or counter was not found.');
+        }
+
+        // First move the current live delta into the consolidated open-item
+        // ledger. Existing open rows remain untouched.
+        if (!bill_service_snapshot_shift_open_items($child_sale_id, $user_id)) {
+            throw new RuntimeException('Could not upsert open LAST items.');
+        }
+
+        $open_rows = bill_service_fetch_shift_open_items($child_sale_id, null);
+        if (!$open_rows) {
+            throw new RuntimeException('Open LAST bill has no items.');
+        }
+        foreach ($open_rows as &$row) {
+            $row['name'] = bill_repo_get_item_name((int)($row['item_id'] ?? 0));
+        }
+        unset($row);
+
+        // Queue only the newly-added BOT delta first.
+        $new_rows = bill_service_fetch_shift_open_items($child_sale_id, 2);
+        $departments = bill_service_detect_print_departments_from_items($new_rows);
+        if (!$departments['bot'] && !$departments['kot'] && !$departments['got'] && $new_rows) {
+            $departments['bot'] = true;
+        }
+        $queued_jobs = bill_service_queue_unprinted_tickets($child_sale_id, $user_id, $counter_id, [
+            'include_cashier_order' => false,
+            'delta_only' => true,
+            'session_flag' => 2,
+            'open_source' => true,
+            'sale_counter_id' => $counter_id,
+            'departments' => $departments,
+            'fallback_bot' => true,
+        ]);
+
+        // Queue the final bill from the consolidated open-item ledger, so it
+        // cannot lose names by reading an incomplete kp_sale_print snapshot.
+        $bill_queue_id = bill_service_queue_snapshot_job($child_sale_id, $user_id, $counter_id, 'BILL', $open_rows, $counter_id);
+        if ($bill_queue_id < 1) {
+            throw new RuntimeException('Could not queue the final open LAST bill.');
+        }
+        $queued_jobs[] = ['queue_id' => $bill_queue_id, 'type' => 'bill', 'counter_id' => $counter_id];
+
+        if (!bill_service_mark_shift_open_items_sent($child_sale_id)) {
+            throw new RuntimeException('Could not mark open LAST items as sent.');
+        }
+        if (!mysqli_query($connection, "DELETE FROM kp_sale_items_live WHERE sale_id='" . (int)$child_sale_id . "'")) {
+            throw new RuntimeException('Could not clear open LAST live items.');
+        }
+        if (!mysqli_query($connection, "DELETE FROM kp_shift_sale_open_items WHERE sale_id='" . (int)$child_sale_id . "'")) {
+            throw new RuntimeException('Could not clear open LAST items.');
+        }
+        if (!repo_clear_sale_open($parent_sale_id, $parent_sale_id)) {
+            throw new RuntimeException('Could not clear open LAST registry.');
+        }
+        if (!repo_clear_sale_closed_open($parent_sale_id)) {
+            throw new RuntimeException('Could not clear closed open registry.');
+        }
+        if (!repo_clear_open_family_status($user_id, $parent_sale_id)) {
+            throw new RuntimeException('Could not clear open LAST sale status.');
+        }
+        if (function_exists('repo_reset_thesion_front')) {
+            repo_reset_thesion_front($user_id);
+        }
+
+        return [
+            'sale_id' => $child_sale_id,
+            'amount' => array_sum(array_map(static function ($row) { return (float)($row['total'] ?? 0); }, $open_rows)),
+            'queued_jobs' => $queued_jobs,
+            'parent_sale_id' => $parent_sale_id,
+            'mode' => 'last',
+            'redirect' => '../log_out.php',
+        ];
+    }
+
     function bill_service_close_closed_parent($context, $params = []) {
         $params = is_array($params) ? $params : [];
         $user_id = (int)($context['user_id'] ?? 0);
@@ -1856,6 +1941,10 @@ if (!function_exists('bill_service_close_closed_parent')) {
 
         if ($parent_sale_id < 1) {
             throw new RuntimeException('Open parent was not found.');
+        }
+
+        if ($mode === 'last') {
+            return bill_service_close_open_last_parent_service($context, $params);
         }
 
         $child_sale_id = $mode === 'last'
