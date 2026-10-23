@@ -143,6 +143,10 @@ if (!function_exists('bill_service_map_scenario')) {
             return 'open_active_last';
         }
 
+        if ($status === 3 && $mode === 'each' && $parent_sale_id > 0) {
+            return 'open_active_each';
+        }
+
         if ($status === 2 && $mode === 'each' && $parent_sale_id > 0) {
             return 'open_active_each';
         }
@@ -1654,7 +1658,10 @@ if (!function_exists('bill_service_resolve_closed_parent_child')) {
             $child_position = ((int)($position_row['last_position'] ?? 0)) + 1;
         }
 
-        $child_status = $mode === 'last' ? 3 : 2;
+        // Every continuing child is an active open bill while it is being
+        // edited. The bill mode remains EACH/LAST; status 3 is the active
+        // open-session marker for both modes.
+        $child_status = 3;
         if (!repo_set_sale_status($user_id, $child_sale_id, $child_status, $mode, 1, $parent_sale_id)) {
             throw new RuntimeException('Could not start child session: ' . mysqli_error($connection));
         }
@@ -2724,7 +2731,7 @@ if (!function_exists('bill_service_initialise')) {
                 ) {
                     $is_open_each_session = true;
                 }
-                if ($is_open_last_session) {
+                if ($is_open_last_session || $is_open_each_session) {
                     $status = 3;
                 }
 
