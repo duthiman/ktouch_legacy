@@ -383,11 +383,7 @@ if (!function_exists('bill_service_load_submit_confirm_modal')) {
 if (!function_exists('bill_service_load_open_bill_mode_modal')) {
     function bill_service_load_open_bill_mode_modal($user_id) {
         $user_id = (int)$user_id;
-        $requested_sale_id = (int)($params['sale_id'] ?? 0);
-        $context = bill_service_get_live_context($user_id, [
-            'require_status' => true,
-            'sale_id' => $requested_sale_id,
-        ]);
+        $context = bill_service_get_live_context($user_id, ['require_status' => true]);
         if (empty($context['ok'])) {
             return [
                 'ok' => false,
@@ -2363,7 +2359,11 @@ if (!function_exists('bill_service_open_order')) {
         global $connection;
 
         $params = is_array($params) ? $params : [];
-        $context = bill_service_get_live_context($user_id, ['require_status' => true]);
+        $requested_sale_id = (int)($params['sale_id'] ?? 0);
+        $context = bill_service_get_live_context($user_id, [
+            'require_status' => true,
+            'sale_id' => $requested_sale_id,
+        ]);
         if (empty($context['ok'])) {
             return $context;
         }
