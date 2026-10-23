@@ -5,7 +5,6 @@ header('Content-Type: application/json');
 
 include('../../../inc/connection.php');
 include_once('../../../inc/gen_funcs.php');
-include_once('../../chaba/funcs.php');
 require_once __DIR__ . '/take_schema.php';
 require_once __DIR__ . '/take_helpers.php';
 require_once __DIR__ . '/take_repository.php';
