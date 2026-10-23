@@ -1470,7 +1470,8 @@ if (!function_exists('bill_service_queue_open_prints')) {
 
         $live_items = repo_fetch_sale_print_grouped($sale_id, 2, 'kp_sale_items_live');
         $departments = bill_service_detect_print_departments_from_items($live_items);
-        if ($scenario === 'fresh_open_each' && !$departments['bot'] && !$departments['kot'] && !$departments['got'] && $live_items) {
+        $open_bot_fallback = in_array($scenario, ['fresh_open_last', 'open_active_last', 'fresh_open_each'], true);
+        if ($open_bot_fallback && !$departments['bot'] && !$departments['kot'] && !$departments['got'] && $live_items) {
             $departments['bot'] = true;
         }
 
@@ -1481,7 +1482,7 @@ if (!function_exists('bill_service_queue_open_prints')) {
             'sale_counter_id' => (int)($context['counter_id'] ?? 0),
             'live_source' => true,
             'departments' => $departments,
-            'fallback_bot' => $scenario === 'fresh_open_each',
+            'fallback_bot' => $open_bot_fallback,
         ]);
 
         if ($scenario !== 'fresh_open_each') {
