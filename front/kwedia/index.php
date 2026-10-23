@@ -117,15 +117,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
         <div class="kw-card kw-bill-panel">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <p class="kw-section-title" style="margin:0;">Current Order</p>
-            <button type="button" class="kw-cart-close" id="kw-cart-close">&times;</button>
+            <button type="button" class="kw-cart-close" id="kw-cart-close" aria-label="Close order panel and add more items" title="Close panel and add more items">&times;</button>
           </div>
           <div class="kw-account-strip">
             <b>Account : <span id="kw-cart-account-name"></span></b>
             <b><span id="kw-cart-counter-name"></span> Counter Bill No: <span id="kw-cart-sale-id">0</span></b>
           </div>
           <div id="screen_mobile"></div>
-          <div class="kw-order-actions" style="grid-template-columns: 1fr;">
-            <button id="kw-mobile-close-btn" onclick="complete();" class="kw-order-btn kw-order-send" data-sales-action="sale.close_order" type="button">Close Sale</button>
+          <div class="kw-order-actions" style="grid-template-columns: 1fr 1fr;">
+            <button id="kw-mobile-close-btn" onclick="complete();" class="kw-order-btn kw-order-send" data-sales-action="sale.close_order" type="button">Close Order</button>
+            <button id="kw-mobile-open-btn" onclick="openOpenBillModeModal();" class="kw-order-btn kw-order-send" data-sales-action="sale.open_order" type="button">Open Order</button>
             <button id="kw-mobile-continue-btn" onclick="complete();" class="kw-order-btn kw-order-send" style="display:none;" type="button">Continue</button>
             <button id="kw-mobile-close-open-btn" onclick="complete();" class="kw-order-btn kw-order-send" style="display:none;" type="button">Close Open</button>
           </div>

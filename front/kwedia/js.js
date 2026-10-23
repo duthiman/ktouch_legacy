@@ -853,7 +853,7 @@ function updateOpenOrderButtons(data) {
   var parentId = Number(statusRow.parent_sale_id || 0);
   var mode = String(statusRow.mode || '').toLowerCase();
   var isOpenChild = Number(data && data.status || 0) === 3 && parentId > 0 && (mode === 'each' || mode === 'last');
-  $('#kw-desktop-close-btn, #kw-desktop-open-btn, #kw-mobile-close-btn').toggle(!isOpenChild);
+  $('#kw-desktop-close-btn, #kw-desktop-open-btn, #kw-mobile-close-btn, #kw-mobile-open-btn').toggle(!isOpenChild);
   $('#kw-desktop-continue-btn, #kw-desktop-close-open-btn, #kw-mobile-continue-btn, #kw-mobile-close-open-btn').toggle(isOpenChild);
   if (isOpenChild) {
     $('#kw-desktop-continue-btn, #kw-mobile-continue-btn').off('click.kwOpen').on('click.kwOpen', function() { complete(); });
