@@ -687,6 +687,8 @@ function order(button){
 //    });
 // }
 function del_item(item_id, hhr, attr_id, accompaniment_json) {
+  if (window.__kwRemoveBusy) return;
+  window.__kwRemoveBusy = true;
   var accompanimentPayload = accompaniment_json ? decodeURIComponent(accompaniment_json) : '';
   $.post(window.KWEDIA_API_URL, {
     action: 'sales.item.remove',
@@ -705,9 +707,13 @@ function del_item(item_id, hhr, attr_id, accompaniment_json) {
     if (window.refreshKwCatalog) window.refreshKwCatalog();
   }).fail(function(jqXHR) {
     alert('Error removing item: ' + (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : 'Connection error'));
+  }).always(function() {
+    window.__kwRemoveBusy = false;
   });
 }
 function cancelCurrentSale() {
+  if (window.__kwCancelBusy) return;
+  window.__kwCancelBusy = true;
   $.post(window.KWEDIA_API_URL, {
     action: 'sales.cancel'
   }).done(function(data) {
@@ -724,6 +730,8 @@ function cancelCurrentSale() {
     alert(data.message || 'Failed to cancel sale');
   }).fail(function(jqXHR) {
     alert('Error cancelling sale: ' + (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : 'Connection error'));
+  }).always(function() {
+    window.__kwCancelBusy = false;
   });
 }
 function load_item_list(){

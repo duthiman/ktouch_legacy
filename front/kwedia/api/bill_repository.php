@@ -1990,8 +1990,7 @@ if (!function_exists('bill_repo_delete_item')) {
         }
 
         $rows_to_return = [];
-        $fetch_rows = mysqli_query(
-            $connection,
+        $fetch_rows = mysqli_query($connection,
             "SELECT item_id, qty, stock_counter
              FROM kp_sale_items_live
              WHERE sale_id='$sale_id' AND item_id='$item_id'"
@@ -2018,6 +2017,10 @@ if (!function_exists('bill_repo_delete_item')) {
         }
 
         mysqli_query($connection, "DELETE FROM kp_sale_items_live WHERE sale_id='$sale_id' AND item_id='$item_id'");
+        // The print snapshot mirrors live rows for an active open session.
+        // Remove it without returning stock a second time.
+        mysqli_query($connection, "DELETE FROM kp_sale_print WHERE sale_id='$sale_id' AND item_id='$item_id'");
+        mysqli_query($connection, "DELETE FROM kp_shift_sale_open_items WHERE sale_id='$sale_id' AND item_id='$item_id' AND session_flag=2");
         mysqli_query($connection, "DELETE FROM kp_stock_track WHERE sale_id='$sale_id' AND item_id='$item_id'");
 
         return true;
@@ -2036,11 +2039,16 @@ if (!function_exists('bill_repo_cancel_order')) {
         }
 
         $rows_to_return = [];
-        $fetch_rows = mysqli_query(
-            $connection,
-            "SELECT item_id, qty, stock_counter
-             FROM kp_sale_print
-             WHERE sale_id='$sale_id'"
+        // Prefer the live rows when present (fresh status-2 drafts). For an
+        // active open session, print rows mirror live rows, so use only one
+        // source to prevent returning stock twice.
+        $live_count = (int)column_count('kp_sale_items_live', 'item_id', "sale_id='$sale_id'");
+        $source_table = $live_count > 0 ? 'kp_sale_items_live' : 'kp_sale_print';
+        $fetch_rows = mysqli_query($connection,
+            "SELECT item_id, SUM(qty) AS qty, stock_counter
+             FROM {$source_table}
+             WHERE sale_id='$sale_id'
+             GROUP BY item_id, stock_counter"
         );
         if ($fetch_rows) {
             while ($row = mysqli_fetch_assoc($fetch_rows)) {
@@ -2063,7 +2071,9 @@ if (!function_exists('bill_repo_cancel_order')) {
             }
         }
 
+        mysqli_query($connection, "DELETE FROM kp_sale_items_live WHERE sale_id='$sale_id'");
         mysqli_query($connection, "DELETE FROM kp_sale_print WHERE sale_id='$sale_id'");
+        mysqli_query($connection, "DELETE FROM kp_shift_sale_open_items WHERE sale_id='$sale_id'");
         mysqli_query($connection, "DELETE FROM kp_stock_track WHERE sale_id='$sale_id'");
 
         return true;
