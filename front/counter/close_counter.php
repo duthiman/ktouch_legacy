@@ -311,6 +311,40 @@ if (!function_exists('store_counter_close_totals')) {
 }
 
 if (!function_exists('queue_counter_close_summary')) {
+	function counter_close_enqueue_print_job($connection, array $job) {
+		if (!$connection) {
+			return 0;
+		}
+		mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_print_queue (
+			queue_id INT NOT NULL AUTO_INCREMENT,
+			sale_id INT NOT NULL DEFAULT 0,
+			ref_id INT NOT NULL DEFAULT 0,
+			print_type VARCHAR(55) NOT NULL DEFAULT 'bill',
+			label VARCHAR(120) NOT NULL DEFAULT '',
+			cntr_id INT NOT NULL DEFAULT 0,
+			route_path VARCHAR(255) NOT NULL DEFAULT '',
+			route_query TEXT NULL,
+			requested_by INT NOT NULL DEFAULT 0,
+			reprint_of INT NOT NULL DEFAULT 0,
+			status TINYINT(1) NOT NULL DEFAULT 0,
+			created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (queue_id), KEY idx_queue_counter_status (cntr_id, status), KEY idx_queue_status_created (status, created_at)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+		$sale_id = (int)($job['sale_id'] ?? 0);
+		$ref_id = (int)($job['ref_id'] ?? 0);
+		$type = mysqli_real_escape_string($connection, (string)($job['print_type'] ?? 'bill'));
+		$label = mysqli_real_escape_string($connection, (string)($job['label'] ?? strtoupper($type)));
+		$counter = (int)($job['cntr_id'] ?? 0);
+		$route = mysqli_real_escape_string($connection, (string)($job['route_path'] ?? ''));
+		$query = mysqli_real_escape_string($connection, (string)($job['route_query'] ?? ''));
+		$user = (int)($job['requested_by'] ?? 0);
+		$payload = mysqli_real_escape_string($connection, (string)($job['payload_json'] ?? ''));
+		$payload_sql = $payload === '' ? "NULL" : "'$payload'";
+		$sql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,payload_json)
+			VALUES ('$sale_id','$ref_id','$type','$label','$counter','$route','$query','$user',0,0,$payload_sql)";
+		return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+	}
+
 	function queue_counter_close_summary($connection, $summary_id, $counter, $user_id, $shift) {
 		$summary_id = (int)$summary_id;
 		$counter = (int)$counter;
@@ -321,7 +355,8 @@ if (!function_exists('queue_counter_close_summary')) {
 		$routeQuery = 'summary_id=' . urlencode((string)$summary_id)
 			. '&cntr_id=' . urlencode((string)$counter)
 			. '&shift=' . urlencode((string)$shift);
-		return (int)kp_print_enqueue($connection, [
+		$enqueue = function_exists('kp_print_enqueue') ? 'kp_print_enqueue' : 'counter_close_enqueue_print_job';
+		return (int)$enqueue($connection, [
 			'sale_id' => 0,
 			'ref_id' => $summary_id,
 			'print_type' => 'counter_sum',
@@ -330,6 +365,29 @@ if (!function_exists('queue_counter_close_summary')) {
 			'route_path' => 'render_counter_sum.php',
 			'route_query' => $routeQuery,
 			'requested_by' => $user_id,
+		]);
+	}
+}
+
+if (!function_exists('queue_shift_close_summary')) {
+	function queue_shift_close_summary($connection, $counter, $user_id, $shift) {
+		$enqueue = function_exists('kp_print_enqueue') ? 'kp_print_enqueue' : 'counter_close_enqueue_print_job';
+		$payload = json_encode([
+			'payload_version' => 1,
+			'document_type' => 'SSP',
+			'title' => 'SHIFT SUMMARY PRINT',
+			'header' => ['shift_date' => (string)$shift, 'print_time' => date('Y-m-d H:i:s')],
+		], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+		return (int)$enqueue($connection, [
+			'sale_id' => 0,
+			'ref_id' => 0,
+			'print_type' => 'ssp',
+			'label' => 'SHIFT SUMMARY',
+			'cntr_id' => (int)$counter,
+			'route_path' => 'ssp.php',
+			'route_query' => 'shift=' . urlencode((string)$shift),
+			'requested_by' => (int)$user_id,
+			'payload_json' => $payload,
 		]);
 	}
 }
@@ -445,6 +503,10 @@ if (empty($counter) OR $counter==0) {
 												if ($queued < 1) {
 													error_log('Counter close summary queue failed for summary #' . $close_sum_id . ' mode ' . $print_mode);
 												}
+											$shift_queued = queue_shift_close_summary($connection, $counter, $user_id, $shift);
+											if ($shift_queued < 1) {
+												error_log('Shift summary queue failed for shift ' . $shift);
+											}
 											} elseif ($close_sum_id > 0) {
 												redirect_counter_close_summary_print($close_sum_id, $counter, $shift, '../log_out.php');
 											}
