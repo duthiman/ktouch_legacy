@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
 ?>
 <link rel="stylesheet" href="kwedia_desktop.css">
 <link rel="stylesheet" href="kwedia_mobile.css">
-<script src="kwedia.js"></script>
 <body  id="whole"> 
   <!-- begin #page-container -->
   <div id="page-container" class="page-without-sidebar page-header-fixed">

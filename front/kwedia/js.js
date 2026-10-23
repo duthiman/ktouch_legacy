@@ -1,3 +1,23 @@
+function kwLoadSubFood(id) {
+  if (typeof load_sub_food === 'function') {
+    load_sub_food(id);
+  }
+}
+
+function kwOrderItem(id, hasAttr) {
+  if (parseInt(hasAttr, 10) === 1 && typeof openAttrItem === 'function') {
+    openAttrItem(id);
+    return;
+  }
+  if (typeof isDeciModalMode === 'function' && isDeciModalMode() && typeof openDeciItem === 'function') {
+    openDeciItem(id);
+    return;
+  }
+  if (typeof recp === 'function') {
+    recp(id);
+  }
+}
+
 $(document).ready(function(){
   $.ajaxSetup({ cache: false });
   window.KWEDIA_API_URL = 'api/bill_api.php';
