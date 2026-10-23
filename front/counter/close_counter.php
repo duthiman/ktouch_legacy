@@ -394,11 +394,9 @@ if (!function_exists('queue_shift_close_summary')) {
 
 if (!function_exists('close_counter_should_use_queue')) {
 	function close_counter_should_use_queue($print_mode) {
-		$print_mode = (int)$print_mode;
-		if (function_exists('kp_print_mode_uses_queue')) {
-			return kp_print_mode_uses_queue($print_mode);
-		}
-		return in_array($print_mode, [2, 3, 4], true);
+		// Counter closing uses the current Chaba queue worker. Do not fall back
+		// to the removed direct-print mode when the setting still contains 1.
+		return true;
 	}
 }
 
