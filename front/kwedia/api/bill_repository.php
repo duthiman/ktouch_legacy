@@ -774,10 +774,42 @@ if (!function_exists('bill_repo_get_item_name')) {
         global $connection;
 
         $item_id = (int)$item_id;
-        $result = mysqli_query($connection, "SELECT name FROM kp_items WHERE item_id='$item_id' LIMIT 1");
-        $row = $result ? mysqli_fetch_assoc($result) : null;
+        if ($item_id < 1) {
+            return '';
+        }
 
-        return (string)($row['name'] ?? '');
+        // Sale rows only retain item_id. Resolve it from every supported
+        // catalogue because the V1/open flow can use the inventory catalogue
+        // while older installations still use kp_items.
+        $lookups = [
+            ['table' => 'kp_items', 'column' => 'name'],
+            ['table' => 'kp_inventory_master', 'column' => 'item_name'],
+            ['table' => 'kp_inventory_master', 'column' => 'name'],
+        ];
+        foreach ($lookups as $lookup) {
+            if (function_exists('kw_schema_table_exists')
+                && !kw_schema_table_exists($connection, $lookup['table'])) {
+                continue;
+            }
+            if (function_exists('kw_schema_column_exists')
+                && !kw_schema_column_exists($connection, $lookup['table'], $lookup['column'])) {
+                continue;
+            }
+
+            $table = $lookup['table'];
+            $column = $lookup['column'];
+            $result = mysqli_query(
+                $connection,
+                "SELECT {$column} AS item_name FROM {$table} WHERE item_id='{$item_id}' LIMIT 1"
+            );
+            $row = $result ? mysqli_fetch_assoc($result) : null;
+            $name = trim((string)($row['item_name'] ?? ''));
+            if ($name !== '') {
+                return $name;
+            }
+        }
+
+        return '';
     }
 }
 
