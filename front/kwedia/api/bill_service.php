@@ -1896,6 +1896,19 @@ if (!function_exists('bill_service_open_fresh_last')) {
             $print_counter_id = $counter_id;
         }
 
+        // A brand-new open order must hand off every item currently in the
+        // live draft. Older clients could create the first rows with a
+        // non-pending session flag, which made the initial snapshot empty.
+        // Normalize only this fresh sale; later continuations continue to use
+        // session_flag=2 as the delta marker.
+        if (!mysqli_query(
+            $GLOBALS['connection'],
+            "UPDATE kp_sale_items_live SET session_flag=2
+             WHERE sale_id='" . $sale_id . "' AND user_id='" . $user_id . "'"
+        )) {
+            throw new RuntimeException('Could not prepare fresh open items.');
+        }
+
         if (!repo_update_sale_status($user_id, $sale_id, 3, 'last', 2, 0)) {
             throw new RuntimeException('Could not update sale status.');
         }
