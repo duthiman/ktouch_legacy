@@ -237,12 +237,20 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
   }
   .sales-panel table {
     width: 100%;
-    table-layout: fixed;
+    min-width: 100%;
+    table-layout: auto;
+    margin-bottom: 0;
   }
   .sales-panel table th,
   .sales-panel table td {
     vertical-align: middle !important;
-    word-break: break-word;
+    white-space: nowrap;
+  }
+  .sales-main-col .panel-body,
+  .sales-side-col .panel-body {
+    width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
   }
   .sales-pagination {
     display: flex;
@@ -702,7 +710,13 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
   .mobile-sales-panel.mobile-sales-panel-hidden { display: none !important; }
   .mobile-scroll {
     max-height: 50vh;
+    width: 100%;
+    overflow-x: auto;
     overflow-y: auto;
+  }
+  .mobile-scroll table {
+    width: 100%;
+    min-width: 560px;
   }
   .sold-list {
     margin: 0;
