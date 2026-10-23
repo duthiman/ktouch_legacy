@@ -90,7 +90,6 @@
 </div>
 <script src="../../assets/plugins/jquery/jquery-3.2.1.min.js"></script>
 <script src="../../assets/plugins/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="../../assets/plugins/Hullabaloo/js/hullabaloo.js"></script>
 <script src="assets/js/dashboard.js?v=20261013-permissions2"></script>
 </body>
 </html>
