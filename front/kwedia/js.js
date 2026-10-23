@@ -550,6 +550,34 @@ $(document).on('click', '.kw-bill-counter-btn[data-bill-counter]', function(){
   $('.kw-bill-counter-btn[data-bill-counter]').removeClass('active');
   $(this).addClass('active');
 });
+function isStockMessage(message) {
+  return /out of stock|insufficient stock|stock.*available|available stock/i.test(String(message || ''));
+}
+function showStockModal(response) {
+  response = response || {};
+  var data = response.data || {};
+  var available = data.stock_qty ?? data.available_qty ?? response.stock_qty ?? response.available_qty ?? 0;
+  var itemName = data.item_name || response.item_name || 'This item';
+  var modal = document.getElementById('modal');
+  var load = document.getElementById('load');
+  if (!modal || !load) return;
+  load.innerHTML = '<div class="modal-content kw-stock-modal">'
+    + '<div class="modal-header"><h4 class="modal-title">Stock unavailable</h4>'
+    + '<button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button></div>'
+    + '<div class="modal-body text-center" style="padding:24px 18px;">'
+    + '<div style="font-size:34px;line-height:1;margin-bottom:12px;">&#9888;</div>'
+    + '<h4 style="margin:0 0 8px;">' + escapeHtml(itemName) + '</h4>'
+    + '<p style="margin:0;color:#6b7280;">This item cannot be added right now.</p>'
+    + '<div style="margin-top:14px;font-size:18px;font-weight:800;color:#b45309;">Current stock: ' + escapeHtml(available) + '</div>'
+    + '</div><div class="modal-footer" style="justify-content:center;">'
+    + '<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button></div></div>';
+  if (window.jQuery && $('#modal').modal) {
+    $('#modal').modal('show');
+  } else {
+    modal.style.display = 'block';
+    modal.classList.add('show');
+  }
+}
 function recp(id) {
   if (window.__kwAddLock && window.__kwAddLock[id]) {
     return;
@@ -570,7 +598,11 @@ function recp(id) {
       }
       refreshCurrentItemsList();
     } else {
-      alert(data.message || 'Failed to add item');
+      if (isStockMessage(data && data.message)) {
+        showStockModal(data);
+      } else {
+        alert(data.message || 'Failed to add item');
+      }
     }
     load_item_list();
     if (window.refreshKwCatalog) window.refreshKwCatalog();
@@ -602,7 +634,11 @@ function orderWithAttribute(item_id, attr_id, price_modifier,qty) {
         refreshCurrentItemsList();
         document.getElementById('close').click();
       } else {
-        alert(data.message || 'Failed to add item');
+        if (isStockMessage(data && data.message)) {
+          showStockModal(data);
+        } else {
+          alert(data.message || 'Failed to add item');
+        }
       }
       load_item_list();
       if (window.refreshKwCatalog) window.refreshKwCatalog();
@@ -658,7 +694,11 @@ function order(button){
       refreshCurrentItemsList();
       document.getElementById('close').click();
     } else {
-      alert(data.message || 'Failed to add item');
+      if (isStockMessage(data && data.message)) {
+        showStockModal(data);
+      } else {
+        alert(data.message || 'Failed to add item');
+      }
     }
     load_item_list();
     if (window.refreshKwCatalog) window.refreshKwCatalog();
