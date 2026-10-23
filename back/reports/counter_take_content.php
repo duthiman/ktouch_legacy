@@ -155,6 +155,7 @@ $itemCount = count($rows);
     font-weight: 700;
     text-decoration: none !important;
   }
+  .ctr-reprint-btn { background: #184d8a; margin-left: 8px; }
   .ctr-summary-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -333,6 +334,7 @@ $itemCount = count($rows);
     </div>
     <div class="hidden-print">
       <a href="javascript:;" onclick="window.print()" class="ctr-print-btn"><i class="fa fa-print"></i> Print A4 Report</a>
+      <a href="javascript:;" onclick="ctrConfirmVarianceReprint(<?php echo (int)$counter; ?>, '<?php echo htmlspecialchars($shift, ENT_QUOTES); ?>')" class="ctr-print-btn ctr-reprint-btn"><i class="fa fa-print"></i> Reprint SVP</a>
     </div>
   </div>
 
@@ -420,3 +422,52 @@ $itemCount = count($rows);
     </table>
   </div>
 </div>
+
+<div id="ctr-reprint-modal" class="ctr-reprint-modal" style="display:none;">
+  <div class="ctr-reprint-backdrop" onclick="ctrCloseVarianceReprint()"></div>
+  <div class="ctr-reprint-dialog" role="dialog" aria-modal="true" aria-labelledby="ctr-reprint-title">
+    <div class="ctr-reprint-icon"><i class="fa fa-print"></i></div>
+    <h3 id="ctr-reprint-title">Reprint variance report?</h3>
+    <p>This will add a new Stock Variance Print job to the print queue.</p>
+    <div class="ctr-reprint-actions">
+      <button type="button" class="btn btn-default" onclick="ctrCloseVarianceReprint()">Cancel</button>
+      <button type="button" class="btn btn-primary" id="ctr-reprint-confirm">Yes, queue report</button>
+    </div>
+  </div>
+</div>
+<style>
+  .ctr-reprint-modal { position:fixed; z-index:1100; inset:0; }
+  .ctr-reprint-backdrop { position:absolute; inset:0; background:rgba(15,23,42,.55); }
+  .ctr-reprint-dialog { position:relative; width:min(420px, calc(100% - 32px)); margin:15vh auto 0; padding:28px; background:#fff; border-radius:18px; text-align:center; box-shadow:0 20px 60px rgba(15,23,42,.28); }
+  .ctr-reprint-icon { width:54px; height:54px; line-height:54px; margin:0 auto 12px; border-radius:50%; background:#e8f1fb; color:#184d8a; font-size:22px; }
+  .ctr-reprint-dialog h3 { margin:0 0 10px; color:#17324d; font-weight:800; }
+  .ctr-reprint-dialog p { color:#667789; margin:0 0 22px; }
+  .ctr-reprint-actions { display:flex; justify-content:center; gap:10px; }
+</style>
+<script>
+  function ctrCloseVarianceReprint() {
+    var modal = document.getElementById('ctr-reprint-modal');
+    if (modal) modal.style.display = 'none';
+  }
+  function ctrConfirmVarianceReprint(counter, shift) {
+    var modal = document.getElementById('ctr-reprint-modal');
+    var confirm = document.getElementById('ctr-reprint-confirm');
+    if (!modal || !confirm) return;
+    modal.style.display = 'block';
+    confirm.onclick = function() {
+      confirm.disabled = true;
+      confirm.textContent = 'Queueing...';
+      $.post('queue_variance.php', { counter: counter, shift: shift })
+        .done(function(response) {
+          if (response && response.ok) {
+            ctrCloseVarianceReprint();
+            alert('Variance report queued for printing.');
+          } else {
+            alert(response && response.message ? response.message : 'Could not queue the variance report.');
+          }
+        })
+        .fail(function() { alert('Could not connect to the print queue.'); })
+        .always(function() { confirm.disabled = false; confirm.textContent = 'Yes, queue report'; });
+    };
+  }
+</script>
