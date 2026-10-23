@@ -183,7 +183,9 @@
         html += '<div class="kw-print-step-note">The saved bill type controls the customer receipt. BOT and KOT tickets will still print for the order items you are sending now.</div>';
         html += '<div class="kw-flow-card">';
         html += '<div style="font-size:13px; font-weight:900; color:#8a4a12; text-transform:uppercase;">'
-          + escapeHtml(data.parent_bill_mode === 'last' ? 'Open Bill #' + data.parent_bill : 'Continuation Bill #' + data.parent_bill)
+          + escapeHtml(data.parent_bill_mode === 'last'
+            ? 'Open Bill #' + data.parent_bill + ' · Current Bill #' + data.sale_id
+            : 'Child Bill #' + data.sale_id + ' · Parent Bill #' + data.parent_bill)
           + '</div>';
         if (data.parent_bill_mode === 'last') {
           html += '<div class="kw-print-step-note" style="margin-top:10px;">This is an <strong>Open Bill</strong>. <strong>Still Open</strong> prints only BOT and KOT tickets for the newly added items. <strong>Close Order</strong> prints the final customer bill too.</div>';
