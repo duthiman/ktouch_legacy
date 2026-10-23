@@ -15,7 +15,12 @@ if (session_status() === PHP_SESSION_NONE) {
 include('../../inc/connection.php');
 require_once('../cash/funcs.php');  
  
-$shift = get_column('kp_shift','shift',"1"); 
+$shift = trim((string)get_column('kp_shift','shift',"1"));
+// Prevent invalid legacy shift values such as 0 from being used in DATE queries.
+$shift_date = DateTime::createFromFormat('!Y-m-d', $shift);
+if ($shift === '' || !$shift_date || $shift_date->format('Y-m-d') !== $shift) {
+  $shift = date('Y-m-d');
+}
 $today = date('Y-m-d');
 $kitchen_total=0;
 $kitchen_untotal=0;
