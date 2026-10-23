@@ -1875,6 +1875,27 @@ if (!function_exists('bill_service_close_closed_parent')) {
         }
         unset($row);
 
+        // Customer bills show identical open items as one line. Keep
+        // different attributes/accompaniments separate, while summing qty
+        // and total for truly identical rows.
+        $bill_rows = [];
+        foreach ($open_rows as $row) {
+            $key = (int)($row['item_id'] ?? 0)
+                . '|' . (int)($row['attr_id'] ?? 0)
+                . '|' . (string)($row['accompaniment_json'] ?? '');
+            if (!isset($bill_rows[$key])) {
+                $bill_rows[$key] = $row;
+                continue;
+            }
+            $bill_rows[$key]['qty'] = (float)($bill_rows[$key]['qty'] ?? 0) + (float)($row['qty'] ?? 0);
+            $bill_rows[$key]['total'] = (float)($bill_rows[$key]['total'] ?? 0) + (float)($row['total'] ?? 0);
+            $qty = (float)$bill_rows[$key]['qty'];
+            $bill_rows[$key]['price'] = $qty > 0
+                ? (float)$bill_rows[$key]['total'] / $qty
+                : (float)($bill_rows[$key]['price'] ?? 0);
+        }
+        $bill_rows = array_values($bill_rows);
+
         // Queue only the newly-added BOT delta first.
         $new_rows = bill_service_fetch_shift_open_items($child_sale_id, 2);
         $departments = bill_service_detect_print_departments_from_items($new_rows);
@@ -1895,7 +1916,7 @@ if (!function_exists('bill_service_close_closed_parent')) {
         // cannot lose names by reading an incomplete kp_sale_print snapshot.
         // The returned id is only the immediate INSERT result. Do not query
         // kp_print_queue afterward because the print worker may consume it.
-        $bill_queue_id = bill_service_queue_snapshot_job($child_sale_id, $user_id, $counter_id, 'BILL', $open_rows, $counter_id);
+        $bill_queue_id = bill_service_queue_snapshot_job($child_sale_id, $user_id, $counter_id, 'BILL', $bill_rows, $counter_id);
         if ($bill_queue_id < 1) {
             throw new RuntimeException('Could not queue the final open LAST bill.');
         }
