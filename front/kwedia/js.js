@@ -356,34 +356,14 @@ function showActiveSaleChoice(conflict, params) {
     $.post(window.KWEDIA_API_URL, { action: 'sales.cancel' }).done(function(cancel) {
       if (cancel && cancel.ok) {
         submitPlaceSale(params);
-      } else if (window.Swal) {
-        Swal.fire({ icon: 'error', title: 'Could not cancel sale', text: cancel && cancel.message ? cancel.message : 'Please try again.' });
+      } else {
+        console.error(cancel && cancel.message ? cancel.message : 'Could not cancel sale.');
       }
     });
   };
-  if (window.Swal && typeof window.Swal.fire === 'function') {
-    Swal.fire({
-      icon: 'info',
-      title: 'An order is already in progress',
-      html: '<div class="kw-active-sale-dialog"><div class="kw-active-sale-number">SALE #' + saleId + '</div>' +
-        '<p>Choose whether to continue this order or cancel it before starting a new one.</p>' + list + '</div>',
-      showDenyButton: true,
-      confirmButtonText: 'Continue order',
-      denyButtonText: 'Cancel order',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      customClass: { popup: 'kw-active-sale-popup', confirmButton: 'kw-active-sale-continue', denyButton: 'kw-active-sale-cancel' }
-    }).then(function(result) {
-      if (result.isConfirmed) continueSale();
-      if (result.isDenied) cancelSale();
-    });
-    return true;
-  }
   var modal = document.getElementById('modal');
   var load = document.getElementById('load');
   if (!modal || !load) {
-    // Keep the page usable if the modal shell itself is unavailable.
-    alert('Sale #' + saleId + ' is already in progress. Continue or cancel it first.');
     return true;
   }
   load.innerHTML = '<div class="modal-content shadow-lg border-0">' +
