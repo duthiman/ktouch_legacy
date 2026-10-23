@@ -773,9 +773,7 @@ if (!function_exists('bill_service_open_list_sales')) {
                         'children_total' => (float)($row['child_total'] ?? 0),
                         'parent_amount' => (float)($row['parent_amount'] ?? 0),
                         'family_total' => (float)($row['parent_amount'] ?? 0) + (float)($row['child_total'] ?? 0),
-                        'open_items_total' => bill_clean_bill_mode($row['bill_mode'] ?? 'each') === 'last'
-                            ? repo_sum_shift_open_items((int)$row['sale_id'])
-                            : 0,
+                        'open_items_total' => repo_sum_shift_open_items((int)$row['sale_id']),
                         'child_ids' => trim((string)($row['child_ids'] ?? '')),
                         'child_bills' => $child_bills,
                         'current_open_child' => (int)($row['current_open_child'] ?? 0),

@@ -315,6 +315,9 @@ include("../clude/head.php");
   .open-sales-grid.open-grid-two {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .open-sales-grid.open-grid-open {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .open-sale-card {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -446,6 +449,8 @@ include("../clude/head.php");
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .open-sale-card, .open-sale-card * { min-width: 0; }
+  .open-id-chip { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .open-id-chip-row {
     display: flex;
     flex-wrap: nowrap;
@@ -532,10 +537,13 @@ include("../clude/head.php");
     .open-sales-grid.open-grid-two {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+    .open-sales-grid.open-grid-open {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
     .open-sale-card {
-      aspect-ratio: 1 / 1;
-      min-height: 120px;
-      padding: 12px;
+      aspect-ratio: auto;
+      min-height: 150px;
+      padding: 9px;
     }
     .open-sale-no {
       font-size: 18px;
@@ -585,12 +593,23 @@ include("../clude/head.php");
     .open-sales-grid.open-grid-two {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .open-sales-grid.open-grid-open {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .open-sale-card {
       padding: 10px;
+      min-height: 0;
+      aspect-ratio: auto;
+      overflow: hidden;
     }
     .open-sale-no {
       font-size: 24px;
     }
+    .open-sale-total { padding: 6px 7px; margin-top: 5px; }
+    .open-sale-total small { font-size: 8px; }
+    .open-sale-total strong { font-size: 14px; }
+    .open-sale-meta { font-size: 9px; }
+    .open-sale-meta span { gap: 4px; }
   }
   @media (max-width: 575px) {
     .open-mobile-search-trigger {
@@ -856,7 +875,7 @@ include("../clude/head.php");
           if (!sales.length) {
             resultsWrap.innerHTML = '<div class="open-empty">' + (activeTab === 'open' ? 'No open bills were found.' : 'No closed bills were found.') + '</div>';
           } else if (activeTab === 'open') {
-            html = '<div class="open-sales-grid open-grid-two">';
+            html = '<div class="open-sales-grid open-grid-open">';
             for (i = 0; i < sales.length; i++) {
               var sale = sales[i];
               var label = sale.identifier_label || 'No Tag';
@@ -869,7 +888,9 @@ include("../clude/head.php");
               html += '<div class="open-sale-head"><span class="open-sale-no">#' + sale.sale_id + '</span></div>';
               html += '<div class="open-id-chip-row"><span class="open-id-chip">' + label + '</span><span class="open-id-chip">Children ' + sale.child_count + '</span>';
               if (sale.current_open_child > 0) html += '<span class="open-id-chip">Open Child #' + sale.current_open_child + '</span>';
-              html += '</div><div class="open-sale-total"><small>' + (sale.bill_mode === 'last' ? 'OPEN ITEMS TOTAL' : 'FAMILY TOTAL') + '</small><strong>' + Number(sale.bill_mode === 'last' ? (sale.open_items_total || 0) : (sale.family_total || 0)).toFixed(2) + '</strong></div><div class="open-sale-meta">';
+              html += '</div><div class="open-sale-total"><small>OPEN ITEMS TOTAL</small><strong>' + Number(sale.open_items_total || 0).toFixed(2) + '</strong></div>';
+              if (sale.bill_mode !== 'last') html += '<div class="open-sale-total"><small>PARENT TOTAL</small><strong>' + Number(sale.parent_amount || 0).toFixed(2) + '</strong></div><div class="open-sale-total"><small>FAMILY TOTAL</small><strong>' + Number(sale.family_total || 0).toFixed(2) + '</strong></div>';
+              html += '<div class="open-sale-meta">';
               html += '<span><b>Parent</b><i>' + Number(sale.parent_amount || 0).toFixed(2) + '</i></span><span><b>Children</b><i>' + Number(sale.children_total || 0).toFixed(2) + '</i></span><span><b>Counter</b><i>' + (sale.counter_name || '') + '</i></span><span><b>Type</b><i>' + typeLabel + '</i></span></div>';
               if (Array.isArray(sale.child_bills) && sale.child_bills.length) {
                 html += '<div class="open-child-list"><b>CHILD BILLS</b>';
