@@ -148,7 +148,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
     </div>
   <!-- ================== BEGIN BASE JS ================== -->
   <script src="../../assets/plugins/jquery/jquery-3.2.1.min.js"></script> 
-  <!--<script src="../../assets/plugins/jquery-ui/jquery-ui.min.js"></script>-->
   <script src="../../assets/plugins/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script> 
   <script src="js.js?v=<?php echo filemtime(__DIR__ . '/js.js'); ?>"></script>
   <!-- ================== END BASE JS ================== --> 

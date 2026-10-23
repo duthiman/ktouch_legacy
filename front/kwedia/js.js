@@ -420,17 +420,6 @@ function submitPlaceSale(params) {
       return;
     }
     var message = (res && res.message) ? res.message : 'Unable to send order right now.';
-    if (/already sent|already placed|session expired|session was not found/i.test(message) && window.Swal && typeof window.Swal.fire === 'function') {
-      window.Swal.fire({
-        icon: 'warning',
-        title: 'Order already sent',
-        text: message,
-        confirmButtonText: 'Reopen'
-      }).then(function(result) {
-        if (result.isConfirmed) window.location.href = '../dash/index.php';
-      });
-      return;
-    }
     alert(message);
   })
   .fail(function(jqXHR) {
