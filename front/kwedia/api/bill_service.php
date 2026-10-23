@@ -1063,7 +1063,15 @@ if (!function_exists('bill_service_open_save_identifier')) {
 if (!function_exists('bill_service_resolve_counter_id')) {
     function bill_service_resolve_counter_id($context, $params = []) {
         $params = is_array($params) ? $params : [];
-        $counter_id = (int)($params['bill_cntr'] ?? $params['counter'] ?? $context['counter_id'] ?? 0);
+        $context = is_array($context) ? $context : [];
+        $counter_id = (int)($params['bill_cntr'] ?? 0);
+        if ($counter_id < 1) $counter_id = (int)($params['counter'] ?? 0);
+        if ($counter_id < 1) $counter_id = (int)($context['counter_id'] ?? 0);
+        if ($counter_id < 1) $counter_id = (int)($context['status_row']['counter_id'] ?? $context['status_row']['counter'] ?? 0);
+        if ($counter_id < 1 && function_exists('repo_get_sale_status_for_sale')) {
+            $status = repo_get_sale_status_for_sale((int)($context['user_id'] ?? 0), (int)($context['sale_id'] ?? 0));
+            $counter_id = (int)($status['counter_id'] ?? $status['counter'] ?? 0);
+        }
         return $counter_id > 0 ? $counter_id : 0;
     }
 }
