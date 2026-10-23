@@ -844,7 +844,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
               <thead>
                 <tr>
                   <th style="width: 90px;">#</th> 
-                  <th>Order Time</th>
+                  <th>Time</th>
                   <th>Bill No.</th>
                   <th>Counter</th>
                   <th>Bill Total</th>
@@ -853,12 +853,12 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
               </thead>
               <tbody id="desktop_sales_rows">
                 <?php if (empty($sales_rows)) { ?>
-                <tr class="empty-row"><td colspan="7">You have not placed any orders today</td></tr>
+                <tr class="empty-row"><td colspan="6">You have not placed any orders today</td></tr>
                 <?php } else { ?>
                 <?php foreach ($sales_rows as $index => $row) { ?>
                 <tr class="sale-row" data-bill="<?php echo strtolower($row['sale_id']); ?>" data-item="<?php echo htmlspecialchars($row['search']); ?>" data-amount="<?php echo strtolower(number_format((float)$row['total'], 2)); ?>" data-kind="<?php echo htmlspecialchars($row['kind']); ?>">
                   <td><?php echo $index + 1; ?></td> 
-                  <td><?php echo htmlspecialchars($row['order_time'] ?? ''); ?></td>
+                  <td><?php echo htmlspecialchars(!empty($row['order_time']) ? date('H:i:s', strtotime($row['order_time'])) : ''); ?></td>
                   <td><?php echo htmlspecialchars($row['label']); ?></td>
                   <td><?php echo htmlspecialchars($row['counter'] ?? ''); ?></td>
                   <td><?php echo number_format((float)$row['total'], 2); ?></td>
@@ -1095,8 +1095,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
             <thead>
               <tr>
                 <th>Bill</th>
-                <!-- <th>Shift</th> -->
-                <th>Order Time</th>
+                <th>Time</th>
                 <th>Counter</th>
                 <th>Total</th>
                 <th>Actions</th>
@@ -1104,13 +1103,12 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
             </thead>
             <tbody id="mobile_sales_rows">
               <?php if (empty($sales_rows)) { ?>
-              <tr class="empty-row"><td colspan="6">You have not placed any orders today</td></tr>
+              <tr class="empty-row"><td colspan="5">You have not placed any orders today</td></tr>
               <?php } else { ?>
               <?php foreach ($sales_rows as $row) { ?>
               <tr class="sale-row-mobile" data-bill="<?php echo strtolower($row['sale_id']); ?>" data-item="<?php echo htmlspecialchars($row['search']); ?>" data-amount="<?php echo strtolower(number_format((float)$row['total'], 2)); ?>" data-kind="<?php echo htmlspecialchars($row['kind']); ?>">
                 <td><?php echo htmlspecialchars($row['label']); ?></td>
-                <!-- <td><?php //echo $row['shift']; ?></td> -->
-                <td><?php echo htmlspecialchars($row['order_time'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars(!empty($row['order_time']) ? date('H:i:s', strtotime($row['order_time'])) : ''); ?></td>
                 <td><?php echo htmlspecialchars($row['counter'] ?? ''); ?></td>
                 <td><?php echo number_format((float)$row['total'], 2); ?></td>
                 <td>
@@ -1543,7 +1541,6 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
         var kind = row.kind || 'sale';
         var id = parseInt(row.sale_id || row.id || 0, 10) || 0;
         var label = esc(row.label || ('#' + id));
-        var shift = esc(row.shift || '');
         var rawTime = String(row.order_time || '');
         var timeParts = rawTime.split(' ');
         var orderTime = esc(timeParts.length > 1 ? timeParts[timeParts.length - 1] : (rawTime || '—'));
@@ -1553,14 +1550,14 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
           ? '<button type="button" data-merge-id="' + id + '" class="btn btn-sm sales-btn view-merge-review">VIEW</button>'
           : '<button type="button" data-id="' + id + '" class="btn btn-sm sales-btn ' + (mobile ? 'view-sale-mobile' : 'view-sale') + '">VIEW</button>';
         var cells = mobile
-          ? '<td>' + label + '</td><td>' + shift + '</td><td>' + orderTime + '</td><td>' + counter + '</td><td>' + total + '</td><td>' + action + '</td>'
-          : '<td>' + (index + 1) + '</td><td>' + shift + '</td><td>' + orderTime + '</td><td>' + label + '</td><td>' + counter + '</td><td>' + total + '</td><td>' + action + '</td>';
+          ? '<td>' + label + '</td><td>' + orderTime + '</td><td>' + counter + '</td><td>' + total + '</td><td>' + action + '</td>'
+          : '<td>' + (index + 1) + '</td><td>' + orderTime + '</td><td>' + label + '</td><td>' + counter + '</td><td>' + total + '</td><td>' + action + '</td>';
         return '<tr class="' + (mobile ? 'sale-row-mobile' : 'sale-row') + '" data-bill="' + esc(id) + '" data-item="' + esc(row.search || '') + '" data-amount="' + esc(total) + '" data-kind="' + esc(kind) + '">' + cells + '</tr>';
       }
       var desktop = rows.map(function(row, index) { return rowHtml(row, false, ((salesPage - 1) * 10) + index); }).join('');
       var mobile = rows.map(function(row, index) { return rowHtml(row, true, index); }).join('');
-      $('#desktop_sales_rows').html(desktop || '<tr><td colspan="7">No orders with items found for the current shift.</td></tr>');
-      $('#mobile_sales_rows').html(mobile || '<tr><td colspan="6">No orders with items found for the current shift.</td></tr>');
+      $('#desktop_sales_rows').html(desktop || '<tr><td colspan="6">No orders with items found for the current shift.</td></tr>');
+      $('#mobile_sales_rows').html(mobile || '<tr><td colspan="5">No orders with items found for the current shift.</td></tr>');
       renderSoldItems(data.sold_rows || data.items || []);
       renderSalesPagination(data.pagination || {});
       if (data.context && data.context.shift) {
@@ -1568,8 +1565,8 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
         $('.sales-current-shift').text(data.context.shift || '');
       }
     }).fail(function() {
-      $('#desktop_sales_rows').html('<tr><td colspan="7">Could not load current-shift orders.</td></tr>');
-      $('#mobile_sales_rows').html('<tr><td colspan="6">Could not load current-shift orders.</td></tr>');
+      $('#desktop_sales_rows').html('<tr><td colspan="6">Could not load current-shift orders.</td></tr>');
+      $('#mobile_sales_rows').html('<tr><td colspan="5">Could not load current-shift orders.</td></tr>');
     });
   }
 
