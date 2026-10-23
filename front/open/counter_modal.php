@@ -144,7 +144,7 @@
       type: 'POST',
       dataType: 'json',
       data: {
-        action: 'initialise',
+        action: 'sales.initialize_open',
         sale_id: continueSaleId,
         counter: counterId,
         st: 2

@@ -25,6 +25,7 @@ $read_only_modal_actions = [
 // required tables are healed during bootstrap; repeating all CREATE/ALTER
 // checks here makes submitting an otherwise small sale noticeably slower.
 $hot_order_actions = [
+    'sales.initialize_open',
     'open_order',
     'close_order',
     'continue.open.last',

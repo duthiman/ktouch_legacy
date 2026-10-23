@@ -55,6 +55,11 @@ function open_service_initialise($user_id, $params)
     );
 }
 
+function open_service_initialise_open($user_id, $params)
+{
+    return bill_service_initialise_open((int)$user_id, is_array($params) ? $params : []);
+}
+
 function open_service_identifier($user_id, $params)
 {
     $params = is_array($params) ? $params : [];

@@ -2873,6 +2873,88 @@ if (!function_exists('bill_service_initialise')) {
     }
 }
 
+if (!function_exists('bill_service_initialise_open')) {
+    /**
+     * Initialise an existing open-order parent using the V1 open flow.
+     * EACH always receives a fresh child sale; LAST restores the parent as
+     * the active working sale.
+     */
+    function bill_service_initialise_open($user_id, $params = []) {
+        global $connection;
+
+        $user_id = (int)$user_id;
+        $params = is_array($params) ? $params : [];
+        $parent_sale_id = (int)($params['sale_id'] ?? 0);
+        $counter_id = (int)($params['counter'] ?? $params['counter_id'] ?? 0);
+        if ($parent_sale_id < 1 || $counter_id < 1) {
+            return ['ok' => false, 'message' => 'sale_id and counter are required.'];
+        }
+
+        $open_parent = bill_repo_get_sales_open_registry($parent_sale_id, $user_id);
+        if (!$open_parent || (int)($open_parent['status'] ?? 0) !== 1) {
+            return ['ok' => false, 'message' => 'Open parent bill was not found.'];
+        }
+        $mode = bill_clean_bill_mode($params['bill_mode'] ?? $open_parent['bill_mode'] ?? 'last');
+        mysqli_begin_transaction($connection);
+
+        try {
+            if ($mode === 'each') {
+                $child = bill_service_resolve_closed_parent_child($user_id, $parent_sale_id, $counter_id, $params, [
+                    'closed_parent' => [
+                        'sale_id' => $parent_sale_id,
+                        'user_id' => $user_id,
+                        'bill_mode' => 'each',
+                        'identifier_type' => (string)($open_parent['identifier_type'] ?? ''),
+                        'identifier_value' => (string)($open_parent['identifier_value'] ?? ''),
+                        'identifier_label' => (string)($open_parent['identifier_label'] ?? ''),
+                        'identifier_hex' => (string)($open_parent['identifier_hex'] ?? ''),
+                    ],
+                    'print_counter_id' => $counter_id,
+                    'activate_session' => false,
+                ]);
+                $sale_id = (int)($child['child_sale_id'] ?? 0);
+            } else {
+                $sale_id = $parent_sale_id;
+                if (!repo_set_sale_status($user_id, $sale_id, 3, 'last', 1, $parent_sale_id, $counter_id)) {
+                    throw new RuntimeException('Could not restore the open LAST sale status.');
+                }
+            }
+
+            if ($sale_id < 1) {
+                throw new RuntimeException('Could not allocate the open working sale.');
+            }
+            if (function_exists('kw_schema_ensure_column')) {
+                kw_schema_ensure_column('kp_sales', 'bill_role', "VARCHAR(20) NOT NULL DEFAULT 'closed' AFTER is_child_bill");
+                kw_schema_ensure_column('kp_sales', 'bill_status', "TINYINT(1) NOT NULL DEFAULT 2 AFTER bill_role");
+            }
+            if ($mode === 'each' && !mysqli_query($connection, "UPDATE kp_sales SET parent='$parent_sale_id', bill_role='child', bill_status=1 WHERE sale_id='$sale_id'")) {
+                throw new RuntimeException('Could not mark the open child sale.');
+            }
+            if (!repo_set_sale_status($user_id, $sale_id, 3, $mode, 1, $parent_sale_id, $counter_id)) {
+                throw new RuntimeException('Could not save the open working sale status.');
+            }
+            if (!repo_set_active_sale_id($user_id, $sale_id, 3)) {
+                throw new RuntimeException('Could not activate the open working sale.');
+            }
+            sales_thesion('front/kwedia/', $sale_id, $counter_id, 3);
+            mysqli_commit($connection);
+            return [
+                'ok' => true,
+                'message' => 'Open bill initialised.',
+                'sale_id' => $sale_id,
+                'parent_sale_id' => $parent_sale_id,
+                'counter' => $counter_id,
+                'status' => 3,
+                'mode' => $mode,
+                'redirect' => '../kwedia/index.php?sale_id=' . $sale_id,
+            ];
+        } catch (Throwable $exception) {
+            mysqli_rollback($connection);
+            return ['ok' => false, 'message' => 'Could not initialise the open bill.', 'error' => $exception->getMessage()];
+        }
+    }
+}
+
 if (!function_exists('bill_service_get_items')) {
     function bill_service_get_items($user_id, $category_id, $subcategory_id = 0) {
         $user_id = (int)$user_id;

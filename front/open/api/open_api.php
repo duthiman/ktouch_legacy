@@ -95,6 +95,18 @@ switch ($action) {
         ], $result['ok'] ? 200 : 400);
         break;
 
+    case 'sales.initialize_open':
+        $result = open_service_initialise_open($user_id, $_REQUEST);
+        open_api_response($result['ok'], $result['message'], [
+            'sale_id' => (int)($result['sale_id'] ?? 0),
+            'parent_sale_id' => (int)($result['parent_sale_id'] ?? 0),
+            'counter' => (int)($result['counter'] ?? 0),
+            'status' => (int)($result['status'] ?? 0),
+            'mode' => (string)($result['mode'] ?? ''),
+            'redirect' => (string)($result['redirect'] ?? ''),
+        ], $result['ok'] ? 200 : 400);
+        break;
+
     case 'load_identifier_modal':
         $result = open_service_identifier($user_id, $_REQUEST);
         open_api_response($result['ok'], $result['message'], [
