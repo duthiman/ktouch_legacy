@@ -1079,6 +1079,8 @@ if (!function_exists('bill_service_queue_print_job')) {
         $label = trim((string)$label);
         $route_path = trim((string)$route_path);
         $route_params = is_array($route_params) ? $route_params : [];
+        $payload_header = is_array($route_params['_payload_header'] ?? null) ? $route_params['_payload_header'] : [];
+        unset($route_params['_payload_header']);
 
         if ($sale_id < 1 || $user_id < 1 || $counter_id < 1 || $print_type === '' || $route_path === '') {
             bill_log(
@@ -1105,6 +1107,7 @@ if (!function_exists('bill_service_queue_print_job')) {
             'cntr_id' => $counter_id,
             'route_path' => $route_path,
             'route_query' => $route_query,
+            'payload_header' => $payload_header,
             'requested_by' => $user_id,
         ]);
 
@@ -1365,6 +1368,9 @@ if (!function_exists('bill_service_queue_full_bill')) {
         }
 
         $route_params = ['sale_id' => $sale_id];
+        if (is_array($options['payload_header'] ?? null) && $options['payload_header']) {
+            $route_params['_payload_header'] = $options['payload_header'];
+        }
         if ($delta_only) {
             $route_params['delta_only'] = 1;
         }
@@ -1488,7 +1494,9 @@ if (!function_exists('bill_service_queue_open_prints')) {
         }
 
         if (in_array($scenario, ['fresh_open_each', 'open_active_each'], true)) {
-            $queued_jobs = array_merge($queued_jobs, bill_service_queue_full_bill($sale_id, $user_id, $counter_id));
+            $queued_jobs = array_merge($queued_jobs, bill_service_queue_full_bill($sale_id, $user_id, $counter_id, [
+                'payload_header' => bill_service_open_each_bill_header($context),
+            ]));
         }
 
         return $queued_jobs;
@@ -1519,7 +1527,32 @@ if (!function_exists('bill_service_queue_close_prints')) {
 
         return array_merge($queued_jobs, bill_service_queue_full_bill($sale_id, $user_id, $counter_id, [
             'delta_only' => false,
+            'payload_header' => bill_service_open_each_bill_header($context),
         ]));
+    }
+}
+
+if (!function_exists('bill_service_open_each_bill_header')) {
+    function bill_service_open_each_bill_header($context) {
+        global $connection;
+        $context = is_array($context) ? $context : [];
+        $status = is_array($context['status_row'] ?? null) ? $context['status_row'] : [];
+        $sale_id = (int)($context['sale_id'] ?? 0);
+        $parent_id = (int)($status['parent_sale_id'] ?? 0);
+        $mode = bill_clean_bill_mode($status['mode'] ?? $status['bill_mode'] ?? '');
+        if ($sale_id < 1 || $parent_id < 1 || $mode !== 'each' || $sale_id === $parent_id) return [];
+
+        $previous_total = 0.0;
+        $query = mysqli_query($connection, "SELECT COALESCE(SUM(amount),0) total FROM kp_sales WHERE (sale_id='" . $parent_id . "' OR parent='" . $parent_id . "') AND sale_id<>'" . $sale_id . "'");
+        if ($query && ($row = mysqli_fetch_assoc($query))) $previous_total = (float)($row['total'] ?? 0);
+
+        return [
+            'bill_mode' => 'each',
+            'parent_sale_id' => $parent_id,
+            'previous_bill_sale_id' => $parent_id,
+            'previous_total' => $previous_total,
+            'bill_position' => (int)($status['bill_position'] ?? 0),
+        ];
     }
 }
 

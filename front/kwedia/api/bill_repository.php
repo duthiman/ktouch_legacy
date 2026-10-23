@@ -1789,7 +1789,7 @@ if (!function_exists('bill_repo_print_queue')) {
             'title' => (string)($data['label'] ?? 'BILL'),
             'items' => $items,
             'summary' => ['item_count' => count($items), 'amount' => $amount, 'total' => $amount],
-            'header' => ['sale_id' => $sale_id],
+            'header' => array_merge(['sale_id' => $sale_id], is_array($data['payload_header'] ?? null) ? $data['payload_header'] : []),
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if ($payload === false) return 0;
 
