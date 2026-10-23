@@ -51,11 +51,23 @@ final class ChabaService
         if($legacy) {
             // Legacy batches are keyed by queue ID; snapshot jobs never take this path.
             try {
-                $s=$pdo->prepare('SELECT t.*,i.item_name AS name FROM kp_print_ticket_items t LEFT JOIN kp_inventory_items i ON i.item_id=t.item_id WHERE t.batch_id=? ORDER BY t.id');
+                $s=$pdo->prepare('SELECT * FROM kp_print_ticket_items WHERE batch_id=? ORDER BY id');
                 $s->execute([$id]);$items=$s->fetchAll(\PDO::FETCH_ASSOC);
             } catch(\PDOException $e) {throw new ApiException('Legacy ticket items are unavailable; enqueue a complete snapshot',409,'chaba_legacy');}
             if(!$items)throw new ApiException('Legacy print job has no ticket items',409,'chaba_legacy');
-            foreach($items as &$item) $item['name']=$item['name']?:'Item '.$item['item_id'];
+            foreach($items as &$item) {
+                $name=trim((string)($item['name']??$item['item_name']??''));
+                if($name==='') foreach([
+                    ['kp_items','name'],
+                    ['kp_inventory_master','item_name'],
+                    ['kp_inventory_master','name'],
+                    ['kp_inventory_items','item_name'],
+                ] as [$table,$column]) {
+                    try {$q=$pdo->prepare("SELECT {$column} FROM {$table} WHERE item_id=? LIMIT 1");$q->execute([(int)($item['item_id']??0)]);$name=trim((string)($q->fetchColumn()?:''));} catch(\Throwable $e) {$name='';}
+                    if($name!=='') break;
+                }
+                $item['name']=$name!==''?$name:'Item '.(int)($item['item_id']??0);
+            }
             unset($item);
             $doc=Document::decode(Document::build(['items'=>$items],['document_type'=>$row['print_type'],'sale_id'=>$row['sale_id'],'ref_id'=>$row['ref_id'],'shift'=>$row['shift']]));
         } else {$doc=Document::decode($row['payload_json']);$doc['header']=array_replace($this->companyHeader($pdo),is_array($doc['header']??null)?$doc['header']:[]);if(!empty($row['print_type'])){$type=strtoupper((string)$row['print_type']);$doc['document_type']=$type;if(empty($doc['title']))$doc['title']=$type==='BOT'?'BAR ORDER TICKET':($type==='KOT'?'KITCHEN ORDER TICKET':($type==='CUSTOMER_BILL'?'CUSTOMER BILL':$type));}}
