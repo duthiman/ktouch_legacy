@@ -82,6 +82,39 @@ $sum=0;
               </script>
  
 <script type="text/javascript">
+    function ctrCloseVarianceReprint() {
+      var modal = document.getElementById('ctr-reprint-modal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function ctrConfirmVarianceReprint(counter, shift) {
+      var modal = document.getElementById('ctr-reprint-modal');
+      var confirm = document.getElementById('ctr-reprint-confirm');
+      if (!modal || !confirm) {
+        alert('Please load the variance report first.');
+        return;
+      }
+      modal.style.display = 'block';
+      confirm.onclick = function() {
+        confirm.disabled = true;
+        confirm.textContent = 'Queueing...';
+        $.post('queue_variance.php', { counter: counter, shift: shift })
+          .done(function(response) {
+            if (response && response.ok) {
+              ctrCloseVarianceReprint();
+              alert('Variance report queued for printing.');
+            } else {
+              alert(response && response.message ? response.message : 'Could not queue the variance report.');
+            }
+          })
+          .fail(function() { alert('Could not connect to the print queue.'); })
+          .always(function() {
+            confirm.disabled = false;
+            confirm.textContent = 'Yes, queue report';
+          });
+      };
+    }
+
     function filter_report(){
       shift = document.getElementById('pick').value;  
       counter = document.getElementById('counter').value;
