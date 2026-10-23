@@ -1165,11 +1165,16 @@ if (!function_exists('repo_set_sale_status')) {
         if (function_exists('kw_ensure_sale_status_schema')) {
             kw_ensure_sale_status_schema($connection);
         }
+        if (function_exists('kw_schema_ensure_column')) {
+            kw_schema_ensure_column('kp_sale_status', 'sale_type', "VARCHAR(20) NOT NULL DEFAULT 'normal' AFTER bill_position");
+        }
+        $sale_type = ($parent_sale_id > 0 || $status === 3 || $mode === 'last') ? 'open' : 'normal';
+        $sale_type = mysqli_real_escape_string($connection, $sale_type);
 
         return mysqli_query(
             $connection,
-            "INSERT INTO kp_sale_status (user_id, sale_id, status, mode, parent_status, parent_sale_id, counter_id)
-             VALUES ('$user_id', '$sale_id', '$status', '$mode', '$parent_status', '$parent_sale_id', '$counter_id')
+            "INSERT INTO kp_sale_status (user_id, sale_id, status, mode, parent_status, parent_sale_id, counter_id, sale_type)
+             VALUES ('$user_id', '$sale_id', '$status', '$mode', '$parent_status', '$parent_sale_id', '$counter_id', '$sale_type')
              ON DUPLICATE KEY UPDATE
                 user_id=VALUES(user_id),
                 sale_id=VALUES(sale_id),
@@ -1177,7 +1182,8 @@ if (!function_exists('repo_set_sale_status')) {
                 mode=VALUES(mode),
                 parent_status=VALUES(parent_status),
                 parent_sale_id=VALUES(parent_sale_id),
-                counter_id=VALUES(counter_id)"
+                counter_id=VALUES(counter_id),
+                sale_type=VALUES(sale_type)"
         );
     }
 }
