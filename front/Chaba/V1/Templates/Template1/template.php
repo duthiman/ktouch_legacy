@@ -3,6 +3,7 @@ $header = is_array($document['header'] ?? null) ? $document['header'] : [];
 $items = is_array($document['items'] ?? null) ? $document['items'] : [];
 $summary = is_array($document['summary'] ?? null) ? $document['summary'] : [];
 $type = strtoupper((string)($document['document_type'] ?? ($templateType ?? 'DOCUMENT')));
+$isBill = $type === 'BILL';
 $esc = static function($value) {
     $text=(string)$value;
     if (strpos($text,'__CHABA_ITEM__')===0) {
