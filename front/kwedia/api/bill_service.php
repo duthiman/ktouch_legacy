@@ -2004,7 +2004,7 @@ if (!function_exists('bill_service_open_fresh_each')) {
         if (!repo_register_parent_closed_opened($sale_id, 'each', $identifier, $user_id)) {
             throw new RuntimeException('Could not register open EACH parent.');
         }
-        if (!repo_set_sales_open_bill_position($sale_id, $user_id, 1)) {
+        if (!repo_set_sales_open_bill_position($sale_id, $user_id, 1, $sale_id)) {
             throw new RuntimeException('Could not initialize open EACH bill position.');
         }
 
@@ -3028,11 +3028,15 @@ if (!function_exists('bill_service_initialise_open')) {
                     throw new RuntimeException('Could not allocate a new open child sale.');
                 }
                 $bill_position = ((int)($open_parent['bill_position'] ?? 0)) + 1;
+                $previous_sale_id = (int)($open_parent['previous_sale_id'] ?? 0);
+                if ($previous_sale_id < 1) {
+                    $previous_sale_id = $parent_sale_id;
+                }
                 if (!repo_set_sale_status($user_id, $sale_id, 3, 'each', 1, $parent_sale_id, $counter_id)
                     || !repo_set_sale_position($user_id, $sale_id, $bill_position)) {
                     throw new RuntimeException('Could not create the open child sale status.');
                 }
-                if (!repo_set_sales_open_bill_position($parent_sale_id, $user_id, $bill_position)) {
+                if (!repo_set_sales_open_bill_position($parent_sale_id, $user_id, $bill_position, $sale_id)) {
                     throw new RuntimeException('Could not advance the open bill position.');
                 }
             } else {
@@ -3056,23 +3060,6 @@ if (!function_exists('bill_service_initialise_open')) {
                 throw new RuntimeException('Could not save the open working sale status.');
             }
             if ($mode === 'each') {
-                // Preserve the actual preceding sale id for the printed
-                // summary. The parent is used for the first child.
-                $previous_sale_id = $parent_sale_id;
-                $previous_query = mysqli_query(
-                    $connection,
-                    "SELECT sale_id
-                     FROM kp_sale_status
-                     WHERE user_id='" . (int)$user_id . "'
-                       AND (sale_id='" . (int)$parent_sale_id . "' OR parent_sale_id='" . (int)$parent_sale_id . "')
-                       AND sale_id<'" . (int)$sale_id . "'
-                     ORDER BY bill_position DESC, sale_id DESC
-                     LIMIT 1"
-                );
-                $previous_row = $previous_query ? mysqli_fetch_assoc($previous_query) : null;
-                if ($previous_row && (int)($previous_row['sale_id'] ?? 0) > 0) {
-                    $previous_sale_id = (int)$previous_row['sale_id'];
-                }
                 $previous_balance = (float)bill_repo_get_sale_amount($parent_sale_id);
                 $previous_balance += (float)column_total('kp_sales', 'amount', "parent='" . (int)$parent_sale_id . "' AND sale_id<'" . (int)$sale_id . "'");
                 if (!repo_set_sale_lineage($user_id, $sale_id, $bill_position, $previous_sale_id, $previous_balance, $bill_position)) {

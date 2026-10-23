@@ -1633,9 +1633,10 @@ if (!function_exists('repo_upsert_sales_open')) {
 }
 
 if (!function_exists('repo_set_sales_open_bill_position')) {
-    function repo_set_sales_open_bill_position($parent_sale_id, $user_id, $position) {
+    function repo_set_sales_open_bill_position($parent_sale_id, $user_id, $position, $previous_sale_id = null) {
         global $connection;
-        return mysqli_query($connection, "UPDATE kp_shift_sales_open SET bill_position='" . (int)$position . "', bill_count='" . (int)$position . "' WHERE sale_id='" . (int)$parent_sale_id . "' AND user_id='" . (int)$user_id . "' AND status=1");
+        $previous_sql = $previous_sale_id === null ? '' : ", previous_sale_id='" . (int)$previous_sale_id . "'";
+        return mysqli_query($connection, "UPDATE kp_shift_sales_open SET bill_position='" . (int)$position . "', bill_count='" . (int)$position . "'" . $previous_sql . " WHERE sale_id='" . (int)$parent_sale_id . "' AND user_id='" . (int)$user_id . "' AND status=1");
     }
 }
 
