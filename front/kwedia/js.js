@@ -882,7 +882,28 @@ function updateOpenOrderButtons(data) {
 window.kwContinueOpen = function(desktopConfirm) {
   var mode = String(window.__kwOpenBillMode || 'last').toLowerCase();
   if (mode !== 'last' && mode !== 'each') mode = 'last';
-  if (desktopConfirm && !window.confirm('Continue this open ' + mode.toUpperCase() + ' bill?')) {
+  if (desktopConfirm) {
+    var existing = document.getElementById('kw-continue-confirm');
+    if (existing) existing.remove();
+    var modal = document.createElement('div');
+    modal.id = 'kw-continue-confirm';
+    modal.className = 'kw-local-confirm-backdrop';
+    modal.innerHTML = '<div class="kw-local-confirm" role="dialog" aria-modal="true" aria-labelledby="kw-continue-confirm-title">'
+      + '<div class="kw-local-confirm-icon">?</div>'
+      + '<h3 id="kw-continue-confirm-title">Continue Open Bill?</h3>'
+      + '<p>This will continue the current <strong>OPEN ' + mode.toUpperCase() + '</strong> bill and keep it active.</p>'
+      + '<div class="kw-local-confirm-actions"><button type="button" class="kw-local-confirm-cancel">Cancel</button><button type="button" class="kw-local-confirm-ok">Continue</button></div>'
+      + '</div>';
+    document.body.appendChild(modal);
+    var close = function() { modal.remove(); };
+    modal.querySelector('.kw-local-confirm-cancel').onclick = close;
+    modal.querySelector('.kw-local-confirm-ok').onclick = function() {
+      close();
+      kwContinueOpen(false);
+    };
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) close();
+    });
     return;
   }
   var counterId = Number(window.__kwCounterId || $('#bill_cntr_select').val() || 0);
