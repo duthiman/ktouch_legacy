@@ -22,6 +22,8 @@ while ($counter_select_query && ($counter_select_row = mysqli_fetch_assoc($count
 }
 $counter_select_single = count($counter_select_rows) === 1 ? $counter_select_rows[0] : null;
 ?>
+<link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
+<script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
 <style>
   .counter-select-shell .modal-content{width:100%;max-width:460px;margin:0 auto;border:0;border-radius:18px;overflow:hidden;box-shadow:0 20px 40px rgba(33,19,6,.24)}
   .counter-select-shell .modal-header{border:0;padding:14px 16px;background:linear-gradient(135deg,#7e2014,#b94828 52%,#e7a33a);color:#fff8ea}

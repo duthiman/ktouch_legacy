@@ -12,6 +12,8 @@ $sale_id = isset($_REQUEST['sale_id']) ? (int)$_REQUEST['sale_id'] : 0;
 $init_status = $sale_id ? 2 : 1;
 $init_api = "../kwedia/api/bill_api.php";
 ?>
+<link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
+<script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
 <style type="text/css">
   .counter-select-shell .modal-content {
     width: 100%;
