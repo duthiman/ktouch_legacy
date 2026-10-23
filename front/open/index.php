@@ -1101,6 +1101,8 @@ include("../clude/head.php");
       };
 
       window.confirmCloseOpenOrder = function(parentSaleId, printFinal, billCounterId) {
+        if (window.__openCloseSubmitting) return;
+        window.__openCloseSubmitting = true;
         parentSaleId = parseInt(parentSaleId, 10) || 0;
         if (parentSaleId < 1) {
           alert('Invalid bill selected.');
@@ -1122,6 +1124,7 @@ include("../clude/head.php");
         }).done(function(res) {
           var payload = res && res.data ? res.data : {};
           if (!res || !res.ok) {
+            window.__openCloseSubmitting = false;
             alert(res && res.message ? res.message : 'Unable to close this bill right now.');
             return;
           }
@@ -1136,6 +1139,7 @@ include("../clude/head.php");
           }
           $('#modal').modal('hide');
         }).fail(function() {
+          window.__openCloseSubmitting = false;
           alert('Unable to close this bill right now.');
         });
       };

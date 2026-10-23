@@ -163,6 +163,7 @@ switch ($action) {
             'scenario' => (string)($result['scenario'] ?? ''),
             'sale_id' => (int)($result['sale_id'] ?? 0),
             'amount' => (float)($result['amount'] ?? 0),
+            'queued_jobs' => is_array($result['queued_jobs'] ?? null) ? $result['queued_jobs'] : [],
             'redirect' => (string)($result['redirect'] ?? ''),
         ], $result['ok'] ? 200 : 400);
         break;

@@ -53,6 +53,7 @@
   var familyRoot = document.getElementById('open-counter-family');
   var modalData = null;
   var selectedView = null;
+  var submitting = false;
   function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
   function money(v){return Number(v||0).toFixed(2);}
   function show(msg, type){feedback.style.display='block'; feedback.className='alert alert-' + (type||'info'); feedback.textContent=msg;}
@@ -112,6 +113,10 @@
     });
   }
   function submit(counterId, billMode, isClose) {
+    if (submitting) return;
+    submitting = true;
+    var actionButtons = grid ? grid.querySelectorAll('button') : [];
+    for (var b = 0; b < actionButtons.length; b++) actionButtons[b].disabled = true;
     var continueSaleId = saleId;
     if (selectedView && selectedView.is_open) {
       continueSaleId = Number(selectedView.sale_id || 0) || saleId;
@@ -133,6 +138,7 @@
       }).done(function(html) {
         $('#load').html(html);
       }).fail(function() {
+        submitting = false;
         show('Could not load close counter selection right now.', 'danger');
       });
       return;
@@ -151,12 +157,14 @@
       }
     }).done(function(res){
       if (!res || !res.ok) {
+        submitting = false;
+        for (var b = 0; b < actionButtons.length; b++) actionButtons[b].disabled = false;
         show(res && res.message ? res.message : 'Could not complete this action.', 'danger');
         return;
       }
       var redirect = (res.data && res.data.redirect) ? res.data.redirect : '../kwedia/index.php';
       window.location = redirect;
-    }).fail(function(){ show('Could not complete this action right now.', 'danger'); });
+      }).fail(function(){ submitting = false; for (var b = 0; b < actionButtons.length; b++) actionButtons[b].disabled = false; show('Could not complete this action right now.', 'danger'); });
   }
   $.getJSON('api/open_api.php', { action:'counter', sale_id:saleId }).done(function(res){
     var data = res && res.data ? res.data : {};
