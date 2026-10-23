@@ -46,6 +46,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
             <div class="wrapper" style="background-color: #B10421; text-align: center; padding: 2px;">
               <b style="color: white; font-size: 20px;">ACCOUNT : <span id="kw-account-name"></span></b> <br>
               <b style="color: white; font-size: 20px;"><span id="kw-counter-name"></span> COUNTER BILL NO: <span id="kw-sale-id">0</span></b>
+              <div class="kw-order-mode-badge" id="kw-order-mode-desktop">FRESH ORDER</div>
             </div>
             <div id="screen" style="overflow-y:scroll; height: 80%; width: auto; background-color: #fff; padding:5px;"></div>
               <div class="wrapper kw-desktop-order-actions" style="background-color: transparent; padding: 10px 0px 2px 0px;">
@@ -73,6 +74,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
               <strong>Bill No</strong>
                 <span id="kw-sale-id-mobile">0</span>
             </div>
+            <div class="kw-order-mode-badge" id="kw-order-mode-mobile">FRESH ORDER</div>
           </div>
           <div class="kw-top-actions">
             <button onclick="location.reload();" class="kw-top-btn" type="button">Refresh</button>
@@ -122,6 +124,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
           <div class="kw-account-strip">
             <b>Account : <span id="kw-cart-account-name"></span></b>
             <b><span id="kw-cart-counter-name"></span> Counter Bill No: <span id="kw-cart-sale-id">0</span></b>
+            <span class="kw-order-mode-badge" id="kw-order-mode-cart">FRESH ORDER</span>
           </div>
           <div id="screen_mobile"></div>
           <div class="kw-order-actions" style="grid-template-columns: 1fr 1fr;">

@@ -463,6 +463,18 @@ body {
 .kw-item-button.stock-green { background: #008000; border-color: #008000; }
 .kw-item-button.stock-orange { background: #ffa500; border-color: #ffa500; }
 .kw-item-button.stock-red { background: #ff0000; border-color: #ff0000; }
+.kw-order-mode-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #fff3cd;
+  color: #7a4b00;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
 /* Keep the checkout/confirmation modal clear of the floating cart control. */
 body.modal-open #kw-cart-toggle,
 #modal.show ~ #kw-cart-toggle {
