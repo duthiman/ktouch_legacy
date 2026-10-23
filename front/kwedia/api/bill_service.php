@@ -1665,6 +1665,13 @@ if (!function_exists('bill_service_resolve_closed_parent_child')) {
             }
         }
 
+        // Reopening a historical closed bill must always create a new sale.
+        // Never reuse the closed parent itself, even if an older registry row
+        // incorrectly points its sale_id back to that parent.
+        if ($child_sale_id === $parent_sale_id) {
+            $child_sale_id = 0;
+        }
+
         if ($child_sale_id < 1) {
             $child_sale_id = bill_repo_last_id($user_id);
             if ($child_sale_id < 1) {
