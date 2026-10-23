@@ -1095,6 +1095,41 @@ if (!function_exists('bill_service_queue_print_job')) {
         $payload_header = is_array($route_params['_payload_header'] ?? null) ? $route_params['_payload_header'] : [];
         unset($route_params['_payload_header']);
 
+        // Keep the payment line in the frozen bill payload so Chaba can render it
+        // after the sale has been queued and the live sale data is cleared.
+        if (strtolower($print_type) === 'bill' && empty($payload_header['payment_line'])) {
+            $print_settings = [];
+            $settings_result = mysqli_query($connection, "SELECT * FROM kp_settings_print WHERE print_doc=1 LIMIT 1");
+            if ($settings_result) {
+                $print_settings = mysqli_fetch_assoc($settings_result) ?: [];
+            }
+            $general_settings = [];
+            $general_result = mysqli_query($connection, "SELECT * FROM kp_settings_gen WHERE id=1 LIMIT 1");
+            if ($general_result) {
+                $general_settings = mysqli_fetch_assoc($general_result) ?: [];
+            }
+            $payment_source = strtoupper((string)($print_settings['mpesa_source'] ?? 'MAIN')) === 'COUNTER' ? 'COUNTER' : 'MAIN';
+            $payment_type = (string)($print_settings['mpesa'] ?? 1) == '2' ? 'PAYBILL' : 'TILL';
+            $payment_number = (string)($general_settings['mpesa_no'] ?? '');
+            $payment_account = (string)($general_settings['mpesa_account'] ?? '');
+            if ($payment_source === 'COUNTER' && $counter_id > 0) {
+                $counter_result = mysqli_query($connection, "SELECT mpesa_type, mpesa_shortcode, mpesa_account FROM kp_counters WHERE cntr_id='" . (int)$counter_id . "' LIMIT 1");
+                $counter_settings = $counter_result ? (mysqli_fetch_assoc($counter_result) ?: []) : [];
+                if (!empty($counter_settings['mpesa_type'])) {
+                    $payment_type = strtoupper((string)$counter_settings['mpesa_type']);
+                }
+                if (array_key_exists('mpesa_shortcode', $counter_settings)) {
+                    $payment_number = (string)$counter_settings['mpesa_shortcode'];
+                }
+                if (array_key_exists('mpesa_account', $counter_settings)) {
+                    $payment_account = (string)$counter_settings['mpesa_account'];
+                }
+            }
+            $payload_header['payment_line'] = $payment_type === 'PAYBILL'
+                ? 'PAYBILL ' . $payment_number . ' ACCOUNT: ' . $payment_account
+                : 'TILL ' . $payment_number;
+        }
+
         if ($sale_id < 1 || $user_id < 1 || $counter_id < 1 || $print_type === '' || $route_path === '') {
             bill_log(
                 'PRINT_QUEUE_SKIP',
