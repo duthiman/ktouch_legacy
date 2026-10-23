@@ -1,8 +1,0 @@
-04-Aug-2026 10:53:52am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=127.0.0.1
-04-Aug-2026 10:54:39am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=127.0.0.1
-04-Aug-2026 10:56:01am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=127.0.0.1
-04-Aug-2026 10:56:15am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=127.0.0.1
-04-Aug-2026 10:59:42am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=127.0.0.1
-04-Aug-2026 11:00:03am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=127.0.0.1
-04-Aug-2026 11:01:19am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=127.0.0.1
-04-Aug-2026 11:01:31am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=127.0.0.1

@@ -1,7 +1,0 @@
-21-Oct-2026 01:43:31pm|Ezekiel|STARTED|-|-|BUY STOCK DRAFT NO|86|FOR BUTCHERY COUNTER|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1
-21-Oct-2026 01:43:41pm|Ezekiel|ADDED|2|BANANA|AT 300|TO BUY STOCK NO|86|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1
-21-Oct-2026 01:43:53pm|Ezekiel|ADDED|10|BEEF RAW|AT 730|TO BUY STOCK NO|86|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1
-21-Oct-2026 01:44:03pm|Ezekiel|PLACED AND STOCKED|-|-|BUY STOCK NO|86|FOR BUTCHERY COUNTER|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1
-21-Oct-2026 01:45:32pm|Ezekiel|STARTED|-|-|BUY STOCK DRAFT NO|87|FOR BUTCHERY COUNTER|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1
-21-Oct-2026 01:46:17pm|Ezekiel|ADDED|5|BEEF RAW|AT 300|TO BUY STOCK NO|87|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1
-21-Oct-2026 01:46:31pm|Ezekiel|PLACED AND STOCKED|-|-|BUY STOCK NO|87|FOR BUTCHERY COUNTER|SHIFT=2026-10-21|USER_ID=10|MODULE=clients/ktouch/ndeck/front/kug/API|URI=/clients/ktouch/ndeck/front/kug/API/kug_api.php|IP=127.0.0.1

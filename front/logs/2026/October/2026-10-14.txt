@@ -1,1 +1,0 @@
-14-Oct-2026 10:05:00pm|System|LOGGED OUT|SHIFT=2026-10-10|USER_ID=0|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1

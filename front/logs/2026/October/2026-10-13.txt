@@ -1,1 +1,0 @@
-13-Oct-2026 10:17:11am|HARUN|LOGGED OUT|SHIFT=2026-10-10|USER_ID=4|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=127.0.0.1

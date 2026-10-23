@@ -1,5 +1,0 @@
-11-Aug-2026 07:04:00pm|KTOUCH_ADMIN|STARTED|-|-|BUY STOCK DRAFT NO|11|FOR BAR COUNTER|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug/API|URI=/clients/ktouch/mvure/front/kug/API/kug_api.php|IP=192.168.88.146
-11-Aug-2026 07:05:38pm|KTOUCH_ADMIN|ADDED|5|4 COUSIN'S SWEET WHITE 750ML  |AT 50|TO BUY STOCK NO|11|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug/API|URI=/clients/ktouch/mvure/front/kug/API/kug_api.php|IP=192.168.88.146
-11-Aug-2026 07:06:55pm|KTOUCH_ADMIN|STARTED|-|-|BUY STOCK DRAFT NO|12|FOR BAR COUNTER|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug/API|URI=/clients/ktouch/mvure/front/kug/API/kug_api.php|IP=::1
-11-Aug-2026 07:11:11pm|KTOUCH_ADMIN|STARTED|-|-|BUY STOCK DRAFT NO|13|FOR BAR COUNTER|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug/API|URI=/clients/ktouch/mvure/front/kug/API/kug_api.php|IP=192.168.88.146
-11-Aug-2026 07:30:46pm|KTOUCH_ADMIN|STARTED|-|-|BUY STOCK DRAFT NO|14|FOR BAR COUNTER|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug/API|URI=/clients/ktouch/mvure/front/kug/API/kug_api.php|IP=::1

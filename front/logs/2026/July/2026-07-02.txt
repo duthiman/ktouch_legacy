@@ -1,1 +1,0 @@
-02-Jul-2026 09:04:01am|KTOUCH_ADMIN|STARTED|-|-|REQUISTIO NO|366FORBAR COUNTER |SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/gwitia|URI=/clients/ktouch/mvure/front/gwitia/req_init.php|IP=::1

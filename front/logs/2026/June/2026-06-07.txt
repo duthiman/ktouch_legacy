@@ -1,6 +1,0 @@
-07-Jun-2026 10:55:57pm|Superadmin|CLOSED|-|-|COUNTER|2026-06-07|SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/front/counter|URI=/clients/ktouch/gpints/front/counter/close_counter.php|IP=::1
-07-Jun-2026 10:59:08pm|Superadmin|LOGGED OUT|SHIFT=2026-04-02|USER_ID=1|MODULE=clients/ktouch/gpints/front|URI=/clients/ktouch/gpints/front/log_out.php|IP=::1
-07-Jun-2026 10:59:19pm|TEST USER 1|LOGGED IN|SHIFT=2026-04-02|USER_ID=4|MODULE=clients/ktouch/gpints/front|URI=/clients/ktouch/gpints/front/kuingira.php|IP=::1
-07-Jun-2026 10:59:35pm|TEST USER 1|CONFIRMED RETURN|1.00|MONSTER  |FROM ORDER NO|1148|SHIFT=2026-04-02|USER_ID=4|MODULE=clients/ktouch/gpints/front/ret|URI=/clients/ktouch/gpints/front/ret/ret_confirm.php?id=176|IP=::1
-07-Jun-2026 11:00:04pm|TEST USER 1|CLOSED|-|-|COUNTER|2026-06-07|SHIFT=2026-06-07|USER_ID=4|MODULE=clients/ktouch/gpints/front/counter|URI=/clients/ktouch/gpints/front/counter/close_counter.php|IP=::1
-07-Jun-2026 11:00:40pm|TEST USER 1|LOGGED OUT|SHIFT=2026-06-07|USER_ID=4|MODULE=clients/ktouch/gpints/front|URI=/clients/ktouch/gpints/front/log_out.php|IP=::1

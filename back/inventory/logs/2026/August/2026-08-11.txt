@@ -1,1 +1,0 @@
-11-Aug-2026 05:08:18pm|KTOUCH_ADMIN|ISSUED|-|-|REQUISITION NO|365| FOR BAR COUNTER|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/back/inventory/API|URI=/clients/ktouch/mvure/back/inventory/API/inventory_api.php|IP=::1

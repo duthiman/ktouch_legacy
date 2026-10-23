@@ -1,1 +1,0 @@
-05-Jul-2026 03:26:42pm|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.2.107

@@ -1,2 +1,0 @@
-{"timestamp":"2026-08-04T18:10:33+00:00","action":"cash_api_request","user_id":1,"uri":"\/clients\/ktouch\/mvure\/front\/cashnew\/API\/cash_api.php?action=live","context":{"action":"live","user_id":1}}
-{"timestamp":"2026-08-04T18:10:33+00:00","action":"cash_api_request","user_id":1,"uri":"\/clients\/ktouch\/mvure\/front\/cashnew\/API\/cash_api.php?action=panel&panel=cashbox","context":{"action":"panel","user_id":1}}

@@ -1,1 +1,6 @@
 inc/connection.php
+
+# Runtime logs and generated request traces are local-only.
+**/logs/
+2026/
+*.jsonl

@@ -1,9 +1,0 @@
-01-Jul-2026 09:53:12am|KTOUCH_ADMIN|LOGGED IN TO TAKE STOCK|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.100.37
-01-Jul-2026 10:36:51am|KTOUCH_ADMIN|LOGGED OUT|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.100.37
-01-Jul-2026 10:36:55am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.100.37
-01-Jul-2026 10:36:58am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.100.37
-01-Jul-2026 10:48:34am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=::1
-01-Jul-2026 11:30:53am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.100.22
-01-Jul-2026 11:34:20am|KTOUCH_ADMIN|STARTED|-|-|BUY STOCK DRAFT NO|8|FOR BAR COUNTER|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front/kug|URI=/clients/ktouch/mvure/front/kug/buy_init.php|IP=::1
-01-Jul-2026 11:47:45am|KTOUCH_ADMIN|LOGGED IN|SHIFT=2026-06-29|USER_ID=1|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/kuingira.php|IP=192.168.100.66
-01-Jul-2026 12:11:57pm|System|LOGGED OUT|SHIFT=2026-06-29|USER_ID=0|MODULE=clients/ktouch/mvure/front|URI=/clients/ktouch/mvure/front/log_out.php|IP=192.168.100.37
