@@ -88,8 +88,8 @@ $label = mysqli_real_escape_string($connection, 'SVP');
 $shiftSql = mysqli_real_escape_string($connection, $shift);
 $requestedBy = $userId;
 $ok = mysqli_query($connection, "INSERT INTO kp_print_queue
-    (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json)
-    VALUES (0,0,'SVP','{$label}','{$counter}','','','{$requestedBy}',0,0,0,'','{$shiftSql}','{$payloadSql}','')");
+    (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json)
+    VALUES (0,0,'SVP','{$label}','{$counter}','','','{$requestedBy}',0,0,0,'','{$shiftSql}','{$payloadSql}')");
 if (!$ok) {
     echo json_encode(['ok' => false, 'message' => 'Could not queue the variance report.']);
     exit;
