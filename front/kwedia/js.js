@@ -213,9 +213,11 @@ $(document).ready(function(){
   });
   $(document).on('click','#kw-cart-toggle', function(){
     $('#kw-cart-drawer').toggleClass('open');
+    setKwCartFabVisible(!$('#kw-cart-drawer').hasClass('open'));
   });
   $(document).on('click','#kw-cart-close', function(){
     $('#kw-cart-drawer').removeClass('open');
+    setKwCartFabVisible(true);
   });
   $(document).on('change','.deci-mode-switch', function(){
     setDeciMode($(this).is(':checked'));
