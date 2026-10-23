@@ -2899,20 +2899,24 @@ if (!function_exists('bill_service_initialise_open')) {
 
         try {
             if ($mode === 'each') {
-                $child = bill_service_resolve_closed_parent_child($user_id, $parent_sale_id, $counter_id, $params, [
-                    'closed_parent' => [
-                        'sale_id' => $parent_sale_id,
-                        'user_id' => $user_id,
-                        'bill_mode' => 'each',
-                        'identifier_type' => (string)($open_parent['identifier_type'] ?? ''),
-                        'identifier_value' => (string)($open_parent['identifier_value'] ?? ''),
-                        'identifier_label' => (string)($open_parent['identifier_label'] ?? ''),
-                        'identifier_hex' => (string)($open_parent['identifier_hex'] ?? ''),
-                    ],
-                    'print_counter_id' => $counter_id,
-                    'activate_session' => false,
-                ]);
-                $sale_id = (int)($child['child_sale_id'] ?? 0);
+                // V1 EACH always creates a new working sale. Never fall back
+                // to the parent when the open registry has no child yet.
+                $sale_id = bill_repo_last_id($user_id);
+                if ($sale_id < 1) {
+                    throw new RuntimeException('Could not allocate a new open child sale.');
+                }
+                $position_result = mysqli_query(
+                    $connection,
+                    "SELECT COALESCE(MAX(bill_position), 0) AS last_position
+                     FROM kp_sale_status
+                     WHERE user_id='$user_id' AND parent_sale_id='$parent_sale_id'"
+                );
+                $position_row = $position_result ? mysqli_fetch_assoc($position_result) : null;
+                $bill_position = ((int)($position_row['last_position'] ?? 0)) + 1;
+                if (!repo_set_sale_status($user_id, $sale_id, 3, 'each', 1, $parent_sale_id, $counter_id)
+                    || !repo_set_sale_position($user_id, $sale_id, $bill_position)) {
+                    throw new RuntimeException('Could not create the open child sale status.');
+                }
             } else {
                 $sale_id = $parent_sale_id;
                 if (!repo_set_sale_status($user_id, $sale_id, 3, 'last', 1, $parent_sale_id, $counter_id)) {
