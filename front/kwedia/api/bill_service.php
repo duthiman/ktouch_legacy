@@ -571,7 +571,35 @@ if (!function_exists('bill_service_open_load_counter_modal')) {
                 $parent_items = bill_repo_fetch_bill_items_summary($sale_id, false);
             }
         } elseif ($is_open_bill_mode) {
-            $parent_items = bill_repo_fetch_bill_items_summary($sale_id, false);
+            // A fresh open-LAST bill is stored in the open registry and its
+            // accumulated items live in kp_shift_sale_open_items, not in
+            // kp_sale_print. Show that open snapshot in the counter modal.
+            $open_rows = function_exists('bill_service_fetch_shift_open_items')
+                ? bill_service_fetch_shift_open_items($sale_id)
+                : [];
+            $open_grouped = [];
+            foreach ($open_rows as $open_row) {
+                $item_id = (int)($open_row['item_id'] ?? 0);
+                $attr_id = (int)($open_row['attr_id'] ?? 0);
+                $key = $item_id . ':' . $attr_id;
+                if (!isset($open_grouped[$key])) {
+                    $name = function_exists('bill_repo_get_item_name')
+                        ? bill_repo_get_item_name($item_id)
+                        : '';
+                    $open_grouped[$key] = [
+                        'item_id' => $item_id,
+                        'name' => $name !== '' ? $name : ('Item ' . $item_id),
+                        'qty' => 0,
+                        'total' => 0,
+                    ];
+                }
+                $open_grouped[$key]['qty'] += (float)($open_row['qty'] ?? 0);
+                $open_grouped[$key]['total'] += (float)($open_row['total'] ?? 0);
+            }
+            $parent_items = array_values($open_grouped);
+            if (count($parent_items) === 0) {
+                $parent_items = bill_repo_fetch_bill_items_summary($sale_id, false);
+            }
         }
 
         $root_view_items = count($parent_items) > 0 ? $parent_items : $bill_items;
