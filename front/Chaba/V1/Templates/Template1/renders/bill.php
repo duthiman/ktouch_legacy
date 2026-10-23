@@ -9,8 +9,7 @@ $defaultSections = [
     'items',
     'tax',
     'thank_you',
-    'paybill',
-    'qr',
+    'paybill', 
     'advertising',
 ];
 

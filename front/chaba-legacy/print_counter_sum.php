@@ -19,7 +19,7 @@ if ($counter < 1) {
 }
 
 if ($counter < 1 || $shift === '') {
-    header('Location:../dash/dash.php');
+ //   header('Location:../dash/dash.php');
     exit;
 }
 
@@ -33,7 +33,7 @@ if ($summary_id < 1) {
 }
 
 if ($summary_id < 1) {
-    header('Location:../dash/dash.php');
+ //   header('Location:../dash/dash.php');
     exit;
 }
 

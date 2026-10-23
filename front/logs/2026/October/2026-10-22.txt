@@ -28,3 +28,11 @@
 22-Oct-2026 09:30:45pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1
 22-Oct-2026 09:36:25pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=192.168.0.125
 22-Oct-2026 09:43:54pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=192.168.0.125
+22-Oct-2026 11:15:08pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1
+22-Oct-2026 11:21:43pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=10.212.73.233
+22-Oct-2026 11:24:52pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=10.212.73.233
+22-Oct-2026 11:33:22pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=10.212.73.233
+22-Oct-2026 11:34:47pm|PETER|LOGGED OUT|SHIFT=2026-10-21|USER_ID=2|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=10.212.73.233
+22-Oct-2026 11:35:30pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1
+22-Oct-2026 11:57:00pm|SHEE|LOGGED OUT|SHIFT=2026-10-21|USER_ID=7|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1
+22-Oct-2026 11:58:05pm|PETER|LOGGED OUT|SHIFT=2026-10-21|USER_ID=2|MODULE=clients/ktouch/ndeck/front|URI=/clients/ktouch/ndeck/front/log_out.php|IP=::1

@@ -843,8 +843,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th style="width: 90px;">#</th>
-                  <th style="width: 90px;">Shift</th>
+                  <th style="width: 90px;">#</th> 
                   <th>Order Time</th>
                   <th>Bill No.</th>
                   <th>Counter</th>
@@ -858,8 +857,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
                 <?php } else { ?>
                 <?php foreach ($sales_rows as $index => $row) { ?>
                 <tr class="sale-row" data-bill="<?php echo strtolower($row['sale_id']); ?>" data-item="<?php echo htmlspecialchars($row['search']); ?>" data-amount="<?php echo strtolower(number_format((float)$row['total'], 2)); ?>" data-kind="<?php echo htmlspecialchars($row['kind']); ?>">
-                  <td><?php echo $index + 1; ?></td>
-                  <td><?php echo $row['shift']; ?></td>
+                  <td><?php echo $index + 1; ?></td> 
                   <td><?php echo htmlspecialchars($row['order_time'] ?? ''); ?></td>
                   <td><?php echo htmlspecialchars($row['label']); ?></td>
                   <td><?php echo htmlspecialchars($row['counter'] ?? ''); ?></td>
@@ -1097,7 +1095,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
             <thead>
               <tr>
                 <th>Bill</th>
-                <th>Shift</th>
+                <!-- <th>Shift</th> -->
                 <th>Order Time</th>
                 <th>Counter</th>
                 <th>Total</th>
@@ -1111,7 +1109,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
               <?php foreach ($sales_rows as $row) { ?>
               <tr class="sale-row-mobile" data-bill="<?php echo strtolower($row['sale_id']); ?>" data-item="<?php echo htmlspecialchars($row['search']); ?>" data-amount="<?php echo strtolower(number_format((float)$row['total'], 2)); ?>" data-kind="<?php echo htmlspecialchars($row['kind']); ?>">
                 <td><?php echo htmlspecialchars($row['label']); ?></td>
-                <td><?php echo $row['shift']; ?></td>
+                <!-- <td><?php //echo $row['shift']; ?></td> -->
                 <td><?php echo htmlspecialchars($row['order_time'] ?? ''); ?></td>
                 <td><?php echo htmlspecialchars($row['counter'] ?? ''); ?></td>
                 <td><?php echo number_format((float)$row['total'], 2); ?></td>
@@ -1545,7 +1543,7 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
         var kind = row.kind || 'sale';
         var id = parseInt(row.sale_id || row.id || 0, 10) || 0;
         var label = esc(row.label || ('#' + id));
-        var shift = esc(row.shift || '');
+       // var shift = esc(row.shift || '');
         var rawTime = String(row.order_time || '');
         var timeParts = rawTime.split(' ');
         var orderTime = esc(timeParts.length > 1 ? timeParts[timeParts.length - 1] : (rawTime || '—'));
