@@ -237,15 +237,28 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
   }
   .sales-panel table {
     width: 100%;
-    min-width: 100%;
-    table-layout: auto;
+    table-layout: fixed;
     margin-bottom: 0;
   }
   .sales-panel table th,
   .sales-panel table td {
     vertical-align: middle !important;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
+  #desktop_sales_rows + * { min-width: 0; }
+  .sales-main-col table th:nth-child(1),
+  .sales-main-col table td:nth-child(1) { width: 8%; }
+  .sales-main-col table th:nth-child(2),
+  .sales-main-col table td:nth-child(2) { width: 16%; }
+  .sales-main-col table th:nth-child(3),
+  .sales-main-col table td:nth-child(3) { width: 21%; }
+  .sales-main-col table th:nth-child(4),
+  .sales-main-col table td:nth-child(4) { width: 18%; }
+  .sales-main-col table th:nth-child(5),
+  .sales-main-col table td:nth-child(5) { width: 19%; }
+  .sales-main-col table th:nth-child(6),
+  .sales-main-col table td:nth-child(6) { width: 18%; }
   .sales-main-col .panel-body,
   .sales-side-col .panel-body {
     width: 100%;
@@ -711,12 +724,26 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
   .mobile-scroll {
     max-height: 50vh;
     width: 100%;
-    overflow-x: auto;
     overflow-y: auto;
   }
   .mobile-scroll table {
     width: 100%;
-    min-width: 560px;
+    table-layout: fixed;
+  }
+  .mobile-scroll table th:nth-child(1),
+  .mobile-scroll table td:nth-child(1) { width: 22%; }
+  .mobile-scroll table th:nth-child(2),
+  .mobile-scroll table td:nth-child(2) { width: 18%; }
+  .mobile-scroll table th:nth-child(3),
+  .mobile-scroll table td:nth-child(3) { width: 20%; }
+  .mobile-scroll table th:nth-child(4),
+  .mobile-scroll table td:nth-child(4) { width: 18%; }
+  .mobile-scroll table th:nth-child(5),
+  .mobile-scroll table td:nth-child(5) { width: 22%; }
+  .mobile-scroll table .sales-btn {
+    max-width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
   }
   .sold-list {
     margin: 0;
