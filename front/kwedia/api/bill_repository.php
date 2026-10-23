@@ -653,7 +653,7 @@ if (!function_exists('repo_find_active_each_child')) {
                AND mode='each'
                AND parent_status=1
                AND parent_sale_id='$parent_sale_id'
-               AND status=2
+               AND status IN (2,3)
              ORDER BY bill_position DESC, sale_id DESC
              LIMIT 1"
         );
