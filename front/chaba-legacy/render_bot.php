@@ -57,6 +57,32 @@ function kp_ticket_attribute_summary($json) {
 }
 $batch_id = (int)($_GET['batch_id'] ?? 0);
 
+function kp_bot_item_name($connection, $item_id, $stored_name = '') {
+  $stored_name = trim((string)$stored_name);
+  if ($stored_name !== '') return $stored_name;
+  $item_id = (int)$item_id;
+  if ($item_id < 1) return '';
+
+  $lookups = [
+    ['table' => 'kp_items', 'column' => 'name'],
+    ['table' => 'kp_inventory_master', 'column' => 'item_name'],
+    ['table' => 'kp_inventory_master', 'column' => 'name'],
+  ];
+  foreach ($lookups as $lookup) {
+    $table = $lookup['table'];
+    $column = $lookup['column'];
+    $table_check = mysqli_query($connection, "SHOW TABLES LIKE '" . mysqli_real_escape_string($connection, $table) . "'");
+    if (!$table_check || mysqli_num_rows($table_check) < 1) continue;
+    $column_check = mysqli_query($connection, "SHOW COLUMNS FROM `{$table}` LIKE '" . mysqli_real_escape_string($connection, $column) . "'");
+    if (!$column_check || mysqli_num_rows($column_check) < 1) continue;
+    $result = mysqli_query($connection, "SELECT `{$column}` AS item_name FROM `{$table}` WHERE item_id='{$item_id}' LIMIT 1");
+    $row = $result ? mysqli_fetch_assoc($result) : null;
+    $name = trim((string)($row['item_name'] ?? ''));
+    if ($name !== '') return $name;
+  }
+  return '';
+}
+
 $nos = 50;
 ?>
 <!DOCTYPE html>
@@ -619,7 +645,7 @@ $nos = 50;
           $grouped = [];
           while ($o = mysqli_fetch_assoc($r)) {
             $key = (int)$o['item_id'] . ':' . (int)($o['attr_id'] ?? 0);
-            if (!isset($grouped[$key])) $grouped[$key] = ['item_id' => (int)$o['item_id'], 'attr_id' => (int)($o['attr_id'] ?? 0), 'qty' => 0, 'price' => (float)$o['price'], 'total' => 0, 'attrs' => []];
+            if (!isset($grouped[$key])) $grouped[$key] = ['item_id' => (int)$o['item_id'], 'item_name' => (string)($o['item_name'] ?? ''), 'attr_id' => (int)($o['attr_id'] ?? 0), 'qty' => 0, 'price' => (float)$o['price'], 'total' => 0, 'attrs' => []];
             $grouped[$key]['qty'] += (float)$o['qty'];
             $grouped[$key]['total'] += (float)$o['total'];
             $attr_summary = kp_ticket_attribute_summary($o['accompaniment_json'] ?? '');
@@ -648,7 +674,8 @@ $nos = 50;
             }
           }
           foreach ($grouped as $o):
-            $iname = get_column('kp_items', 'name', "item_id='{$o['item_id']}'");
+            $iname = kp_bot_item_name($connection, $o['item_id'], $o['item_name'] ?? '');
+            if ($iname === '') $iname = 'Item ' . (int)$o['item_id'];
             if ($o['attr_id'] > 0) $iname .= ' (' . get_column('kp_items_attributes', 'name', "id='{$o['attr_id']}'") . ')';
             $line = $o['total'] > 0 ? $o['total'] : $o['qty'] * $o['price'];
             $sum += $line;
