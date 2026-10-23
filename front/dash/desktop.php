@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>K-TOUCH Waiter Dashboard</title>
   <link rel="stylesheet" href="../../assets/plugins/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/desktop.css?v=20261011-profile2">
+  <link rel="stylesheet" href="assets/css/desktop.css?v=20261023-shift-actions3">
 </head>
 <body data-layout="desktop">
   <header class="topbar"> 
@@ -113,6 +113,6 @@
 </div>
 <script src="../../assets/plugins/jquery/jquery-3.2.1.min.js"></script>
 <script src="../../assets/plugins/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="assets/js/dashboard.js?v=20261013-permissions2"></script>
+<script src="assets/js/dashboard.js?v=20261023-permissions3"></script>
 </body>
 </html>

@@ -127,3 +127,9 @@ body{background-image:radial-gradient(circle at 8% 18%,rgba(55,190,105,.24) 0 2p
   .profile .profile-actions button span { font-size: 11px; }
   .profile .profile-actions button b { font-size: 21px; }
 }
+
+@media (min-width: 901px) {
+  .profile .profile-actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
