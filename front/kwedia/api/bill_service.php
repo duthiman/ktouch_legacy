@@ -18,6 +18,7 @@ if (!function_exists('bill_service_get_live_context')) {
         $user_id = (int)$user_id;
         $options = is_array($options) ? $options : [];
         $require_status = !empty($options['require_status']);
+        $requested_sale_id = (int)($options['sale_id'] ?? 0);
         $thesion = repo_get_thesion($user_id); // tracing only; never used to select the sale
 
         if ($user_id < 1) {
@@ -33,7 +34,9 @@ if (!function_exists('bill_service_get_live_context')) {
             ];
         }
 
-        $status_row = repo_get_sale_status_by_user($user_id);
+        $status_row = $requested_sale_id > 0
+            ? repo_get_sale_status_for_sale($user_id, $requested_sale_id)
+            : repo_get_sale_status_by_user($user_id);
         $sale_id = (int)($status_row['sale_id'] ?? 0);
         $session_status = (int)($status_row['status'] ?? 0);
         $counter_id = (int)($status_row['counter_id'] ?? 0);
@@ -380,7 +383,11 @@ if (!function_exists('bill_service_load_submit_confirm_modal')) {
 if (!function_exists('bill_service_load_open_bill_mode_modal')) {
     function bill_service_load_open_bill_mode_modal($user_id) {
         $user_id = (int)$user_id;
-        $context = bill_service_get_live_context($user_id, ['require_status' => true]);
+        $requested_sale_id = (int)($params['sale_id'] ?? 0);
+        $context = bill_service_get_live_context($user_id, [
+            'require_status' => true,
+            'sale_id' => $requested_sale_id,
+        ]);
         if (empty($context['ok'])) {
             return [
                 'ok' => false,
