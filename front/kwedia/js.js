@@ -871,15 +871,14 @@ function updateOpenOrderButtons(data) {
   $('#kw-desktop-continue-btn, #kw-desktop-close-open-btn, #kw-mobile-continue-btn, #kw-mobile-close-open-btn').toggle(isOpenChild);
   if (isOpenChild) {
     window.__kwOpenBillMode = mode;
-    $('#kw-desktop-continue-btn, #kw-mobile-continue-btn').off('click.kwOpen').on('click.kwOpen', function() {
-      kwContinueOpen(this.id === 'kw-desktop-continue-btn');
-    });
     $('#kw-desktop-close-open-btn, #kw-mobile-close-open-btn').off('click.kwOpen').on('click.kwOpen', function() {
       openCloseParentCounterModal(parentId, mode === 'last', 'open', mode);
     });
   }
 }
 window.kwContinueOpen = function(desktopConfirm) {
+  if (window.__kwContinueBusy) return;
+  window.__kwContinueBusy = true;
   var mode = String(window.__kwOpenBillMode || 'last').toLowerCase();
   if (mode !== 'last' && mode !== 'each') mode = 'last';
   if (desktopConfirm) {
@@ -895,10 +894,11 @@ window.kwContinueOpen = function(desktopConfirm) {
       + '<div class="kw-local-confirm-actions"><button type="button" class="kw-local-confirm-cancel">Cancel</button><button type="button" class="kw-local-confirm-ok">Continue</button></div>'
       + '</div>';
     document.body.appendChild(modal);
-    var close = function() { modal.remove(); };
+    var close = function() { modal.remove(); window.__kwContinueBusy = false; };
     modal.querySelector('.kw-local-confirm-cancel').onclick = close;
     modal.querySelector('.kw-local-confirm-ok').onclick = function() {
       close();
+      window.__kwContinueBusy = false;
       kwContinueOpen(false);
     };
     modal.addEventListener('click', function(event) {
@@ -910,6 +910,7 @@ window.kwContinueOpen = function(desktopConfirm) {
   confirmDirectSubmitBill('open', mode, 'continue', {
     counter: counterId
   });
+  setTimeout(function() { window.__kwContinueBusy = false; }, 3000);
 };
 function updateOrderModeBadge(data) {
   var row = data && data.status_row ? data.status_row : {};
