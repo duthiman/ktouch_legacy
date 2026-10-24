@@ -1271,6 +1271,29 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
             $header['company_phone'] = trim((string)($company_row['phone1'] ?? '') . ' ' . (string)($company_row['phone2'] ?? ''));
             $header['logo_src'] = (string)($company_row['thermal_logo_path'] ?? $company_row['image_path'] ?? '');
         }
+        if ($type === 'BILL') {
+            $print_settings = [];
+            $settings_result = mysqli_query($connection, "SELECT * FROM kp_settings_print WHERE print_doc=1 LIMIT 1");
+            if ($settings_result) $print_settings = mysqli_fetch_assoc($settings_result) ?: [];
+            $general_settings = [];
+            $general_result = mysqli_query($connection, "SELECT * FROM kp_settings_gen WHERE id=1 LIMIT 1");
+            if ($general_result) $general_settings = mysqli_fetch_assoc($general_result) ?: [];
+
+            $payment_source = strtoupper((string)($print_settings['mpesa_source'] ?? 'MAIN')) === 'COUNTER' ? 'COUNTER' : 'MAIN';
+            $payment_type = (string)($print_settings['mpesa'] ?? 1) === '2' ? 'PAYBILL' : 'TILL';
+            $payment_number = (string)($general_settings['mpesa_no'] ?? '');
+            $payment_account = (string)($general_settings['mpesa_account'] ?? '');
+            if ($payment_source === 'COUNTER' && $counter_id > 0) {
+                $counter_result = mysqli_query($connection, "SELECT mpesa_type, mpesa_shortcode, mpesa_account FROM kp_counters WHERE cntr_id='" . (int)$counter_id . "' LIMIT 1");
+                $counter_settings = $counter_result ? (mysqli_fetch_assoc($counter_result) ?: []) : [];
+                if (!empty($counter_settings['mpesa_type'])) $payment_type = strtoupper((string)$counter_settings['mpesa_type']);
+                if (array_key_exists('mpesa_shortcode', $counter_settings)) $payment_number = (string)$counter_settings['mpesa_shortcode'];
+                if (array_key_exists('mpesa_account', $counter_settings)) $payment_account = (string)$counter_settings['mpesa_account'];
+            }
+            $header['payment_line'] = $payment_type === 'PAYBILL'
+                ? 'PAYBILL ' . $payment_number . ' ACCOUNT: ' . $payment_account
+                : 'TILL ' . $payment_number;
+        }
         $payload = json_encode([
             'payload_version' => 1,
             'document_type' => $type,
