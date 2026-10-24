@@ -63,6 +63,7 @@ if (!function_exists('bill_normalize_sale_status_row')) {
             'user_id' => (int)($row['user_id'] ?? 0),
             'status' => (int)($row['status'] ?? 0),
             'mode' => bill_clean_bill_mode($row['mode'] ?? 'fresh'),
+            'sale_type' => strtolower(trim((string)($row['sale_type'] ?? 'normal'))) === 'open' ? 'open' : 'normal',
             'parent_status' => (int)($row['parent_status'] ?? 2),
             'parent_sale_id' => (int)($row['parent_sale_id'] ?? 0),
         ];
