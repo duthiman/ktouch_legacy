@@ -167,7 +167,7 @@ if (!function_exists('kp_counter_kpesa_totals')) {
 }
 
 $summary_id = (int)($_GET['summary_id'] ?? 0);
-$counter = 1;//(int)($_GET['cntr_id'] ?? $_GET['id'] ?? 0);
+$counter = (int)($_GET['cntr_id'] ?? $_GET['id'] ?? 0);
 $shift = mysqli_real_escape_string($connection, $_GET['shift'] ?? '');
 $closeSummaryRow = null;
 if ($summary_id > 0) {
@@ -188,6 +188,11 @@ if ($counter < 1) {
 if ($shift === '') {
     $shift = (string)get_column('kp_shift', 'shift', '1');
 }
+
+$openingStaffId = (int)($closeSummaryRow['opening_staff_id'] ?? $closeSummaryRow['open_by'] ?? get_column('kp_counter_hist', 'open_by', "shift='$shift'"));
+$closingStaffId = (int)($closeSummaryRow['closing_staff_id'] ?? $closeSummaryRow['close_by'] ?? get_column('kp_counter_hist', 'close_by', "shift='$shift'"));
+$openingAt = (string)($closeSummaryRow['opening_time'] ?? $closeSummaryRow['opened_at'] ?? get_column('kp_counter_hist', 'opening', "shift='$shift'"));
+$closingAt = (string)($closeSummaryRow['closing_time'] ?? $closeSummaryRow['closed_at'] ?? get_column('kp_counter_hist', 'closing', "shift='$shift'"));
 
 $nos = 45;
 $today = $shift;
@@ -720,18 +725,18 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
       <tbody>
         <tr>
           <td><b>OPENING:</b></td>
-          <td><?php echo get_user(get_column('kp_counter_hist', 'open_by', "shift='$shift'")); ?></td>
+          <td><?php echo htmlspecialchars(get_user($openingStaffId)); ?></td>
           <td colspan="2">
             <?php
-            $new = date('l h:i:sa d-m-Y', strtotime(get_column('kp_counter_hist', 'opening', "shift='$shift'")));
+            $new = $openingAt !== '' ? date('l h:i:sa d-m-Y', strtotime($openingAt)) : 'NOT RECORDED';
             echo $new;
             ?>
           </td>
         </tr>
         <tr>
           <td><b>CLOSING:</b></td>
-          <td><?php echo get_user(get_column('kp_counter_hist', 'close_by', "shift='$shift'")); ?></td>
-          <td colspan="2"><?php today(); ?></td>
+          <td><?php echo htmlspecialchars(get_user($closingStaffId)); ?></td>
+          <td colspan="2"><?php echo $closingAt !== '' ? htmlspecialchars(date('l h:i:sa d-m-Y', strtotime($closingAt))) : 'NOT RECORDED'; ?></td>
         </tr>
         <tr>
           <td colspan="4"><b>ORDER NUMBER</b></td>
@@ -772,6 +777,44 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
           <td colspan="2"><b>TRANSFER FROM COUNTER</b></td>
           <td colspan="2"><?php echo $today_transfer_from_total; ?></td>
         </tr>
+      </tbody>
+    </table>
+
+    <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
+    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>SOLD ITEMS SUMMARY</b></h4>
+    <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
+    <table class="table">
+      <tbody>
+        <tr><td><b>ITEM</b></td><td class="text-right"><b>QTY</b></td><td class="text-right"><b>AMOUNT</b></td></tr>
+        <?php
+        $soldItems = mysqli_query($connection, "SELECT item_id, SUM(qty) AS qty, SUM(total) AS amount FROM kp_sale_items WHERE shift='$shift' AND stock_counter='$counter' GROUP BY item_id ORDER BY amount DESC");
+        if (!$soldItems || mysqli_num_rows($soldItems) < 1) {
+            echo '<tr><td colspan="3">No sold items recorded for this counter.</td></tr>';
+        } else {
+            while ($sold = mysqli_fetch_assoc($soldItems)) {
+                echo '<tr><td>' . htmlspecialchars(get_item((int)$sold['item_id'])) . '</td><td class="text-right">' . thermal_money($sold['qty']) . '</td><td class="text-right">' . thermal_money($sold['amount']) . '</td></tr>';
+            }
+        }
+        ?>
+      </tbody>
+    </table>
+
+    <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
+    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>REQUISITIONS</b></h4>
+    <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
+    <table class="table">
+      <tbody>
+        <tr><td><b>REQ NO.</b></td><td><b>REQUESTED BY</b></td><td class="text-right"><b>ITEMS</b></td><td class="text-right"><b>QTY</b></td></tr>
+        <?php
+        $reqRows = mysqli_query($connection, "SELECT r.req_id, r.req_user, COUNT(ri.id) AS item_count, COALESCE(SUM(ri.issue_qty), SUM(ri.req_qty), 0) AS qty FROM kp_counter_req r LEFT JOIN kp_counter_req_items ri ON ri.req_id=r.req_id WHERE r.req_shift='$shift' AND r.counter='$counter' GROUP BY r.req_id, r.req_user ORDER BY r.req_id DESC");
+        if (!$reqRows || mysqli_num_rows($reqRows) < 1) {
+            echo '<tr><td colspan="4">No requisitions recorded for this counter.</td></tr>';
+        } else {
+            while ($req = mysqli_fetch_assoc($reqRows)) {
+                echo '<tr><td>#' . (int)$req['req_id'] . '</td><td>' . htmlspecialchars(get_user((int)$req['req_user'])) . '</td><td class="text-right">' . (int)$req['item_count'] . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td></tr>';
+            }
+        }
+        ?>
       </tbody>
     </table>
 
