@@ -76,7 +76,7 @@ function butch_send_drafts_to_sale($draftIds, $userId, $shift) {
     foreach ($modeValues as $modeId=>$modeAmount) { $modeCol='mode'.$modeId; if(isset($available[$modeCol])) { $columns[]=$modeCol; $values[]=$modeAmount; } }
     $quoted=[]; foreach($values as $value) $quoted[] = is_numeric($value) ? "'".(float)$value."'" : "'".mysqli_real_escape_string($connection,(string)$value)."'";
     if (!mysqli_query($connection,"INSERT INTO kp_sale_payment (".implode(',', $columns).") VALUES (".implode(',', $quoted).")")) throw new Exception('Could not save payment.');
-    $queueId = function_exists('kp_print_enqueue') ? kp_print_enqueue($connection,['sale_id'=>$saleId,'ref_id'=>$saleId,'print_type'=>'bill','label'=>'BUTCHERY BILL','cntr_id'=>$counter,'route_path'=>'front/chaba/render_bill.php','route_query'=>http_build_query(['sale_id'=>$saleId]),'requested_by'=>$userId]) : 0;
+    $queueId = function_exists('kp_print_enqueue') ? kp_print_enqueue($connection,['sale_id'=>$saleId,'ref_id'=>$saleId,'print_type'=>'bill','label'=>'BUTCHERY BILL','cntr_id'=>$counter,'route_path'=>'','route_query'=>'','requested_by'=>$userId]) : 0;
     if ($queueId < 1) throw new Exception('Could not queue the bill.');
     mysqli_commit($connection);
     return ['ok'=>true,'sale_id'=>$saleId,'queue_id'=>$queueId];

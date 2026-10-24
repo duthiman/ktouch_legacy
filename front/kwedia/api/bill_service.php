@@ -1130,7 +1130,7 @@ if (!function_exists('bill_service_queue_print_job')) {
                 : 'TILL ' . $payment_number;
         }
 
-        if ($sale_id < 1 || $user_id < 1 || $counter_id < 1 || $print_type === '' || $route_path === '') {
+        if ($sale_id < 1 || $user_id < 1 || $counter_id < 1 || $print_type === '') {
             bill_log(
                 'PRINT_QUEUE_SKIP',
                 'sale_id=' . $sale_id
@@ -1348,17 +1348,13 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
             }
 
             $route_map = [
-                'cashier_order' => 'render_cashier_order.php',
-                'bot' => 'render_bot.php',
-                'kot' => 'render_kot.php',
-                'got' => 'render_got.php',
-                'bill' => 'render_bill.php',
+                'cashier_order' => '',
+                'bot' => '',
+                'kot' => '',
+                'got' => '',
+                'bill' => '',
             ];
             $route_path = $route_map[$type] ?? '';
-            if ($route_path === '') {
-                continue;
-            }
-
             $route_params = ['sale_id' => $sale_id];
             if ($delta_only && $type !== 'bill') {
                 $route_params['delta_only'] = 1;
@@ -1429,7 +1425,7 @@ if (!function_exists('bill_service_queue_full_bill')) {
             $print_counter_id,
             'bill',
             'BILL',
-            'render_bill.php',
+            '',
             $route_params
         );
 

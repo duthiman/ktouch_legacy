@@ -157,8 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'queue_bill_reprint') {
         'print_type' => 'bill',
         'label' => 'BILL REPRINT',
         'cntr_id' => $counter_id,
-        'route_path' => 'render_bill.php',
-        'route_query' => 'sale_id=' . $sale_id,
+        'route_path' => '',
+        'route_query' => '',
         'requested_by' => (int)$_SESSION['user_id'],
         'reprint_of' => 0,
     ]);

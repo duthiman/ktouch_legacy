@@ -370,8 +370,8 @@ if (!function_exists('ret_service_confirm_return')) {
                     'print_type' => 'bill',
                     'label' => 'UPDATED BILL AFTER RETURN',
                     'cntr_id' => $sale_counter,
-                    'route_path' => 'render_bill.php',
-                    'route_query' => 'sale_id=' . $sale_id,
+                    'route_path' => '',
+                    'route_query' => '',
                     'requested_by' => $user_id,
                 ]);
                 if ($bill_queue_id > 0) {
