@@ -4,6 +4,15 @@ function kwLoadSubFood(id) {
   }
 }
 
+function kwLoadCategory(id) {
+  if (typeof load_sub === 'function') {
+    load_sub(id);
+  }
+  if (typeof load_food === 'function') {
+    load_food(id);
+  }
+}
+
 function kwOrderItem(id, hasAttr) {
   if (parseInt(hasAttr, 10) === 1 && typeof openAttrItem === 'function') {
     openAttrItem(id);
