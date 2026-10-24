@@ -9,7 +9,7 @@ if (empty($_SESSION['user_id'])) {
 }
 
 require_once '../../inc/connection.php';
-require_once '../chaba/funcs.php';
+require_once '../../inc/gen_funcs.php';
 
 $shift = '';
 $shift_query = mysqli_query($connection, "SELECT shift FROM kp_shift LIMIT 1");
