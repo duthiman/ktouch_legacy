@@ -3,7 +3,6 @@ session_start();
 include_once('../../inc/connection.php');
 include_once('../../inc/gen_funcs.php');
 include_once('../../back/menu/API/menu_schema.php');
-include_once('../chaba/funcs.php');
 include_once('../kwedia/api/funcs.php');
 include_once('../kwedia/api/bill_repository.php');
 if (function_exists('menu_ensure_item_tables')) { menu_ensure_item_tables(); }
