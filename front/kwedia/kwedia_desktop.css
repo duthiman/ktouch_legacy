@@ -538,10 +538,11 @@ body {
   border: 2px solid transparent;
   border-radius: 10px;
   color: #fff !important;
-  font-family: 'Comic Sans MS', cursive;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-family: Arial, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: .01em;
   white-space: normal;
   overflow-wrap: break-word;
 }
