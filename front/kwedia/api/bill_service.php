@@ -927,7 +927,20 @@ if (!function_exists('bill_service_open_load_identifier_modal')) {
         $target_sale_exists = bill_repo_sale_exists($target_sale_id);
         $items = [];
         global $connection;
-        $items_q = mysqli_query(
+        // Open bills keep their accumulated items in the open-items registry.
+        // Prefer that source for the identifier modal; only fall back to the
+        // live/print rows for a fresh bill that has not been registered yet.
+        $open_items_q = mysqli_query(
+            $connection,
+            "SELECT item_id, attr_id, SUM(qty) AS qty, SUM(total) AS total
+             FROM kp_shift_sale_open_items
+             WHERE sale_id='$target_sale_id'
+             GROUP BY item_id, attr_id
+             HAVING SUM(qty) > 0
+             ORDER BY item_id ASC"
+        );
+        $has_open_items = $open_items_q && mysqli_num_rows($open_items_q) > 0;
+        $items_q = $has_open_items ? $open_items_q : mysqli_query(
             $connection,
             "SELECT item_id, attr_id, SUM(qty) AS qty, SUM(total) AS total
              FROM " . ($target_sale_exists ? 'kp_sale_items' : 'kp_sale_print') . "
