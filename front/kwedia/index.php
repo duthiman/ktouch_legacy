@@ -45,10 +45,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
             <div class="kw-desktop-order-header">
               <div class="kw-desktop-header-row">
                 <div class="kw-desktop-counter"><strong id="kw-counter-name"></strong><span>COUNTER</span></div>
-                <div class="kw-order-mode-badge" id="kw-order-mode-desktop">FRESH ORDER</div>
               </div>
               <div class="kw-desktop-header-row kw-desktop-header-row-bottom">
                 <div class="kw-desktop-account-line">WAITER <strong id="kw-account-name"></strong></div>
+                <div class="kw-bill-badge kw-order-type-badge"><strong id="kw-order-mode-desktop">FRESH ORDER</strong></div>
                 <div class="kw-desktop-bill-line"><span>BILL NO</span><strong id="kw-sale-id">0</strong></div>
               </div>
             </div>
@@ -78,7 +78,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
               <strong>Bill No</strong>
                 <span id="kw-sale-id-mobile">0</span>
             </div>
-            <div class="kw-order-mode-badge" id="kw-order-mode-mobile">FRESH ORDER</div>
+            <div class="kw-bill-badge kw-order-type-badge">
+              <strong id="kw-order-mode-mobile">FRESH ORDER</strong>
+            </div>
           </div>
           <div class="kw-top-actions">
             <button onclick="location.reload();" class="kw-top-btn" type="button">Refresh</button>

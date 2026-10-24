@@ -29,8 +29,8 @@ body {
 }
 .kw-brand {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 6px;
   align-items: center;
 }
 .kw-brand-main {
@@ -73,6 +73,15 @@ body {
   margin-top: 2px;
   font-size: 18px;
   font-weight: 900;
+}
+.kw-order-type-badge {
+  min-width: 92px;
+  background: #fff3cd;
+  color: #7a4b00;
+  box-shadow: inset 0 0 0 1px rgba(255, 243, 205, .55);
+}
+.kw-order-type-badge strong {
+  white-space: nowrap;
 }
 .kw-top-actions {
   display: grid;
@@ -493,6 +502,7 @@ body {
   margin-top: 7px;
   padding-top: 6px;
   border-top: 1px solid rgba(255,255,255,.28);
+  align-items: center;
 }
 .kw-desktop-counter {
   display: flex;
