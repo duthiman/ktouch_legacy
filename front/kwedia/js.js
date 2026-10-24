@@ -887,10 +887,10 @@ function fetchPageBootstrap() {
       $('#kw-sale-id, #kw-sale-id-mobile, #kw-cart-sale-id, #kw-sale-id-hero').text(data.sale_id || 0);
       updateOrderModeBadge(data);
       window.__kwCounterId = Number(data.counter_id || 0);
-      // A fresh order can be status 0 before its first item is added. Keep
-      // Cancel Sale available for both fresh and active draft orders.
-      var orderStatus = Number(data.status || 0);
-      $('.cancel-order-btn, #cancel').toggle(orderStatus === 0 || orderStatus === 1);
+      // Sale type is the source of truth: normal sales can be cancelled;
+      // open sales are controlled through Continue/Close Open.
+      var saleType = String((data.status_row || {}).sale_type || '').toLowerCase();
+      $('.cancel-order-btn, #cancel').toggle(saleType === 'normal');
       updateOpenOrderButtons(data);
       if (data.cart) renderCurrentCart(data.cart);
       fetchCategories(window.__kwCounterId, false);
