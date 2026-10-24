@@ -194,11 +194,7 @@ if (empty($_SESSION['user_id'])) {
           </div>
         </section>
       </main>
-      <div class="modal" id="user-modal"><div class="modal-card">
-        <div class="modal-head">
-          <h2>User sales details</h2>
-          <button id="user-modal-close">&times;</button>
-        </div><div class="summary" id="summary"></div></div></div>
+      <div class="modal" id="user-modal"><div class="modal-card"><div class="summary" id="summary"></div></div></div>
       <div class="modal" id="modal"><div class="modal-card"><div class="modal-head"><h2>Select printer</h2><button id="modal-close">&times;</button></div><div class="printers" id="printers"></div><div class="modal-actions"><button id="modal-cancel">Cancel</button><button id="modal-print">Print totals</button></div></div></div>
       <div class="modal" id="pending-change-modal" aria-hidden="true"><div class="modal-card"><div class="modal-head pending-change-head"><div><span class="pending-change-kicker">PENDING CHANGE</span><h2>Change in progress</h2></div><button id="pending-change-close" aria-label="Close">&times;</button></div><div class="pending-change-body" id="pending-change-list"></div></div></div>
       <div class="modal" id="alert-modal" aria-hidden="true"><div class="modal-card"><div class="modal-head"><h2 id="alert-modal-title">Stock alerts</h2><button type="button" class="close-modal-button" id="alert-modal-close" aria-label="Close modal">Close modal</button></div><div class="summary" id="alert-modal-body"></div></div></div>

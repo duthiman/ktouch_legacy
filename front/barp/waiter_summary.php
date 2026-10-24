@@ -41,17 +41,16 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
     $counter_rows[] = $row;
 }
 ?>
-<div class="modal-content">
-    <div class="modal-header">
+<div class="modal-head user-summary-head">
         <div>
             <span class="user-dashboard-kicker">WAITER PERFORMANCE</span>
             <h2><?php echo htmlspecialchars((string)($user['username'] ?? 'Unknown user'), ENT_QUOTES, 'UTF-8'); ?></h2>
             <small><?php echo htmlspecialchars($shift, ENT_QUOTES, 'UTF-8'); ?></small>
         </div>
-        <button type="button" class="modal-close" aria-label="Close" data-dismiss="modal">&times;</button>
+        <button type="button" class="modal-close" id="user-modal-close" aria-label="Close" data-dismiss="modal">&times;</button>
     </div>
 
-    <div class="modal-body">
+    <div class="modal-body user-summary-body">
         
         <div class="user-dashboard-metrics">
             <div>
@@ -113,6 +112,6 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
     </div>
 
     <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="summary-print">PRINT SUMMARY</button>
         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">CLOSE</button>
     </div>
-</div>
