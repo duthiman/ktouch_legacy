@@ -1955,6 +1955,29 @@ if (!function_exists('bill_service_close_closed_parent')) {
         }
         $bill_rows = array_values($bill_rows);
 
+        // Persist the completed open-LAST family before clearing its working
+        // ledgers. The queue snapshot is not the sales ledger: without this
+        // finalization the bill prints successfully but disappears from
+        // kp_sales/kp_sale_items when the open records are cleaned up.
+        $final_amount = array_sum(array_map(static function ($row) {
+            return (float)($row['total'] ?? 0);
+        }, $open_rows));
+        $parent_for_sale = $child_sale_id !== $parent_sale_id ? $parent_sale_id : 0;
+        if (!repo_insert_sale([
+            'sale_id' => $child_sale_id,
+            'user_id' => $user_id,
+            'shift' => repo_get_shift(),
+            'amount' => $final_amount,
+            'counter' => $counter_id,
+            'bill_counter' => $counter_id,
+            'parent_sale_id' => $parent_for_sale,
+        ])) {
+            throw new RuntimeException('Could not finalize open LAST sale header.');
+        }
+        if (!repo_insert_sale_items_from_shift_open($child_sale_id)) {
+            throw new RuntimeException('Could not finalize open LAST sale items.');
+        }
+
         // Queue the final bill from the consolidated open-item ledger, so it
         // cannot lose names by reading an incomplete kp_sale_print snapshot.
         // The returned id is only the immediate INSERT result. Do not query
