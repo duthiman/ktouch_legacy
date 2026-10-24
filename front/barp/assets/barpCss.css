@@ -692,3 +692,9 @@
 .modal-content>.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #d7e8de;background:#fff}.modal-content>.modal-footer button{min-width:110px;height:38px;border:1px solid #d92d3a;border-radius:6px;background:#fff;color:#d92d3a;font-weight:800}
 #user-modal .summary{padding:0;background:#fff}
 #user-modal .modal-card,#user-modal .modal-head,#user-modal .modal-body,#user-modal .modal-footer,#user-modal .user-summary-tabs,#user-modal .user-summary-tab,#user-modal .user-summary-stat-card,#user-modal .user-dashboard-metrics>div,#user-modal .counter-sales-summary .stat,#user-modal .user-sales,#user-modal .user-sales table,#user-modal .modal-footer button{border-radius:7px}
+#user-modal .user-summary-stat-card b{font-size:20px;color:#087e4b}
+#user-modal .user-summary-tabs,
+#user-modal .user-summary-panel,
+#user-modal .user-summary-stat-card,
+#user-modal .user-sales table th,
+#user-modal .user-sales table td{border-radius:7px}

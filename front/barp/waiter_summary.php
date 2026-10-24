@@ -11,6 +11,8 @@ $user = mysqli_fetch_assoc(mysqli_query($connection, "SELECT username FROM kp_us
 $sales = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) AS total_count, COALESCE(SUM(amount),0) AS total_amount FROM kp_sales WHERE user_id='$user_id' AND shift='$safe_shift'")) ?: [];
 $returns = (float)column_total('kp_ret_items', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
 $voids = (int)column_count('kp_del_orders', 'sale_id', "user_id='$user_id' AND shift='$safe_shift'");
+$void_total = (float)column_total('kp_del_orders', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
+$cancel_total = (float)column_total('kp_cancelled', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
 $open_orders = (int)column_count('kp_sales_open', 'sale_id', "user_id='$user_id' AND status=1");
 $live_orders = (int)column_count('kp_sales', 'sale_id', "user_id='$user_id' AND shift='$safe_shift' AND status=1");
 $sale_rows = [];
@@ -163,9 +165,9 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
         </div>
         </div>
         <?php foreach ([
-            'returns' => ['title' => 'Returned Items', 'count' => $returns, 'text' => 'Returns recorded for this waiter during the shift.'],
-            'cancelled' => ['title' => 'Cancelled Bills', 'count' => 0, 'text' => 'Cancelled bills recorded for this waiter during the shift.'],
-            'voids' => ['title' => 'Voids', 'count' => $voids, 'text' => 'Voided bills recorded for this waiter during the shift.'],
+            'returns' => ['title' => 'Returned Items', 'count' => count($return_rows), 'amount' => $returns, 'text' => 'Returns recorded for this waiter during the shift.'],
+            'cancelled' => ['title' => 'Cancelled Bills', 'count' => count($cancel_rows), 'amount' => $cancel_total, 'text' => 'Cancelled bills recorded for this waiter during the shift.'],
+            'voids' => ['title' => 'Voids', 'count' => $voids, 'amount' => $void_total, 'text' => 'Voided bills recorded for this waiter during the shift.'],
             'open' => ['title' => 'Open Orders', 'count' => $open_orders, 'text' => 'Open orders currently assigned to this waiter.'],
             'live' => ['title' => 'Live Orders', 'count' => $live_orders, 'text' => 'Live orders currently active for this waiter.'],
         ] as $key => $panel) { ?>
@@ -183,7 +185,7 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
                 </tr>
             <?php } ?></tbody></table></div>
             <?php } else { ?>
-            <div class="user-summary-stat-card"><span><?php echo htmlspecialchars($panel['title'], ENT_QUOTES, 'UTF-8'); ?></span><strong><?php echo number_format((float)$panel['count'], 0); ?></strong><small><?php echo htmlspecialchars($panel['text'], ENT_QUOTES, 'UTF-8'); ?></small></div>
+            <div class="user-summary-stat-card"><span><?php echo htmlspecialchars($panel['title'], ENT_QUOTES, 'UTF-8'); ?></span><strong><?php echo number_format((float)$panel['count'], 0); ?></strong><?php if (isset($panel['amount'])) { ?><b>KES <?php echo number_format((float)$panel['amount'], 2); ?></b><?php } ?><small><?php echo htmlspecialchars($panel['text'], ENT_QUOTES, 'UTF-8'); ?></small></div>
             <?php } ?>
         </div>
         <?php } ?>
