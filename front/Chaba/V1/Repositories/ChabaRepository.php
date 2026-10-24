@@ -28,10 +28,19 @@ final class ChabaRepository
     public function insertItems(PDO $pdo,int $queue,int $sale,array $items):void{$s=$pdo->prepare('INSERT INTO kp_print_queue_items(queue_id,sale_id,item_id,item_name,qty,unit_price,amount,attributes,payload_json) VALUES(?,?,?,?,?,?,?,?,?)');foreach($items as $item){$s->execute([$queue,$sale,(int)($item['item_id']??0),(string)($item['item_name']??$item['name']??''),(float)($item['qty']??0),(float)($item['unit_price']??0),(float)($item['amount']??0),isset($item['attributes'])?json_encode($item['attributes'],JSON_THROW_ON_ERROR):null,json_encode($item,JSON_THROW_ON_ERROR)]);}}
     public function claim(PDO $pdo,?int $counter): array {
         return $this->transaction($pdo,function() use($pdo,$counter) {
-            $s=$pdo->prepare('SELECT * FROM kp_print_queue WHERE status=0 AND print_attempts<255'.($counter!==null?' AND cntr_id=?':'').' ORDER BY created_at,queue_id LIMIT 1 FOR UPDATE');
+            $counterWhere=$counter!==null?' AND cntr_id=?':'';
+            $s=$pdo->prepare('SELECT * FROM kp_print_queue WHERE status=0 AND print_attempts<255'.$counterWhere.' ORDER BY created_at,queue_id LIMIT 1 FOR UPDATE');
             $s->execute($counter!==null?[$counter]:[]);$row=$s->fetch(PDO::FETCH_ASSOC);
+            // Legacy workers could leave jobs at status 3 before lease_until
+            // existed. Reclaim those only after all normal pending jobs, and
+            // start a new attempt so the old worker cannot acknowledge it.
+            if(!$row) {
+                $s=$pdo->prepare('SELECT * FROM kp_print_queue WHERE status=3 AND lease_until IS NULL AND print_attempts<255'.$counterWhere.' ORDER BY created_at,queue_id LIMIT 1 FOR UPDATE');
+                $s->execute($counter!==null?[$counter]:[]);$row=$s->fetch(PDO::FETCH_ASSOC);
+            }
             if(!$row)return ['job'=>null];
-            $pdo->prepare("UPDATE kp_print_queue SET status=3,print_attempts=print_attempts+1,last_error='',claimed_at=NOW(),lease_until=DATE_ADD(NOW(), INTERVAL 60 SECOND) WHERE queue_id=? AND status=0")->execute([$row['queue_id']]);
+            $expectedStatus=(int)$row['status'];
+            $pdo->prepare("UPDATE kp_print_queue SET status=3,print_attempts=print_attempts+1,last_error='',claimed_at=NOW(),lease_until=DATE_ADD(NOW(), INTERVAL 60 SECOND) WHERE queue_id=? AND status=?")->execute([$row['queue_id'],$expectedStatus]);
             $row['status']=3;$row['print_attempts']=(int)$row['print_attempts']+1;
             $row['claimed_at']=date('Y-m-d H:i:s');$row['lease_until']=date('Y-m-d H:i:s',time()+60);
             return ['job'=>$row];
