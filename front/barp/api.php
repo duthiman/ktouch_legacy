@@ -11,6 +11,44 @@ if (empty($_SESSION['user_id'])) {
 require_once '../../inc/connection.php';
 require_once '../../inc/gen_funcs.php';
 
+if (!function_exists('kp_print_enqueue')) {
+    function kp_print_enqueue($connection, array $data) {
+        get_print_mode();
+        $columns = [
+            'ref_id' => "INT NOT NULL DEFAULT 0",
+            'label' => "VARCHAR(120) NOT NULL DEFAULT ''",
+            'route_path' => "VARCHAR(255) NOT NULL DEFAULT ''",
+            'route_query' => 'MEDIUMTEXT NULL',
+            'requested_by' => 'INT NOT NULL DEFAULT 0',
+            'reprint_of' => 'INT NOT NULL DEFAULT 0',
+            'print_attempts' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
+            'last_error' => "VARCHAR(255) NOT NULL DEFAULT ''",
+            'printed_at' => 'DATETIME NULL',
+            'shift' => "VARCHAR(60) NOT NULL DEFAULT ''",
+            'payload_json' => 'LONGTEXT NULL',
+            'items_json' => 'LONGTEXT NULL',
+        ];
+        foreach ($columns as $column => $definition) {
+            $check = mysqli_query($connection, "SHOW COLUMNS FROM kp_print_queue LIKE '{$column}'");
+            if ($check && mysqli_num_rows($check) === 0) {
+                mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN `{$column}` {$definition}");
+            }
+        }
+        $sale_id = (int)($data['sale_id'] ?? 0);
+        $ref_id = (int)($data['ref_id'] ?? $sale_id);
+        $type = mysqli_real_escape_string($connection, (string)($data['print_type'] ?? 'bill'));
+        $label = mysqli_real_escape_string($connection, (string)($data['label'] ?? ''));
+        $counter = (int)($data['cntr_id'] ?? 0);
+        $path = mysqli_real_escape_string($connection, (string)($data['route_path'] ?? ''));
+        $query = mysqli_real_escape_string($connection, (string)($data['route_query'] ?? ''));
+        $requested = (int)($data['requested_by'] ?? 0);
+        $sql = "INSERT INTO kp_print_queue
+            (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error)
+            VALUES ({$sale_id},{$ref_id},'{$type}','{$label}',{$counter},'{$path}','{$query}',{$requested},0,0,0,'')";
+        return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+    }
+}
+
 $shift = '';
 $shift_query = mysqli_query($connection, "SELECT shift FROM kp_shift LIMIT 1");
 if ($shift_query && ($shift_row = mysqli_fetch_assoc($shift_query))) {
@@ -82,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'queue_staff_summary') 
         exit;
     }
 
-    ensure_chaba_print_system($connection);
+    get_print_mode();
     $queue_id = kp_print_enqueue($connection, [
         'sale_id' => 0,
         'ref_id' => $user_id,
@@ -112,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'queue_bill_reprint') {
         echo json_encode(['success' => false, 'message' => 'Printer not found.']);
         exit;
     }
-    ensure_chaba_print_system($connection);
+    get_print_mode();
     $queue_id = kp_print_enqueue($connection, [
         'sale_id' => $sale_id,
         'ref_id' => $sale_id,
