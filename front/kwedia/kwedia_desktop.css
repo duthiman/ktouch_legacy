@@ -165,14 +165,14 @@ body {
   height: 100%;
   margin: 0;
   border-radius: 999px;
-  background: #a5a39d;
+  background: #40566f;
   box-shadow: inset 0 3px 8px 1px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.5);
   cursor: pointer;
   transition: all 0.25s ease;
   position: relative;
 }
 .switch-toggle label:before {
-  content: "Touch";
+  content: "";
   position: absolute;
   left: 12px;
   top: 10px;
@@ -195,14 +195,14 @@ body {
   transition: all 0.25s ease;
 }
 .switch-toggle input:checked + label {
-  background: #9abb82;
+  background: #176b63;
 }
 .switch-toggle input:checked + label:before {
-  content: "Modal";
-  left: 10px;
+  content: "";
 }
 .switch-toggle input:checked + label:after {
-  left: 38px;
+  left: auto;
+  right: 4px;
 }
 .switch-toggle label i {
   position: absolute;
@@ -220,9 +220,10 @@ body {
   top: 50%;
   z-index: 1;
   transform: translateY(-50%);
-  color: rgba(0,0,0,.48);
+  color: #fff;
   font-style: normal;
   font-size: 0;
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
   font-weight: 900;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -230,12 +231,12 @@ body {
 }
 .switch-state-label::after {
   content: "TOUCH";
-  font-size: 9px;
+  font-size: 12px;
 }
 .switch-toggle input:checked + label .switch-state-label {
   left: 10px;
   right: auto;
-  color: #527342;
+  color: #fff;
 }
 .switch-toggle input:checked + label .switch-state-label::after {
   content: "MODAL";
@@ -266,7 +267,8 @@ body {
   height: 24px;
 }
 .mobile-inline-switch .switch-toggle input:checked + label:after {
-  left: 34px;
+  left: auto;
+  right: 4px;
 }
 .kw-top-btn {
   min-height: 46px;
