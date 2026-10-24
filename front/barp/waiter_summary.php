@@ -22,6 +22,18 @@ $sale_query = mysqli_query($connection, "SELECT s.sale_id, s.amount, s.datime, s
 while ($sale_query && ($sale_row = mysqli_fetch_assoc($sale_query))) {
     $sale_rows[] = $sale_row;
 }
+$return_rows = [];
+$return_query = mysqli_query($connection, "SELECT r.sale_id,r.item_id,r.qty,r.amount,r.ret_status,r.confirm_status,
+    COALESCE(i.name, CONCAT('Item ', r.item_id)) item_name
+    FROM kp_ret_items r LEFT JOIN kp_items i ON i.item_id=r.item_id
+    WHERE r.user_id='$user_id' AND r.shift='$safe_shift' ORDER BY r.id DESC LIMIT 100");
+while ($return_query && ($row = mysqli_fetch_assoc($return_query))) $return_rows[] = $row;
+$void_rows = [];
+$void_query = mysqli_query($connection, "SELECT sale_id,amount,datime FROM kp_del_orders WHERE user_id='$user_id' AND shift='$safe_shift' ORDER BY sale_id DESC LIMIT 100");
+while ($void_query && ($row = mysqli_fetch_assoc($void_query))) $void_rows[] = $row;
+$cancel_rows = [];
+$cancel_query = mysqli_query($connection, "SELECT sale_id,amount,datime FROM kp_cancelled WHERE user_id='$user_id' AND shift='$safe_shift' ORDER BY sale_id DESC LIMIT 100");
+while ($cancel_query && ($row = mysqli_fetch_assoc($cancel_query))) $cancel_rows[] = $row;
 
 $item_rows = [];
 $item_query = mysqli_query(
@@ -158,11 +170,21 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
             'live' => ['title' => 'Live Orders', 'count' => $live_orders, 'text' => 'Live orders currently active for this waiter.'],
         ] as $key => $panel) { ?>
         <div class="user-summary-panel" data-summary-panel="<?php echo $key; ?>">
-            <div class="user-summary-stat-card">
-                <span><?php echo htmlspecialchars($panel['title'], ENT_QUOTES, 'UTF-8'); ?></span>
-                <strong><?php echo number_format((float)$panel['count'], 0); ?></strong>
-                <small><?php echo htmlspecialchars($panel['text'], ENT_QUOTES, 'UTF-8'); ?></small>
-            </div>
+            <?php $rows = $key === 'returns' ? $return_rows : ($key === 'voids' ? $void_rows : ($key === 'cancelled' ? $cancel_rows : [])); ?>
+            <?php if ($rows) { ?>
+            <div class="user-sales user-tab-table"><table><thead><tr>
+                <?php if ($key === 'returns') { ?><th>Item</th><th>Bill</th><th>Qty</th><th>Status</th>
+                <?php } else { ?><th>Bill</th><th>Time</th><th>Amount</th><th>Status</th><?php } ?>
+            </tr></thead><tbody>
+            <?php foreach ($rows as $row) { ?>
+                <tr>
+                <?php if ($key === 'returns') { ?><td><?php echo htmlspecialchars($row['item_name'], ENT_QUOTES, 'UTF-8'); ?></td><td>#<?php echo (int)$row['sale_id']; ?></td><td><?php echo number_format((float)$row['qty'], 2); ?></td><td><?php echo ((int)$row['confirm_status'] === 1 ? 'Accepted' : ((int)$row['confirm_status'] === 3 ? 'Rejected' : 'Pending')); ?></td>
+                <?php } else { ?><td>#<?php echo (int)$row['sale_id']; ?></td><td><?php echo htmlspecialchars(!empty($row['datime']) ? date('H:i:s', strtotime($row['datime'])) : '', ENT_QUOTES, 'UTF-8'); ?></td><td>KES <?php echo number_format((float)$row['amount'], 2); ?></td><td><?php echo $key === 'voids' ? 'Voided' : 'Cancelled'; ?></td><?php } ?>
+                </tr>
+            <?php } ?></tbody></table></div>
+            <?php } else { ?>
+            <div class="user-summary-stat-card"><span><?php echo htmlspecialchars($panel['title'], ENT_QUOTES, 'UTF-8'); ?></span><strong><?php echo number_format((float)$panel['count'], 0); ?></strong><small><?php echo htmlspecialchars($panel['text'], ENT_QUOTES, 'UTF-8'); ?></small></div>
+            <?php } ?>
         </div>
         <?php } ?>
     </div>
