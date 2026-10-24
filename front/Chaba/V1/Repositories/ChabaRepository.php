@@ -31,10 +31,17 @@ final class ChabaRepository
             $s=$pdo->prepare('SELECT * FROM kp_print_queue WHERE status=0 AND print_attempts<255'.($counter!==null?' AND cntr_id=?':'').' ORDER BY created_at,queue_id LIMIT 1 FOR UPDATE');
             $s->execute($counter!==null?[$counter]:[]);$row=$s->fetch(PDO::FETCH_ASSOC);
             if(!$row)return ['job'=>null];
-            $pdo->prepare('UPDATE kp_print_queue SET status=3,print_attempts=print_attempts+1,last_error=\'\' WHERE queue_id=? AND status=0')->execute([$row['queue_id']]);
+            $pdo->prepare("UPDATE kp_print_queue SET status=3,print_attempts=print_attempts+1,last_error='',claimed_at=NOW(),lease_until=DATE_ADD(NOW(), INTERVAL 60 SECOND) WHERE queue_id=? AND status=0")->execute([$row['queue_id']]);
             $row['status']=3;$row['print_attempts']=(int)$row['print_attempts']+1;
+            $row['claimed_at']=date('Y-m-d H:i:s');$row['lease_until']=date('Y-m-d H:i:s',time()+60);
             return ['job'=>$row];
         });
+    }
+    public function heartbeat(PDO $pdo,int $id,int $attempt): array {
+        $s=$pdo->prepare("UPDATE kp_print_queue SET lease_until=DATE_ADD(NOW(), INTERVAL 60 SECOND) WHERE queue_id=? AND status=3 AND print_attempts=?");
+        $s->execute([$id,$attempt]);
+        if($s->rowCount()!==1) throw new ApiException('Job is not claimed by this print attempt',409,'chaba_state');
+        return ['alive'=>true,'queue_id'=>$id,'print_attempts'=>$attempt,'lease_seconds'=>60];
     }
     public function complete(PDO $pdo,int $id,int $attempt): array {
         return $this->transaction($pdo,function() use($pdo,$id,$attempt) {

@@ -24,6 +24,7 @@ final class ChabaService
             'render'=>$this->render($pdo,$data),
             'claim'=>$this->repo->claim($pdo,isset($data['cntr_id'])?self::id($data,'cntr_id',0):null),
             'next'=>$this->next($pdo,$data),
+            'heartbeat'=>$this->repo->heartbeat($pdo,self::id($data,'queue_id'),self::id($data,'print_attempts',1,255)),
             'complete'=>$this->repo->complete($pdo,self::id($data,'queue_id'),self::id($data,'print_attempts',1,255)),
             'fail'=>$this->repo->fail($pdo,self::id($data,'queue_id'),self::id($data,'print_attempts',1,255),self::text($data,'last_error',255,'Printing failed')),
             'retry'=>$this->repo->retry($pdo,self::id($data,'queue_id')),

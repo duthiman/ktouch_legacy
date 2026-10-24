@@ -15,6 +15,7 @@ final class Schema
         'status'=>'TINYINT UNSIGNED NOT NULL DEFAULT 0', 'print_attempts'=>'TINYINT UNSIGNED NOT NULL DEFAULT 0',
         'last_error'=>"VARCHAR(255) NOT NULL DEFAULT ''", 'shift'=>"VARCHAR(60) NOT NULL DEFAULT ''",
         'payload_json'=>'LONGTEXT NULL', 'items_json'=>'LONGTEXT NULL', 'created_at'=>'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'claimed_at'=>'DATETIME NULL DEFAULT NULL', 'lease_until'=>'DATETIME NULL DEFAULT NULL',
         'printed_at'=>'DATETIME NULL DEFAULT NULL',
     ];
     public const INDEXES = [
