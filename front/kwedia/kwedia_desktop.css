@@ -549,6 +549,8 @@ body {
 .kw-item-button.stock-green { background: #008000; border-color: #008000; }
 .kw-item-button.stock-orange { background: #ffa500; border-color: #ffa500; }
 .kw-item-button.stock-red { background: #ff0000; border-color: #ff0000; }
+.kw-item-button.stock-red:disabled,
+.kw-item-button.stock-red[aria-disabled="true"] { background: #dc2626 !important; border-color: #dc2626 !important; color: #fff !important; opacity: 1; }
 .kw-order-mode-badge {
   display: inline-block;
   margin-top: 4px;
