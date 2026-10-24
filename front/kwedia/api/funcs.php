@@ -208,7 +208,8 @@ if (!function_exists('kw_ensure_bill_schema')) {
         global $connection;
 
         static $checked = false;
-        if ($checked) {
+        if ($checked || (session_status() === PHP_SESSION_ACTIVE && !empty($_SESSION['kw_schema_healed']))) {
+            $checked = true;
             return true;
         }
 
@@ -340,6 +341,9 @@ if (!function_exists('kw_ensure_bill_schema')) {
         kw_schema_ensure_column('kp_sales', 'current_balance', "DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER current_total");
 
         $checked = true;
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['kw_schema_healed'] = 1;
+        }
         return true;
     }
 }

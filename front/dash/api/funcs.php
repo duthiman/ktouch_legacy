@@ -114,6 +114,11 @@ if (!function_exists('dash_ensure_merge_request_table')) {
 
 if (!function_exists('dash_build_payload')) {
     function dash_ensure_runtime_tables() {
+        static $checked = false;
+        if ($checked || (session_status() === PHP_SESSION_ACTIVE && !empty($_SESSION['dash_schema_healed']))) {
+            $checked = true;
+            return;
+        }
         foreach (['kp_users', 'kp_sales', 'kp_sale_status', 'kp_items', 'kp_staff_token_entries', 'kp_staff_token_wallet', 'kp_print_queue'] as $table) {
             if (function_exists('ensure_runtime_table')) {
                 ensure_runtime_table($table);
@@ -121,6 +126,10 @@ if (!function_exists('dash_build_payload')) {
         }
         if (function_exists('get_print_mode')) {
             get_print_mode();
+        }
+        $checked = true;
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['dash_schema_healed'] = 1;
         }
     }
 
