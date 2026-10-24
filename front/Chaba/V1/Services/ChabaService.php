@@ -14,6 +14,7 @@ final class ChabaService
         return match($action) {
             'schema.ensure'=>['success'=>true,'schema'=>'chaba'],
             'templates.load'=>$this->templatesLoad(),
+            'counters'=>$this->counters($pdo),
             'template.preview'=>$this->templatePreview($data),
             'enqueue'=>$this->enqueue($pdo,$data,$user),
             'list'=>$this->repo->list($pdo,self::id($data,'status',0,3),isset($data['cntr_id'])?self::id($data,'cntr_id',0):null),
@@ -30,6 +31,34 @@ final class ChabaService
         };
     }
     private function templatesLoad(): array { $base=dirname(__DIR__).'/Templates/Template1';$sections=['bill'=>['title','logo','header','items','tax','thank_you','paybill','qr','advertising'],'bot'=>['title','header','items'],'kot'=>['title','header','items'],'got'=>['title','header','items'],'cot'=>['title','header','items'],'wct'=>['title','header','summary'],'cct'=>['title','header','summary'],'csp'=>['title','header','gross_sales','item_totals','waiter_totals','returns','voids','changes','requisitions','units_generated','transfers','recipe_consumption','cancelled_orders'],'ssp'=>['title','header','total_sales','counter_sales','cashier_collections','customer_credit_bills','customer_credit_payments','waiter_totals'],'svp'=>['title','header','variance_summary','variance_items']];return ['template'=>'Template1','renders'=>array_map(static fn(string $type):array=>['type'=>strtoupper($type),'label'=>strtoupper($type),'file'=>$base.'/renders/'.$type.'.php','sections'=>$sections[$type]??[],'editable'=>true],array_keys($sections))]; }
+    private function counters(\PDO $pdo): array {
+        $hasPrinter = false;
+        try {
+            $q = $pdo->query("SHOW COLUMNS FROM kp_counters LIKE 'printer_name'");
+            $hasPrinter = (bool)$q && (bool)$q->fetch(\PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {}
+        $sql = $hasPrinter
+            ? 'SELECT cntr_id,name,dpt,printer_name FROM kp_counters WHERE del_status=2 ORDER BY dpt ASC,cntr_id ASC'
+            : 'SELECT cntr_id,name,dpt FROM kp_counters WHERE del_status=2 ORDER BY dpt ASC,cntr_id ASC';
+        try {
+            $q = $pdo->query($sql);
+            $rows = [];
+            foreach ($q->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                $rows[] = [
+                    'cntr_id' => (int)($row['cntr_id'] ?? 0),
+                    'id' => (int)($row['cntr_id'] ?? 0),
+                    'name' => (string)($row['name'] ?? ''),
+                    'counter_name' => (string)($row['name'] ?? ''),
+                    'dpt' => (string)($row['dpt'] ?? ''),
+                    'department' => (string)($row['dpt'] ?? ''),
+                    'printer_name' => (string)($row['printer_name'] ?? ''),
+                ];
+            }
+            return ['counters' => $rows];
+        } catch (\Throwable $e) {
+            throw new ApiException('Could not load counters: '.$e->getMessage(), 500, 'chaba_counters');
+        }
+    }
     private function templatePreview(array $d): array { $type=strtoupper(trim((string)($d['type']??'BILL')));if(!in_array(strtolower($type),['bill','bot','kot','got','cot','wct','cct','csp','ssp','svp'],true))throw new ValidationException('Unknown template type');$doc=['document_type'=>$type,'title'=>$d['title']??($type==='SVP'?'STOCK VARIANCE PRINT':($type==='SSP'?'SHIFT SUMMARY PRINT':($type==='CSP'?'COUNTER SUMMARY PRINT':($type==='WCT'?'WAITER CLEARANCE TICKET':($type==='CCT'?'CASHIER CLEARANCE TICKET':$type))))),'sections'=>$d['sections']??null,'header'=>$d['header']??['shift_date'=>date('Y-m-d'),'user'=>'Preview'],'items'=>$d['items']??[],'summary'=>$d['summary']??[],'footer'=>$d['footer']??'Template preview'];foreach(['show_logo','show_qr','show_tax','show_pin'] as $setting) if(array_key_exists($setting,$d)) $doc[$setting]=$d[$setting];return ['type'=>$type,'template'=>'Template1','document'=>$doc,'html'=>Document::html($doc)]; }
     private function enqueue(\PDO $pdo,array $d,int $user): array {
         $row=['sale_id'=>self::id($d,'sale_id',0),'ref_id'=>self::id($d,'ref_id',0),
