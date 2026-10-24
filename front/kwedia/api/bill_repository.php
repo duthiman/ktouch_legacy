@@ -1784,6 +1784,29 @@ if (!function_exists('bill_repo_print_queue')) {
                 'attributes' => $attributes,
             ];
         }
+        // A finalized sale may already have been removed from kp_sale_print
+        // after its live ticket was queued. Keep V1 printing reliable by
+        // falling back to the finalized sale-item table for the snapshot.
+        if (!$items) {
+            $fallback = mysqli_query($connection, "SELECT item_id,item_name,qty,unit_price,amount,total
+                FROM kp_sale_items WHERE sale_id='{$sale_id}' ORDER BY sale_item_id");
+            while ($fallback && ($row = mysqli_fetch_assoc($fallback))) {
+                $qty = (float)($row['qty'] ?? 0);
+                $price = (float)($row['unit_price'] ?? 0);
+                $line = array_key_exists('amount', $row) && $row['amount'] !== null
+                    ? (float)$row['amount']
+                    : (array_key_exists('total', $row) && $row['total'] !== null
+                        ? (float)$row['total'] : $qty * $price);
+                $items[] = [
+                    'name' => '__CHABA_ITEM__' . json_encode(['name' => (string)($row['item_name'] ?? ('Item ' . (int)$row['item_id'])), 'attributes' => []], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                    'qty' => $qty,
+                    'price' => $price,
+                    'total' => $line,
+                    'item_id' => (int)($row['item_id'] ?? 0),
+                    'attributes' => [],
+                ];
+            }
+        }
         if (strtoupper((string)($data['print_type'] ?? '')) === 'BILL' && count($items) > 1) {
             $merged = [];
             foreach ($items as $item) {
