@@ -544,6 +544,52 @@ if (!function_exists('tots_service_get_print_modal')) {
     }
 }
 
+if (!function_exists('tots_queue_print_job')) {
+    function tots_queue_print_job($connection, array $data) {
+        if (function_exists('get_print_mode')) {
+            get_print_mode();
+        }
+
+        $columns = [
+            'ref_id' => "INT NOT NULL DEFAULT 0",
+            'label' => "VARCHAR(120) NOT NULL DEFAULT ''",
+            'route_path' => "VARCHAR(255) NOT NULL DEFAULT ''",
+            'route_query' => 'MEDIUMTEXT NULL',
+            'requested_by' => 'INT NOT NULL DEFAULT 0',
+            'reprint_of' => 'INT NOT NULL DEFAULT 0',
+            'print_attempts' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0',
+            'last_error' => "VARCHAR(255) NOT NULL DEFAULT ''",
+            'printed_at' => 'DATETIME NULL',
+            'shift' => "VARCHAR(60) NOT NULL DEFAULT ''",
+            'payload_json' => 'LONGTEXT NULL',
+            'items_json' => 'LONGTEXT NULL',
+        ];
+        foreach ($columns as $column => $definition) {
+            $check = mysqli_query($connection, "SHOW COLUMNS FROM kp_print_queue LIKE '{$column}'");
+            if ($check && mysqli_num_rows($check) === 0) {
+                mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN `{$column}` {$definition}");
+            }
+        }
+
+        $sale_id = (int)($data['sale_id'] ?? 0);
+        $ref_id = (int)($data['ref_id'] ?? $sale_id);
+        $type = mysqli_real_escape_string($connection, (string)($data['print_type'] ?? 'bill'));
+        $label = mysqli_real_escape_string($connection, (string)($data['label'] ?? ''));
+        $counter = (int)($data['cntr_id'] ?? 0);
+        $path = mysqli_real_escape_string($connection, (string)($data['route_path'] ?? ''));
+        $query = mysqli_real_escape_string($connection, (string)($data['route_query'] ?? ''));
+        $requested = (int)($data['requested_by'] ?? 0);
+        $shift = mysqli_real_escape_string($connection, (string)($data['shift'] ?? ''));
+        $payload = mysqli_real_escape_string($connection, (string)($data['payload_json'] ?? ''));
+        $items = mysqli_real_escape_string($connection, (string)($data['items_json'] ?? ''));
+
+        $sql = "INSERT INTO kp_print_queue
+            (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json)
+            VALUES ({$sale_id},{$ref_id},'{$type}','{$label}',{$counter},'{$path}','{$query}',{$requested},0,0,0,'','{$shift}','{$payload}','{$items}')";
+        return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+    }
+}
+
 if (!function_exists('tots_service_submit_print')) {
     function tots_service_submit_print($user_id, $cntr_id) {
         global $connection;
@@ -598,20 +644,39 @@ if (!function_exists('tots_service_submit_print')) {
             ];
         }
 
-        if (function_exists('ensure_chaba_print_system')) {
-            ensure_chaba_print_system($connection);
+        $tot_rows = tots_repo_fetch_tot_rows($tot_id);
+        $items = [];
+        foreach ($tot_rows as $row) {
+            $item_id = (int)($row['tot_item_id'] ?? 0);
+            $qty = (float)($row['tots'] ?? 0);
+            $items[] = [
+                'item_id' => $item_id,
+                'name' => function_exists('get_item') ? (string)get_item($item_id) : ('Item #' . $item_id),
+                'qty' => $qty,
+            ];
         }
+        $payload = json_encode([
+            'payload_version' => 1,
+            'document_type' => 'UGT',
+            'title' => 'UNIT GENERATED TICKET',
+            'items' => $items,
+            'summary' => ['item_count' => count($items)],
+            'header' => ['tot_id' => $tot_id, 'shift' => $shift, 'counter_id' => $counter],
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $queue_id = function_exists('kp_print_enqueue') ? kp_print_enqueue($connection, [
+        $queue_id = tots_queue_print_job($connection, [
             'sale_id' => 0,
             'ref_id' => $tot_id,
-            'print_type' => 'tots',
-            'label' => 'TOTS',
+            'print_type' => 'UGT',
+            'label' => 'UNIT GENERATED TICKET',
             'cntr_id' => $cntr_id,
-            'route_path' => 'render_tots.php',
-            'route_query' => 'id=' . $tot_id,
+            'route_path' => 'Templates/Template1/renders/ugt.php',
+            'route_query' => 'tot_id=' . $tot_id,
             'requested_by' => $user_id,
-        ]) : 0;
+            'shift' => $shift,
+            'payload_json' => $payload,
+            'items_json' => json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        ]);
 
         if ($queue_id < 1) {
             return [
