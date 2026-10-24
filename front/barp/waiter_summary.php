@@ -13,6 +13,15 @@ $returns = (float)column_total('kp_ret_items', 'amount', "user_id='$user_id' AND
 $voids = (int)column_count('kp_del_orders', 'sale_id', "user_id='$user_id' AND shift='$safe_shift'");
 $open_orders = (int)column_count('kp_sales_open', 'sale_id', "user_id='$user_id' AND status=1");
 $live_orders = (int)column_count('kp_sales', 'sale_id', "user_id='$user_id' AND shift='$safe_shift' AND status=1");
+$sale_rows = [];
+$sale_query = mysqli_query($connection, "SELECT s.sale_id, s.amount, s.datime, s.counter,
+    COALESCE(c.name, CONCAT('Counter ', s.counter)) AS counter_name
+    FROM kp_sales s LEFT JOIN kp_counters c ON c.cntr_id=s.counter
+    WHERE s.user_id='$user_id' AND s.shift='$safe_shift'
+    ORDER BY s.sale_id DESC LIMIT 100");
+while ($sale_query && ($sale_row = mysqli_fetch_assoc($sale_query))) {
+    $sale_rows[] = $sale_row;
+}
 
 $item_rows = [];
 $item_query = mysqli_query(
@@ -94,6 +103,24 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
                     <strong>KES 0.00</strong>
                 </div>
             <?php } ?>
+        </div>
+        <h4>Sales list</h4>
+        <div class="user-sales user-sales-list">
+            <table>
+                <thead><tr><th>Bill No.</th><th>Time</th><th>Counter</th><th>Total</th></tr></thead>
+                <tbody>
+                <?php if ($sale_rows) { foreach ($sale_rows as $row) { ?>
+                    <tr>
+                        <td>#<?php echo (int)$row['sale_id']; ?></td>
+                        <td><?php echo htmlspecialchars(!empty($row['datime']) ? date('H:i:s', strtotime($row['datime'])) : '', ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars((string)$row['counter_name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td>KES <?php echo number_format((float)$row['amount'], 2); ?></td>
+                    </tr>
+                <?php } } else { ?>
+                    <tr><td colspan="4">No sales recorded.</td></tr>
+                <?php } ?>
+                </tbody>
+            </table>
         </div>
 
         </div>
