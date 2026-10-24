@@ -13,11 +13,9 @@ $counter=(int)$counter;
 $user_id=(int)$user_id;
 $prev_user=$current_user_id;
 
-// Keep compatibility with older callers that do not send the current cashier.
-if ($prev_user < 1) {
-    $counter_user=mysqli_query($connection,"SELECT user_id FROM kp_counters WHERE cntr_id='$counter'");
-    $st=$counter_user ? mysqli_fetch_assoc($counter_user) : null;
-    $prev_user=(int)($st['user_id'] ?? 0);
+if ($counter < 1 || $user_id < 1 || $prev_user < 1) {
+    http_response_code(422);
+    exit('Missing counter, selected cashier, or current cashier.');
 }
 
 $transaction="CHANGED CASHIER FROM ".strtoupper($cashier=get_column('kp_counters','user_id',"cntr_id='$counter'"))." TO ".strtoupper(get_user($user_id));
