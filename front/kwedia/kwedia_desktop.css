@@ -565,16 +565,29 @@ body {
 .kw-desktop-counter span,
 .kw-desktop-bill-line span { font-size: 10px; font-weight: 800; letter-spacing: .08em; }
 .kw-desktop-account-line {
-  font-size: 13px;
+  min-width: 86px;
+  min-height: 43px;
+  box-sizing: border-box;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: #3d5871;
+  color: #fff;
+  font-size: 10px;
   font-weight: 800;
   text-align: left;
   letter-spacing: .08em;
   text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .kw-desktop-account-line strong {
-  margin-left: 5px;
-  font-size: 18px;
+  margin-left: 0;
+  margin-top: 2px;
+  color: #fff;
+  font-size: 16px;
   letter-spacing: .02em;
+  line-height: 1.1;
 }
 .kw-desktop-bill-line {
   display: flex;
