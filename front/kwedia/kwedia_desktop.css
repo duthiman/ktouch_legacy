@@ -165,8 +165,8 @@ body {
   height: 100%;
   margin: 0;
   border-radius: 999px;
-  background: linear-gradient(135deg, #d6c6a2 0%, #bfa16e 100%);
-  box-shadow: inset 0 0 0 1px rgba(122, 79, 18, 0.14);
+  background: #a5a39d;
+  box-shadow: inset 0 3px 8px 1px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.5);
   cursor: pointer;
   transition: all 0.25s ease;
   position: relative;
@@ -190,12 +190,12 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+  background: linear-gradient(#f7f2f6, #b2ac9e);
+  box-shadow: inset 0 1px 0 #fff, 0 0 8px rgba(0,0,0,.3), 0 5px 5px rgba(0,0,0,.2);
   transition: all 0.25s ease;
 }
 .switch-toggle input:checked + label {
-  background: linear-gradient(135deg, #7e2014 0%, #b94828 52%, #e7a33a 100%);
+  background: #9abb82;
 }
 .switch-toggle input:checked + label:before {
   content: "Modal";
@@ -203,6 +203,16 @@ body {
 }
 .switch-toggle input:checked + label:after {
   left: 38px;
+}
+.switch-toggle label i {
+  position: absolute;
+  left: 15%;
+  top: 25%;
+  width: 70%;
+  height: 50%;
+  border-radius: inherit;
+  background: linear-gradient(#cbc7bc, #d2cbc3);
+  pointer-events: none;
 }
 .mobile-inline-switch .mode-title,
 .mobile-inline-switch .switch-copy span {
