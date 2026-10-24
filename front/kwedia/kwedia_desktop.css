@@ -55,6 +55,8 @@ body {
 }
 .kw-bill-badge {
   min-width: 78px;
+  height: 48px;
+  box-sizing: border-box;
   padding: 7px 9px;
   border-radius: 10px;
   text-align: center;
@@ -77,8 +79,7 @@ body {
 .kw-order-type-badge {
   width: 78px;
   min-width: 78px;
-  height: 43px;
-  box-sizing: border-box;
+  height: 48px;
   background: #fff3cd;
   color: #7a4b00;
   box-shadow: inset 0 0 0 1px rgba(255, 243, 205, .55);
@@ -566,7 +567,7 @@ body {
 .kw-desktop-bill-line span { font-size: 10px; font-weight: 800; letter-spacing: .08em; }
 .kw-desktop-account-line {
   min-width: 86px;
-  min-height: 43px;
+  height: 48px;
   box-sizing: border-box;
   padding: 7px 9px;
   border-radius: 10px;
