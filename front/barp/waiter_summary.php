@@ -15,6 +15,12 @@ $void_total = (float)column_total('kp_del_orders', 'amount', "user_id='$user_id'
 $cancel_total = (float)column_total('kp_cancelled', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
 $open_orders = (int)column_count('kp_sales_open', 'sale_id', "user_id='$user_id' AND status=1");
 $live_orders = (int)column_count('kp_sales', 'sale_id', "user_id='$user_id' AND shift='$safe_shift' AND status=1");
+$open_rows = [];
+$open_query = mysqli_query($connection, "SELECT sale_id,amount,created_at AS datime,counter FROM kp_sales_open WHERE user_id='$user_id' AND status=1 ORDER BY sale_id DESC LIMIT 100");
+while ($open_query && ($row = mysqli_fetch_assoc($open_query))) $open_rows[] = $row;
+$live_rows = [];
+$live_query = mysqli_query($connection, "SELECT sale_id,amount,datime,counter FROM kp_sales WHERE user_id='$user_id' AND shift='$safe_shift' AND status=1 ORDER BY sale_id DESC LIMIT 100");
+while ($live_query && ($row = mysqli_fetch_assoc($live_query))) $live_rows[] = $row;
 $sale_rows = [];
 $sale_query = mysqli_query($connection, "SELECT s.sale_id, s.amount, s.datime, s.counter,
     COALESCE(c.name, CONCAT('Counter ', s.counter)) AS counter_name
@@ -40,7 +46,7 @@ while ($cancel_query && ($row = mysqli_fetch_assoc($cancel_query))) $cancel_rows
 $item_rows = [];
 $item_query = mysqli_query(
     $connection,
-    "SELECT item_id, COALESCE(SUM(qty), 0) AS qty, COALESCE(SUM(total), 0) AS total
+    "SELECT item_id, COALESCE(AVG(price), 0) AS price, COALESCE(SUM(qty), 0) AS qty, COALESCE(SUM(total), 0) AS total
      FROM kp_sale_items
      WHERE user_id='$user_id' AND shift='$safe_shift'
      GROUP BY item_id
@@ -144,7 +150,7 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
                 <thead>
                     <tr>
                         <th>Item</th>
-                        <th>Qty</th>
+                        <th>Qty</th><th>Amount</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -154,11 +160,12 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
                             <tr>
                                 <td><?php echo htmlspecialchars((string)get_item((int)$row['item_id']), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo number_format((float)$row['qty'], 2); ?></td>
-                                <td>KES <?php echo number_format((float)$row['total'], 2); ?></td>
+                                <td>KES <?php echo number_format((float)$row['price'], 2); ?></td>
+                        <td>KES <?php echo number_format((float)$row['total'], 2); ?></td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
-                        <tr><td colspan="3">No items sold.</td></tr>
+                        <tr><td colspan="4">No items sold.</td></tr>
                     <?php } ?>
                 </tbody>
             </table>
@@ -172,7 +179,7 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
             'live' => ['title' => 'Live Orders', 'count' => $live_orders, 'text' => 'Live orders currently active for this waiter.'],
         ] as $key => $panel) { ?>
         <div class="user-summary-panel" data-summary-panel="<?php echo $key; ?>">
-            <?php $rows = $key === 'returns' ? $return_rows : ($key === 'voids' ? $void_rows : ($key === 'cancelled' ? $cancel_rows : [])); ?>
+            <?php $rows = $key === 'returns' ? $return_rows : ($key === 'voids' ? $void_rows : ($key === 'cancelled' ? $cancel_rows : ($key === 'open' ? $open_rows : ($key === 'live' ? $live_rows : [])))); ?>
             <?php $counter_totals = []; foreach ($rows as $activity_row) { $activity_counter = (int)($activity_row['stock_counter'] ?? $activity_row['counter'] ?? 0); $activity_counter = $activity_counter > 0 ? $activity_counter : (int)$bar_counter; if (!isset($counter_totals[$activity_counter])) $counter_totals[$activity_counter] = ['count' => 0, 'amount' => 0]; $counter_totals[$activity_counter]['count']++; $counter_totals[$activity_counter]['amount'] += (float)($activity_row['amount'] ?? 0); } ?>
             <div class="user-tab-summary-grid">
                 <?php if ($counter_totals) { foreach ($counter_totals as $activity_counter => $counter_total) { ?>
@@ -189,7 +196,7 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
             <?php foreach ($rows as $row) { ?>
                 <tr>
                 <?php if ($key === 'returns') { ?><td><?php echo htmlspecialchars($row['item_name'], ENT_QUOTES, 'UTF-8'); ?></td><td>#<?php echo (int)$row['sale_id']; ?></td><td><?php echo number_format((float)$row['qty'], 2); ?></td><td><?php echo ((int)$row['confirm_status'] === 1 ? 'Accepted' : ((int)$row['confirm_status'] === 3 ? 'Rejected' : 'Pending')); ?></td>
-                <?php } else { ?><td>#<?php echo (int)$row['sale_id']; ?></td><td><?php echo htmlspecialchars(!empty($row['datime']) ? date('H:i:s', strtotime($row['datime'])) : '', ENT_QUOTES, 'UTF-8'); ?></td><td>KES <?php echo number_format((float)$row['amount'], 2); ?></td><td><?php echo $key === 'voids' ? 'Voided' : 'Cancelled'; ?></td><?php } ?>
+                <?php } else { ?><td>#<?php echo (int)$row['sale_id']; ?></td><td><?php echo htmlspecialchars(!empty($row['datime']) ? date('H:i:s', strtotime($row['datime'])) : '', ENT_QUOTES, 'UTF-8'); ?></td><td>KES <?php echo number_format((float)$row['amount'], 2); ?></td><td><?php echo $key === 'voids' ? 'Voided' : ($key === 'cancelled' ? 'Cancelled' : ucfirst($key)); ?></td><?php } ?>
                 </tr>
             <?php } ?></tbody></table></div>
             <?php } else { ?>
