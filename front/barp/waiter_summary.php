@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../../inc/connection.php';
-require_once '../chaba/funcs.php';
+require_once '../../inc/gen_funcs.php';
 
 $user_id = (int)($_REQUEST['user_id'] ?? 0);
 $shift = (string)get_column('kp_shift', 'shift', '1');
