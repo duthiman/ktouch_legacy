@@ -4,13 +4,21 @@ include('../../inc/connection.php');
 include('../clude/funcs.php');
 $counter=$_REQUEST['counter'];
 $user_id=$_REQUEST['user_id'];
-$reason=$_REQUEST['reason'];
+$current_user_id=(int)($_REQUEST['current_user_id'] ?? 0);
+$reason=$_REQUEST['reason'] ?? '';
 $trans_by=$_SESSION['user_id'];
 $shift=shift();
 
-$counter_user=mysqli_query($connection,"SELECT user_id FROM kp_users WHERE counter='$counter'");
-$st=mysqli_fetch_assoc($counter_user);
-$prev_user=$st['user_id'];
+$counter=(int)$counter;
+$user_id=(int)$user_id;
+$prev_user=$current_user_id;
+
+// Keep compatibility with older callers that do not send the current cashier.
+if ($prev_user < 1) {
+    $counter_user=mysqli_query($connection,"SELECT user_id FROM kp_counters WHERE cntr_id='$counter'");
+    $st=$counter_user ? mysqli_fetch_assoc($counter_user) : null;
+    $prev_user=(int)($st['user_id'] ?? 0);
+}
 
 $transaction="CHANGED CASHIER FROM ".strtoupper($cashier=get_column('kp_counters','user_id',"cntr_id='$counter'"))." TO ".strtoupper(get_user($user_id));
 

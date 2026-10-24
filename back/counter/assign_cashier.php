@@ -99,7 +99,7 @@ document.getElementById('assign_cash').addEventListener('click', assign_cash);
     $.ajax({
       url: 'assign_cashier_act.php',
       type: 'POST',
-      data: 'counter='+encodeURIComponent(cntr_id)+'&reason='+encodeURIComponent(reason)+'&user_id='+encodeURIComponent(user),
+      data: 'counter='+encodeURIComponent(cntr_id)+'&reason='+encodeURIComponent(reason)+'&user_id='+encodeURIComponent(user)+'&current_user_id='+encodeURIComponent('<?php echo $current_cashier_id; ?>'),
       dataType: 'html'
     })
     .done(function(data){
