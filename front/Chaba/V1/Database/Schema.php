@@ -5,7 +5,10 @@ use PDO;
 use KTouch\Core\Logging\RequestLogger;
 final class Schema
 {
-    private const CACHE_TTL = 300;
+    // Schema healing is deployment/startup work, not a print-poll operation.
+    // Recheck at most once per day while retaining automatic repair after a
+    // deployment, cache expiry, or process restart.
+    private const CACHE_TTL = 86400;
     public const COLUMNS = [
         'queue_id'=>'INT NOT NULL AUTO_INCREMENT', 'sale_id'=>'INT NOT NULL DEFAULT 0',
         'ref_id'=>'INT NOT NULL DEFAULT 0', 'print_type'=>"VARCHAR(55) NOT NULL DEFAULT 'bill'",
