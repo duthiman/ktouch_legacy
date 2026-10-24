@@ -248,9 +248,13 @@ body {
   font-size: 11px;
 }
 .mobile-inline-switch .switch-toggle {
-  width: 62px;
-  min-width: 62px;
+  width: 100%;
+  min-width: 100%;
   height: 32px;
+}
+.mobile-inline-switch {
+  width: 100%;
+  box-sizing: border-box;
 }
 .mobile-inline-switch .switch-toggle label:before {
   left: 11px;
