@@ -560,6 +560,12 @@
   #user-modal .user-sales td,#user-modal .user-sales th{padding:8px}
   #user-modal .user-sales-list{max-height:230px;overflow:auto}
   #user-modal .user-tab-table{max-height:300px;overflow:auto}
+  #user-modal .user-tab-summary-grid{display:flex;flex-wrap:wrap;gap:5px;padding:5px}
+  #user-modal .user-tab-counter-card{flex:0 0 auto;min-width:125px;padding:9px 11px;border:1px solid #d7e8de;border-radius:7px;background:linear-gradient(135deg,#f4fbf6,#e4f4e9);color:#174b35}
+  #user-modal .user-tab-counter-card small,#user-modal .user-tab-counter-card strong,#user-modal .user-tab-counter-card b{display:block}
+  #user-modal .user-tab-counter-card small{font-size:10px;font-weight:900;text-transform:uppercase}
+  #user-modal .user-tab-counter-card strong{margin-top:4px;font-size:12px}
+  #user-modal .user-tab-counter-card b{margin-top:3px;color:#087e4b;font-size:13px}
   #user-modal .modal-footer{display:flex;justify-content:flex-end;align-items:center;gap:10px;padding:14px 20px;border-top:1px solid #d7e8de;background:#fff}
   #user-modal .modal-footer button{min-width:130px;height:42px;padding:0 18px;border:0;border-radius:8px;font-size:12px;font-weight:900;letter-spacing:.04em;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}
   #user-modal .modal-footer button:hover{transform:translateY(-1px);box-shadow:0 6px 14px #102d2026;filter:brightness(1.04)}

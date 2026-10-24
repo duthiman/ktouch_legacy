@@ -25,7 +25,7 @@ while ($sale_query && ($sale_row = mysqli_fetch_assoc($sale_query))) {
     $sale_rows[] = $sale_row;
 }
 $return_rows = [];
-$return_query = mysqli_query($connection, "SELECT r.sale_id,r.item_id,r.qty,r.amount,r.ret_status,r.confirm_status,
+$return_query = mysqli_query($connection, "SELECT r.sale_id,r.item_id,r.qty,r.amount,r.stock_counter,r.ret_status,r.confirm_status,
     COALESCE(i.name, CONCAT('Item ', r.item_id)) item_name
     FROM kp_ret_items r LEFT JOIN kp_items i ON i.item_id=r.item_id
     WHERE r.user_id='$user_id' AND r.shift='$safe_shift' ORDER BY r.id DESC LIMIT 100");
@@ -173,6 +173,14 @@ while ($counter_query && ($row = mysqli_fetch_assoc($counter_query))) {
         ] as $key => $panel) { ?>
         <div class="user-summary-panel" data-summary-panel="<?php echo $key; ?>">
             <?php $rows = $key === 'returns' ? $return_rows : ($key === 'voids' ? $void_rows : ($key === 'cancelled' ? $cancel_rows : [])); ?>
+            <?php $counter_totals = []; foreach ($rows as $activity_row) { $activity_counter = (int)($activity_row['stock_counter'] ?? $activity_row['counter'] ?? 0); $activity_counter = $activity_counter > 0 ? $activity_counter : (int)$bar_counter; if (!isset($counter_totals[$activity_counter])) $counter_totals[$activity_counter] = ['count' => 0, 'amount' => 0]; $counter_totals[$activity_counter]['count']++; $counter_totals[$activity_counter]['amount'] += (float)($activity_row['amount'] ?? 0); } ?>
+            <div class="user-tab-summary-grid">
+                <?php if ($counter_totals) { foreach ($counter_totals as $activity_counter => $counter_total) { ?>
+                    <div class="user-tab-counter-card"><small><?php echo htmlspecialchars(get_counter($activity_counter), ENT_QUOTES, 'UTF-8'); ?></small><strong><?php echo number_format((float)$counter_total['count'], 0); ?> records</strong><b>KES <?php echo number_format((float)$counter_total['amount'], 2); ?></b></div>
+                <?php } } else { ?>
+                    <div class="user-tab-counter-card"><small>NO RECORDS</small><strong>0 records</strong><b>KES 0.00</b></div>
+                <?php } ?>
+            </div>
             <?php if ($rows) { ?>
             <div class="user-sales user-tab-table"><table><thead><tr>
                 <?php if ($key === 'returns') { ?><th>Item</th><th>Bill</th><th>Qty</th><th>Status</th>
