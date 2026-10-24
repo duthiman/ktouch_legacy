@@ -6,19 +6,65 @@ if(isset($_REQUEST['id'])){
   $name=strtoupper(get_counter($id)); 
 }
 ?>
-<div class="modal-content">
+<div class="modal-content assign-cashier-modal">
+  <style>
+    .assign-cashier-modal .current-cashier-card {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      margin-bottom:16px;
+      border:1px solid #d9e2ec;
+      border-radius:7px;
+      background:#f7faff;
+    }
+    .assign-cashier-modal .current-cashier-label {
+      display:block;
+      margin-bottom:3px;
+      color:#718096;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .assign-cashier-modal .current-cashier-name {
+      color:#243b53;
+      font-size:16px;
+      font-weight:700;
+    }
+    .assign-cashier-modal .current-cashier-id {
+      padding:5px 9px;
+      border-radius:7px;
+      background:#2f855a;
+      color:#fff;
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+  </style>
   <div id="results"></div>
   <div class="modal-header">
     <h4 class="modal-title"> <strong>ASSIGN NEW CASHIER FOR COUNTER</strong> <?php echo $name; ?></h4> 
   </div>
   <div class="modal-body"> 
     
-    <div class="form-group">
-        <label >Current Cashier: <b><?php echo $cashier=get_column('kp_counters','user_id',"cntr_id='$id'"); ?></b></label> 
-      </div>  
+    <div class="current-cashier-card" aria-label="Current cashier">
+      <?php
+        $current_cashier_id = (int)get_column('kp_counters', 'user_id', "cntr_id='$id'");
+        $current_cashier_name = $current_cashier_id > 0 ? strtoupper(get_user($current_cashier_id)) : 'NO CASHIER ASSIGNED';
+      ?>
+      <div>
+        <span class="current-cashier-label">Current cashier</span>
+        <span class="current-cashier-name"><?php echo htmlspecialchars($current_cashier_name, ENT_QUOTES, 'UTF-8'); ?></span>
+      </div>
+      <?php if ($current_cashier_id > 0): ?>
+        <span class="current-cashier-id">ID <?php echo $current_cashier_id; ?></span>
+      <?php endif; ?>
+    </div>
        <div class="form-group"> 
            <select type="text" class="selectpicker form-control"  id="users" name="users"> 
-                     <option>----SELECT USER----</option>
+                     <option value="">----SELECT USER----</option>
                  <?php
 
           $item = "SELECT * FROM kp_users WHERE work_status=2 AND drole=1  ORDER BY username ASC";
@@ -52,8 +98,8 @@ document.getElementById('assign_cash').addEventListener('click', assign_cash);
     var user = $("#users").val(); 
     $.ajax({
       url: 'assign_cashier_act.php',
-      typr: 'POST',                           
-      data: 'counter='+cntr_id+'&reason='+reason+'&user_id='+user,
+      type: 'POST',
+      data: 'counter='+encodeURIComponent(cntr_id)+'&reason='+encodeURIComponent(reason)+'&user_id='+encodeURIComponent(user),
       dataType: 'html'
     })
     .done(function(data){
@@ -64,4 +110,4 @@ document.getElementById('assign_cash').addEventListener('click', assign_cash);
       $('#results').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Warning!</strong> Error occured.</div>');
     });
   }
-</script> 
+</script>
