@@ -2,25 +2,40 @@
 include("../../inc/connection.php");
 include('../clude/funcs.php');
 if(isset($_REQUEST['id'])){
-  $id = $_REQUEST['id'];
+  $id = (int)$_REQUEST['id'];
   $name=strtoupper(get_counter($id)); 
+  $counter_row = mysqli_query($connection, "SELECT take_status FROM kp_counters WHERE cntr_id='$id' LIMIT 1");
+  $counter_data = $counter_row ? mysqli_fetch_assoc($counter_row) : null;
+  $take_status = (int)($counter_data['take_status'] ?? 0);
+  $take_status_label = $take_status === 3 ? 'OPEN' : ($take_status === 2 ? 'CLOSED' : 'READY');
 }
 ?>
-<div class="modal-content">
+<div class="modal-content open-counter-modal">
+  <style>
+    .open-counter-modal .counter-open-summary { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 14px; margin-bottom:16px; border:1px solid #d9e2ec; border-radius:7px; background:#f7faff; }
+    .open-counter-modal .counter-open-summary small { display:block; color:#718096; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+    .open-counter-modal .counter-open-summary strong { color:#243b53; font-size:16px; }
+    .open-counter-modal .counter-take-status { padding:6px 10px; border-radius:7px; background:<?php echo $take_status === 3 ? '#2f855a' : '#718096'; ?>; color:#fff; font-size:12px; font-weight:700; }
+  </style>
   <div id="results"></div>
   <div class="modal-header">
     <h4 class="modal-title"> <strong>OPEN <?php echo $name; ?> COUNTER</strong></h4> 
   </div>
   <div class="modal-body">  
+    <div class="counter-open-summary">
+      <div><small>Counter</small><strong><?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?></strong></div>
+      <div class="counter-take-status">TAKE: <?php echo $take_status_label; ?></div>
+    </div>
     <div class="form-group"> 
+    <label for="users"><strong>Counter cashier</strong></label>
     <select type="text" class="selectpicker form-control"  id="users" name="users"> 
-      <option>----SELECT COUNTER CASHIER----</option>
+      <option value="">----SELECT COUNTER CASHIER----</option>
                  <?php
 
-          $item = "SELECT * FROM kp_users WHERE user_work_status=2 AND drole=1 AND counter=0  ORDER BY user_username ASC";
+          $item = "SELECT user_id, username FROM kp_users WHERE work_status=2 AND drole=1 AND counter=0 ORDER BY username ASC";
           $item_r = mysqli_query($connection,$item) or die("Error getting categories");
           while ($ct = mysqli_fetch_assoc($item_r)) {
-              $name = $ct['user_username'];
+              $name = $ct['username'];
               $user_id = $ct['user_id'];
               ?>
               <option  value="<?php echo $user_id; ?>"><?php echo $name; ?></option>
@@ -44,8 +59,8 @@ document.getElementById('open_count').addEventListener('click', open_count);
     var user = $("#users").val(); 
     $.ajax({
       url: 'open_counter_act.php',
-      typr: 'POST',                           
-      data: 'counter='+cntr_id+'&user_id='+user,
+      type: 'POST',
+      data: 'counter='+encodeURIComponent(cntr_id)+'&user_id='+encodeURIComponent(user),
       dataType: 'html'
     })
     .done(function(data){
