@@ -176,6 +176,52 @@ if (!function_exists('ret_service_finish_return')) {
     }
 }
 
+if (!function_exists('ret_queue_v1_prints')) {
+    function ret_queue_v1_prints($connection, $sale_id, $return_id, $user_id, $return_counter, $sale_counter)
+    {
+        if (!function_exists('bill_service_queue_snapshot_job')) return [];
+        $sale_id = (int)$sale_id;
+        $return_id = (int)$return_id;
+        $user_id = (int)$user_id;
+        $return_counter = (int)$return_counter;
+        $sale_counter = (int)$sale_counter;
+        $queued = [];
+
+        $return_rows = [];
+        $query = mysqli_query($connection, "SELECT item_id, qty FROM kp_ret_items WHERE sale_id='$sale_id' AND confirm_status=1 ORDER BY id ASC");
+        if ($query) while ($row = mysqli_fetch_assoc($query)) {
+            $item_id = (int)$row['item_id'];
+            $qty = (float)$row['qty'];
+            $price = (float)get_column('kp_sale_items', 'price', "sale_id='$sale_id' AND item_id='$item_id' LIMIT 1");
+            $return_rows[] = ['item_id'=>$item_id, 'name'=>get_item($item_id), 'qty'=>$qty, 'price'=>$price, 'total'=>$qty * $price];
+        }
+        if ($return_rows && $return_counter > 0) {
+            $queue_id = bill_service_queue_snapshot_job($sale_id, $user_id, $return_counter, 'RET', $return_rows, $return_counter);
+            if ($queue_id > 0) $queued[] = $queue_id;
+        }
+
+        if ($sale_counter > 0) {
+            $sale = ret_repo_get_sale_rows($connection, $sale_id);
+            $bill_rows = [];
+            foreach (($sale['rows'] ?? []) as $row) {
+                if ((float)($row['qty'] ?? 0) <= 0) continue;
+                $bill_rows[] = [
+                    'item_id'=>(int)($row['item_id'] ?? 0),
+                    'name'=>(string)($row['item_name'] ?? ''),
+                    'qty'=>(float)($row['qty'] ?? 0),
+                    'price'=>(float)($row['price'] ?? 0),
+                    'total'=>(float)($row['total'] ?? 0),
+                ];
+            }
+            if ($bill_rows) {
+                $queue_id = bill_service_queue_snapshot_job($sale_id, $user_id, $sale_counter, 'BILL', $bill_rows, $sale_counter);
+                if ($queue_id > 0) $queued[] = $queue_id;
+            }
+        }
+        return $queued;
+    }
+}
+
 if (!function_exists('ret_service_approval_list')) {
     function ret_service_approval_list($connection, $user_id = 0)
     {
@@ -348,36 +394,8 @@ if (!function_exists('ret_service_confirm_return')) {
             "sale_id='$sale_id' AND (confirm_status=0 OR confirm_status=2 OR confirm_status IS NULL)"
         );
         $queued_prints = [];
-        if (function_exists('kp_print_enqueue') && $counter > 0 && $pending_return_items === 0) {
-            $return_queue_id = kp_print_enqueue($connection, [
-                'sale_id' => $sale_id,
-                'ref_id' => $return_id,
-                'print_type' => 'ret',
-                'label' => 'RETURN RECEIPT',
-                'cntr_id' => $counter,
-                'route_path' => 'render_ret.php',
-                'route_query' => 'sale_id=' . $sale_id . '&return_id=' . $return_id,
-                'requested_by' => $user_id,
-            ]);
-            if ($return_queue_id > 0) {
-                $queued_prints[] = $return_queue_id;
-            }
-
-            if ($remaining_items > 0 && $sale_counter > 0) {
-                $bill_queue_id = kp_print_enqueue($connection, [
-                    'sale_id' => $sale_id,
-                    'ref_id' => $sale_id,
-                    'print_type' => 'bill',
-                    'label' => 'UPDATED BILL AFTER RETURN',
-                    'cntr_id' => $sale_counter,
-                    'route_path' => '',
-                    'route_query' => '',
-                    'requested_by' => $user_id,
-                ]);
-                if ($bill_queue_id > 0) {
-                    $queued_prints[] = $bill_queue_id;
-                }
-            }
+        if ($counter > 0 && $pending_return_items === 0) {
+            $queued_prints = ret_queue_v1_prints($connection, $sale_id, $return_id, $user_id, $counter, $remaining_items > 0 ? $sale_counter : 0);
         }
         if (function_exists('sync_sale_tokens')) {
             sync_sale_tokens($sale_id, 'sale_return_sync');
