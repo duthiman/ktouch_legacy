@@ -12,6 +12,7 @@ final class ChabaService
         $pdo=$this->repo->db();
         $user=(int)($context->userId()??0);
         return match($action) {
+            'ping'=>['status'=>'ok','module'=>'chaba','version'=>'v1','database'=>'connected','time'=>date('c')],
             'schema.ensure'=>['success'=>true,'schema'=>'chaba'],
             'templates.load'=>$this->templatesLoad(),
             'counters'=>$this->counters($pdo),
