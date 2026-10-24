@@ -81,3 +81,4 @@ document.addEventListener('pointerdown',function(e){
 });
 })();
 document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#user-modal .modal-footer button')){var modal=document.getElementById('user-modal');if(modal)modal.className='modal';}});
+document.addEventListener('click',function(e){var tab=e.target.closest&&e.target.closest('.user-summary-tab');if(!tab)return;var root=tab.closest('#user-modal');if(!root)return;root.querySelectorAll('.user-summary-tab').forEach(function(x){x.classList.toggle('active',x===tab)});root.querySelectorAll('.user-summary-panel').forEach(function(x){x.classList.toggle('active',x.dataset.summaryPanel===tab.dataset.summaryTab)})});
