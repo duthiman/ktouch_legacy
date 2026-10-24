@@ -32,7 +32,12 @@ namespace {
         $module=(require __DIR__.'/module.php')($factory,$logger);
         $user=(int)($_SESSION['user_id']??$_POST['user_id']??1);
         $result=$module->handle($action,new \KTouch\Core\Http\Request($data),new \KTouch\Core\Auth\AuthContext($user));
-        if(isset($result['html']) && in_array($action, ['next', 'render'], true)) { header('Content-Type: text/html; charset=utf-8'); echo $result['html']; }
-        else echo json_encode(['ok'=>true,'data'=>$result],JSON_UNESCAPED_SLASHES);
+        $jsonRequest = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST'
+            && stripos((string)($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json') !== false;
+        if(isset($result['html']) && in_array($action, ['next', 'render'], true) && !$jsonRequest) {
+            header('Content-Type: text/html; charset=utf-8'); echo $result['html'];
+        } else {
+            echo json_encode(['ok'=>true,'data'=>$result],JSON_UNESCAPED_SLASHES);
+        }
     } catch(\Throwable $e) { http_response_code($e->getCode()>=400&&$e->getCode()<600?$e->getCode():500); echo json_encode(['ok'=>false,'error'=>$e->getMessage()]); }
 }
