@@ -4,7 +4,6 @@ session_start();
 header('Content-Type: application/json');
 
 include('../../../inc/connection.php');
-include_once('../../chaba/funcs.php');
 include_once('../../../inc/gen_funcs.php');
 require_once __DIR__ . '/tots_schema.php';
 require_once __DIR__ . '/tots_helpers.php';
