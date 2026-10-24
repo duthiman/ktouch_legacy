@@ -23,6 +23,15 @@ $defaultSections = is_array($defaultSections ?? null) ? $defaultSections : ['tit
 $sections = array_map('strtolower', array_map('strval', $defaultSections));
 $has = static fn(string $name): bool => in_array($name, $sections, true);
 $attributeRows = static function($value): array { $rows=[]; if(!is_array($value))return $rows; foreach($value as $a){if(is_string($a)){$name=trim($a);$qty=1;}elseif(is_array($a)){$name=trim((string)($a['name']??$a['label']??$a['title']??''));$qty=(float)($a['qty']??1);}else continue;if($name!=='')$rows[]=['name'=>$name,'qty'=>$qty>0?$qty:1];}return $rows; };
+$rawAttributeRows = $attributeRows;
+$attributeRows = static function($value) use ($rawAttributeRows): array {
+    $unique = [];
+    foreach ($rawAttributeRows($value) as $row) {
+        $key = strtolower($row['name']) . '|' . (string)$row['qty'];
+        if (!isset($unique[$key])) $unique[$key] = $row;
+    }
+    return array_values($unique);
+};
 $isDocket = in_array($type, ['BOT', 'KOT', 'GOT', 'COT'], true);
 $layoutClass = $type === 'FLPO' ? ' flpo' : '';
 $logo = (string)($header['logo_src'] ?? '');
