@@ -5,7 +5,6 @@ header('Content-Type: application/json');
 
 require_once '../../../inc/connection.php';
 require_once '../../../inc/gen_funcs.php';
-require_once __DIR__ . '/../../chaba/funcs.php';
 require_once __DIR__ . '/ret_schema.php';
 require_once __DIR__ . '/ret_helper.php';
 require_once __DIR__ . '/ret_logger.php';
