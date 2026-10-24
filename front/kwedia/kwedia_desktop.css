@@ -214,6 +214,32 @@ body {
   background: linear-gradient(#cbc7bc, #d2cbc3);
   pointer-events: none;
 }
+.switch-state-label {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+  color: rgba(0,0,0,.48);
+  font-style: normal;
+  font-size: 0;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.switch-state-label::after {
+  content: "TOUCH";
+  font-size: 9px;
+}
+.switch-toggle input:checked + label .switch-state-label {
+  left: 10px;
+  right: auto;
+  color: #527342;
+}
+.switch-toggle input:checked + label .switch-state-label::after {
+  content: "MODAL";
+}
 .mobile-inline-switch .mode-title,
 .mobile-inline-switch .switch-copy span {
   display: none;
