@@ -199,6 +199,12 @@ function renderReturnModal(item) {
   html += '<div class="ret-qty-card"><label>Ordered</label><input type="text" class="form-control" value="' + retEscapeHtml(item.ordered_qty) + '" disabled></div>';
   html += '<div class="ret-qty-card"><label>Returned</label><input type="number" min="0" step="0.01" id="ret_modal_qty" class="form-control" autofocus></div>';
   html += '</div>';
+  html += '<div class="ret-numpad" aria-label="Return quantity keypad">';
+  ['7','8','9','4','5','6','1','2','3','C','0','⌫'].forEach(function(key) {
+    html += '<button type="button" class="ret-numpad-key' + (key === 'C' ? ' ret-numpad-clear' : '') + '" data-ret-key="' + key + '">' + key + '</button>';
+  });
+  html += '<button type="button" class="ret-numpad-key ret-numpad-decimal" data-ret-key=".">.</button>';
+  html += '</div>';
   html += '<input type="hidden" id="ret_modal_item_id" value="' + Number(item.item_id) + '">';
   html += '<input type="hidden" id="ret_modal_counter" value="' + Number(item.counter) + '">';
   html += '<input type="hidden" id="ret_modal_oqty" value="' + retEscapeHtml(item.ordered_qty) + '">';
@@ -210,6 +216,18 @@ function renderReturnModal(item) {
   $('#dynamic-content').html(html);
   $('#edit_item').modal('show');
 }
+
+$(document).on('click', '[data-ret-key]', function() {
+  var key = String($(this).data('ret-key') || '');
+  var input = document.getElementById('ret_modal_qty');
+  if (!input) return;
+  if (key === 'C') input.value = '';
+  else if (key === '⌫') input.value = input.value.slice(0, -1);
+  else if (key === '.' && input.value.indexOf('.') !== -1) return;
+  else input.value += key;
+  input.dispatchEvent(new Event('input', {bubbles: true}));
+  input.focus();
+});
 
 function hasPendingReturns() {
   return (retState.pendingReturns || []).length > 0;

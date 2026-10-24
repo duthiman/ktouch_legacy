@@ -290,6 +290,30 @@ body {
   padding: 8px 10px 10px;
 }
 
+.ret-numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  max-width: 300px;
+  margin: 10px auto 0;
+}
+
+.ret-numpad-key {
+  min-height: 42px;
+  border: 1px solid #c8d8e6;
+  border-radius: 7px;
+  background: linear-gradient(#fff, #eaf2f8);
+  color: #24445f;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(31, 65, 91, .12);
+}
+
+.ret-numpad-key:active { transform: translateY(1px); background: #d9ebf7; }
+.ret-numpad-clear { background: #fff0f0; color: #b3261e; }
+.ret-numpad-decimal { grid-column: 2; }
+
 .ret-modal-btn {
   min-width: 140px;
   min-height: 46px;
