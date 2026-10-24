@@ -28,9 +28,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
                   
                 </div> -->
               <div class="switch-holder">
-                <div class="switch-toggle">
+                <div class="kw-mode-toggle">
                   <input type="checkbox" id="deci_mode_desktop" class="deci-mode-switch" checked>
-                  <label for="deci_mode_desktop"><span class="switch-state-label">TOUCH</span><i aria-hidden="true"></i></label>
+                  <label for="deci_mode_desktop"><span class="kw-mode-toggle-label">TOUCH</span><i aria-hidden="true"></i></label>
                 </div>
               </div>
             </div>
@@ -91,9 +91,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_id']==0) {
                   <strong id="deci_mode_text_mobile">Modal</strong>
                   <span>Switch between popup and touch ordering.</span>
                 </div> -->
-                <div class="switch-toggle">
+                <div class="kw-mode-toggle">
                   <input type="checkbox" id="deci_mode_mobile" class="deci-mode-switch" checked>
-                  <label for="deci_mode_mobile"><span class="switch-state-label">TOUCH</span><i aria-hidden="true"></i></label>
+                  <label for="deci_mode_mobile"><span class="kw-mode-toggle-label">TOUCH</span><i aria-hidden="true"></i></label>
                 </div>
               </div>
             </div>

@@ -150,16 +150,16 @@ body {
   font-size: 11px;
   color: #8a6a3a;
 }
-.switch-toggle {
+.kw-mode-toggle {
   position: relative;
   width: 100%;
   min-width: 100%;
   height: 36px;
 }
-.switch-toggle input {
+.kw-mode-toggle input {
   display: none;
 }
-.switch-toggle label {
+.kw-mode-toggle label {
   display: block;
   width: 100%;
   height: 100%;
@@ -171,7 +171,7 @@ body {
   transition: all 0.25s ease;
   position: relative;
 }
-.switch-toggle label:before {
+.kw-mode-toggle label:before {
   content: "";
   position: absolute;
   left: 12px;
@@ -182,7 +182,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.switch-toggle label:after {
+.kw-mode-toggle label:after {
   content: "";
   position: absolute;
   top: 4px;
@@ -194,17 +194,17 @@ body {
   box-shadow: inset 0 1px 0 #fff, 0 0 8px rgba(0,0,0,.3), 0 5px 5px rgba(0,0,0,.2);
   transition: all 0.25s ease;
 }
-.switch-toggle input:checked + label {
+.kw-mode-toggle input:checked + label {
   background: #176b63;
 }
-.switch-toggle input:checked + label:before {
+.kw-mode-toggle input:checked + label:before {
   content: "";
 }
-.switch-toggle input:checked + label:after {
+.kw-mode-toggle input:checked + label:after {
   left: auto;
   right: 4px;
 }
-.switch-toggle label i {
+.kw-mode-toggle label i {
   position: absolute;
   left: 15%;
   top: 25%;
@@ -214,7 +214,7 @@ body {
   background: linear-gradient(#cbc7bc, #d2cbc3);
   pointer-events: none;
 }
-.switch-state-label {
+.kw-mode-toggle-label {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -229,16 +229,16 @@ body {
   text-transform: uppercase;
   pointer-events: none;
 }
-.switch-state-label::after {
+.kw-mode-toggle-label::after {
   content: "TOUCH";
   font-size: 12px;
 }
-.switch-toggle input:checked + label .switch-state-label {
+.kw-mode-toggle input:checked + label .kw-mode-toggle-label {
   left: 10px;
   right: auto;
   color: #fff;
 }
-.switch-toggle input:checked + label .switch-state-label::after {
+.kw-mode-toggle input:checked + label .kw-mode-toggle-label::after {
   content: "MODAL";
 }
 .mobile-inline-switch .mode-title,
@@ -248,7 +248,7 @@ body {
 .mobile-inline-switch .switch-copy strong {
   font-size: 11px;
 }
-.mobile-inline-switch .switch-toggle {
+.mobile-inline-switch .kw-mode-toggle {
   width: 100%;
   min-width: 100%;
   height: 32px;
@@ -257,16 +257,16 @@ body {
   width: 100%;
   box-sizing: border-box;
 }
-.mobile-inline-switch .switch-toggle label:before {
+.mobile-inline-switch .kw-mode-toggle label:before {
   left: 11px;
   top: 8px;
   font-size: 9px;
 }
-.mobile-inline-switch .switch-toggle label:after {
+.mobile-inline-switch .kw-mode-toggle label:after {
   width: 24px;
   height: 24px;
 }
-.mobile-inline-switch .switch-toggle input:checked + label:after {
+.mobile-inline-switch .kw-mode-toggle input:checked + label:after {
   left: auto;
   right: 4px;
 }
