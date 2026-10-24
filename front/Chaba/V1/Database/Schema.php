@@ -5,6 +5,7 @@ use PDO;
 use KTouch\Core\Logging\RequestLogger;
 final class Schema
 {
+    private const CACHE_TTL = 300;
     public const COLUMNS = [
         'queue_id'=>'INT NOT NULL AUTO_INCREMENT', 'sale_id'=>'INT NOT NULL DEFAULT 0',
         'ref_id'=>'INT NOT NULL DEFAULT 0', 'print_type'=>"VARCHAR(55) NOT NULL DEFAULT 'bill'",
@@ -22,11 +23,30 @@ final class Schema
     ];
     public static function ensure(PDO $pdo, ?RequestLogger $logger=null): array
     {
-        // The print worker polls frequently. Once the three Chaba tables exist,
-        // avoid repeating SHOW COLUMNS/SHOW INDEX and DDL on every poll.
+        // Chaba is polled frequently. Cache a successful schema check so normal
+        // worker requests do not query information_schema or acquire a DDL lock.
+        // APCu shares this cache between PHP-FPM workers; the static fallback
+        // still helps when APCu is not installed.
+        static $readyCache=[];
+        $database=(string)$pdo->query('SELECT DATABASE()')->fetchColumn();
+        $cacheKey='ktouch_chaba_schema_'.hash('sha256',$database);
+        $now=time();
+        if(isset($readyCache[$cacheKey]) && ($now-$readyCache[$cacheKey])<self::CACHE_TTL)
+            return ['success'=>true,'fast'=>true,'cached'=>true];
+        if(function_exists('apcu_fetch')) {
+            $hit=false;$cached=apcu_fetch($cacheKey,$hit);
+            if($hit && $cached===1) {
+                $readyCache[$cacheKey]=$now;
+                return ['success'=>true,'fast'=>true,'cached'=>true];
+            }
+        }
         $ready=$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name IN ('kp_print_queue','kp_print_queue_printed','kp_print_reprints')")->fetchColumn();
-        if((int)$ready===3)return ['success'=>true,'fast'=>true];
-        $lock='chaba_schema_'.substr(hash('sha256',(string)$pdo->query('SELECT DATABASE()')->fetchColumn()),0,24);
+        if((int)$ready===3) {
+            $readyCache[$cacheKey]=$now;
+            if(function_exists('apcu_store')) @apcu_store($cacheKey,1,self::CACHE_TTL);
+            return ['success'=>true,'fast'=>true];
+        }
+        $lock='chaba_schema_'.substr(hash('sha256',$database),0,24);
         $stmt=$pdo->prepare('SELECT GET_LOCK(?,10)');$stmt->execute([$lock]);
         if((int)$stmt->fetchColumn()!==1) return ['success'=>false,'errors'=>['Chaba schema lock unavailable']];
         $errors=[];
@@ -70,6 +90,11 @@ final class Schema
                 }
             }
         } finally {$stmt=$pdo->prepare('SELECT RELEASE_LOCK(?)');$stmt->execute([$lock]);}
-        return ['success'=>$errors===[],'errors'=>$errors];
+        $success=$errors===[];
+        if($success) {
+            $readyCache[$cacheKey]=$now;
+            if(function_exists('apcu_store')) @apcu_store($cacheKey,1,self::CACHE_TTL);
+        }
+        return ['success'=>$success,'errors'=>$errors];
     }
 }
