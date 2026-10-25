@@ -297,7 +297,8 @@ if (!function_exists('close_modal_waiter_name')) {
           <div class="close-step" data-close-step="4"><span class="close-step-number">4</span><span>Close the counter and cashier records</span></div>
           <div class="close-step" data-close-step="5"><span class="close-step-number">5</span><span>Save the counter summary</span></div>
           <div class="close-step" data-close-step="6"><span class="close-step-number">6</span><span>Queue the counter and shift prints</span></div>
-          <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Complete closing and redirect</span></div>
+          <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Back up the database tables</span></div>
+          <div class="close-step" data-close-step="8"><span class="close-step-number">8</span><span>Complete closing and redirect</span></div>
         </div>
       </div>
 
@@ -401,7 +402,8 @@ if (!function_exists('close_modal_waiter_name')) {
       <div class="close-step" data-close-step="4"><span class="close-step-number">4</span><span>Close the counter and cashier records</span></div>
       <div class="close-step" data-close-step="5"><span class="close-step-number">5</span><span>Save the counter summary</span></div>
       <div class="close-step" data-close-step="6"><span class="close-step-number">6</span><span>Queue the counter and shift prints</span></div>
-      <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Complete closing and redirect</span></div>
+      <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Back up the database tables</span></div>
+      <div class="close-step" data-close-step="8"><span class="close-step-number">8</span><span>Complete closing and redirect</span></div>
     </div>
     <div class="close-counter-progress" id="close-counter-progress" style="display:block;margin-top:16px;" role="status" aria-live="polite">
       <span id="close-counter-progress-text">Starting counter close...</span>
@@ -491,7 +493,8 @@ if (!function_exists('close_modal_waiter_name')) {
       }).done(function (res) {
         completeCloseStepsThrough(6);
         setCloseStep(7, 'active');
-        window.setTimeout(function () { setCloseStep(7, 'complete'); }, 250);
+        window.setTimeout(function () { completeCloseStepsThrough(7); setCloseStep(8, 'active'); }, 250);
+        window.setTimeout(function () { setCloseStep(8, 'complete'); }, 500);
         var message = (res && res.message) ? res.message : 'Counter is closed.';
         if (res && res.redirect) {
           window.location.href = res.redirect;
