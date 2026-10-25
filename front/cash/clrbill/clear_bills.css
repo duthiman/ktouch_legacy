@@ -27,6 +27,12 @@
 .cash-clearb-shell .cash-clearb-toggle button { padding: 6px 10px; }
 .cash-clearb-shell .cash-clearb-summarybar { margin: 1px; padding: 8px 10px; }
 .cash-clearb-shell .cash-clearb-selector-body { padding: 4px 6px; }
+.cash-clearb-shell .cash-clearb-selector-body { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.cash-clearb-shell .cash-clearb-selector-body > .cash-clearb-toggle { flex: 0 0 auto; }
+.cash-clearb-shell .cash-clearb-selector-body > .cash-clearb-scrollnav { flex: 1 1 220px; margin: 0; }
+.cash-clearb-shell .cash-clearb-selector-body > .cash-clearb-buttons,
+.cash-clearb-shell .cash-clearb-selector-body > .cash-clearb-select,
+.cash-clearb-shell .cash-clearb-selector-body > .cash-clearb-load { flex-basis: 100%; }
 .cash-clearb-shell .cash-clearb-toggle { margin: 0 0 4px; gap: 3px; }
 .cash-clearb-shell .cash-clearb-toggle button { padding: 4px 8px; font-size: 11px; line-height: 1.1; }
 .cash-clearb-shell .cash-clearb-scrollnav { min-height: 20px; margin: 2px 0 4px; font-size: 10px; line-height: 1.1; }
