@@ -5,6 +5,7 @@ use KTouch\Core\Auth\AuthContext;
 use KTouch\Core\Exceptions\ValidationException;
 use KTouch\Core\Exceptions\ApiException;
 use KTouch\Modules\Chaba\V1\Repositories\ChabaRepository;
+use KTouch\Modules\Chaba\V1\Services\CspService;
 final class ChabaService
 {
     public function __construct(private ChabaRepository $repo) {}
@@ -84,17 +85,14 @@ final class ChabaService
                 || strtolower((string)($row['print_type']??'')) === 'counter_sum';
             if($isCounterSummary) {
                 $query=[];parse_str((string)($row['route_query']??''),$query);
-                $previousGet=$_GET;$_GET=array_merge($_GET,$query);
                 $summaryRenderer=dirname(__DIR__).'/Templates/Template1/renders/csp.php';
                 if(!is_file($summaryRenderer)) throw new ApiException('Counter summary renderer not found',404,'chaba_renderer');
-                $legacyConnectionFile=dirname(__DIR__,4).'/inc/connection.php';
-                if(is_file($legacyConnectionFile)) require_once $legacyConnectionFile;
-                if(isset($connection) && $connection instanceof \mysqli) $GLOBALS['connection']=$connection;
+                $cspData=(new CspService())->load($pdo,(int)($query['summary_id']??$row['ref_id']??0),(int)($query['cntr_id']??$row['cntr_id']??0),(string)($query['shift']??$row['shift']??''));
+                $document=['document_type'=>'CSP','title'=>'COUNTER SUMMARY PRINT','header'=>$cspData['header'],'csp'=>$cspData];
                 ob_start();
                 try { include $summaryRenderer; $html=ob_get_clean(); }
-                catch(\Throwable $e) { if(ob_get_level()>0)ob_end_clean();$_GET=$previousGet;throw new ApiException('Counter summary render failed: '.$e->getMessage(),409,'chaba_renderer'); }
-                $_GET=$previousGet;
-                return ['job'=>$row,'document'=>['document_type'=>'COUNTER_SUMMARY'],'legacy'=>true]+($render?['html'=>$html]:[]);
+                catch(\Throwable $e) { if(ob_get_level()>0)ob_end_clean();throw new ApiException('Counter summary render failed: '.$e->getMessage(),409,'chaba_renderer'); }
+                return ['job'=>$row,'document'=>$document,'legacy'=>false]+($render?['html'=>$html]:[]);
             }
             // Legacy batches are keyed by queue ID; snapshot jobs never take this path.
             try {
