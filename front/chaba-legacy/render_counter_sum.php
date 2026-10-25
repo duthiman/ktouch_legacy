@@ -202,6 +202,7 @@ $openingStaffId = (int)($closeSummaryRow['opening_staff_id'] ?? $closeSummaryRow
 $closingStaffId = (int)($closeSummaryRow['closing_staff_id'] ?? $closeSummaryRow['close_by'] ?? get_column('kp_counter_hist', 'close_by', "shift='$shift'"));
 $openingAt = (string)($closeSummaryRow['opening_time'] ?? $closeSummaryRow['opened_at'] ?? get_column('kp_counter_hist', 'opening', "shift='$shift'"));
 $closingAt = (string)($closeSummaryRow['closing_time'] ?? $closeSummaryRow['closed_at'] ?? get_column('kp_counter_hist', 'closing', "shift='$shift'"));
+$counterTotalSales = (float)($closeSummaryRow['total_sales'] ?? column_total('kp_sales', 'amount', "shift='$shift' AND counter='$counter"));
 
 $nos = 45;
 $today = $shift;
@@ -752,7 +753,7 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <table class="table">
       <tbody>
         <tr>
-          <td><b>OPENING:</b></td>
+          <td><b>OPENING</b></td>
           <td><?php echo htmlspecialchars(get_user($openingStaffId)); ?></td>
           <td colspan="2">
             <?php
@@ -762,48 +763,13 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
           </td>
         </tr>
         <tr>
-          <td><b>CLOSING:</b></td>
+          <td><b>CLOSING</b></td>
           <td><?php echo htmlspecialchars(get_user($closingStaffId)); ?></td>
           <td colspan="2"><?php echo $closingAt !== '' ? htmlspecialchars(date('l h:i:sa d-m-Y', strtotime($closingAt))) : 'NOT RECORDED'; ?></td>
         </tr>
         <tr>
-          <td colspan="4"><b>ORDER NUMBER</b></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>START NUMBER</b></td>
-          <td colspan="2"><?php echo get_column('kp_counter_hist', 'open_ord', "shift='$shift'"); ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>END NUMBER</b></td>
-          <td colspan="2"><?php echo get_column('kp_sale_id', 'sale_id', "1") - 1; ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>TODAY REQUESTS</b></td>
-          <td colspan="2"><?php echo $today_requests_total; ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>RETURNS ACCEPTED</b></td>
-          <td colspan="2"><?php echo $today_returns_accepted_total; ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>RETURNS REJECTED</b></td>
-          <td colspan="2"><?php echo $today_returns_rejected_total; ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>VOIDED ITEMS</b></td>
-          <td colspan="2"><?php echo $today_voided_items_total; ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>ITEMS SOLD</b></td>
-          <td colspan="2"><?php echo rtrim(rtrim(number_format($today_items_sold_total, 2, '.', ''), '0'), '.'); ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>TRANSFER TO COUNTER</b></td>
-          <td colspan="2"><?php echo $today_transfer_to_total; ?></td>
-        </tr>
-        <tr>
-          <td colspan="2"><b>TRANSFER FROM COUNTER</b></td>
-          <td colspan="2"><?php echo $today_transfer_from_total; ?></td>
+          <td colspan="2"><b>TOTAL SALES</b></td>
+          <td colspan="2"><b><?php echo thermal_money($counterTotalSales); ?></b></td>
         </tr>
       </tbody>
     </table>
