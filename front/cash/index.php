@@ -72,6 +72,10 @@ $waiters_to_clear = cash_distinct_count($connection, 'kp_sales', 'user_id', "shi
 $reprintable_bills = (int)column_count('kp_sales','sale_id',"shift='$shift'");
 $cashbox_entries = (int)column_count('kp_sale_payment','pay_id',"pay_date='$shift'");
 $cashbox_total_today = (float)column_total('kp_sale_payment','paid_total',"pay_date='$shift'");
+$cash_total_sales = (float)column_total('kp_sales','amount',"shift='$shift'");
+$cash_paid_sales = (float)column_total('kp_sales','amount',"shift='$shift' AND pay_status=1");
+$cash_unpaid_sales = (float)column_total('kp_sales','amount',"shift='$shift' AND pay_status=2");
+$cash_pending_percent = $cash_total_sales > 0 ? min(100, max(0, ($cash_unpaid_sales / $cash_total_sales) * 100)) : 0;
 $return_cashier_mode = function_exists('kp_return_requires_cashier_approval') ? kp_return_requires_cashier_approval($connection) : false;
 $pending_returns_count = $return_cashier_mode
   ? (int)column_count('kp_ret_items','id',"cashier_status=2 AND ret_status!=1")
@@ -276,7 +280,8 @@ $cash_waiter_totals_side = mysqli_query($connection, "SELECT s.user_id, u.userna
                 <div class="cash-panel-head"><h4>Work Area</h4></div>
                 <div class="cash-panel-body cash-scroll-box" id="cleardiv">
                   <div class="cash-dashboard-stack">
-                    <div class="cash-dashboard-total"><small>TOTAL COLLECTED</small><strong><?php echo number_format($cashbox_total_today, 2); ?></strong><span><?php echo $cashbox_entries; ?> payment entries this shift</span></div>
+                    <div class="cash-dashboard-total"><small>CASHBOX TOTAL COLLECTED</small><strong><?php echo number_format($cashbox_total_today, 2); ?></strong><span><?php echo $cashbox_entries; ?> payment entries this shift</span><div class="cashbox-bars"><div><span>Paid</span><i style="width:<?php echo $cash_total_sales>0?min(100,($cash_paid_sales/$cash_total_sales)*100):0; ?>%"></i><b><?php echo number_format($cash_paid_sales,2); ?></b></div><div><span>Pending</span><i class="pending" style="width:<?php echo $cash_pending_percent; ?>%"></i><b><?php echo number_format($cash_unpaid_sales,2); ?></b></div><div><span>Expenses</span><i class="expense" style="width:<?php echo $cashbox_total_today>0?min(100,($expense_total/$cashbox_total_today)*100):0; ?>%"></i><b><?php echo number_format($expense_total,2); ?></b></div></div></div>
+                    <div class="cash-pending-half"><div class="cash-pending-gauge" style="--pending:<?php echo $cash_pending_percent; ?>%"><span><?php echo number_format($cash_pending_percent,1); ?>%</span></div><div><strong>Pending to be paid</strong><small><?php echo number_format($cash_unpaid_sales,2); ?> unpaid sales</small></div></div>
                     <div class="cash-dashboard-card"><h4>Waiter Totals</h4><?php if ($cash_waiter_totals && mysqli_num_rows($cash_waiter_totals)) { while ($waiter_total=mysqli_fetch_assoc($cash_waiter_totals)) { ?><div class="cash-dashboard-waiter"><span><?php echo htmlspecialchars($waiter_total['username'] ?: 'Unknown user'); ?><small><?php echo (int)$waiter_total['bills']; ?> bills</small></span><b><?php echo number_format((float)$waiter_total['total'], 2); ?></b></div><?php } } else { ?><div class="cash-desk-placeholder">No waiter collections recorded for this shift.</div><?php } ?></div>
                   </div>
                 </div>
