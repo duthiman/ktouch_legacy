@@ -78,6 +78,7 @@ $pending_returns_count = $return_cashier_mode
   : 0;
 $pending_returns_label = $return_cashier_mode ? 'Awaiting cashier approval' : 'Counter handles returns';
 $cash_waiter_totals = mysqli_query($connection, "SELECT s.user_id, u.username, COALESCE(SUM(s.amount),0) AS total, COUNT(s.sale_id) AS bills FROM kp_sales s LEFT JOIN kp_users u ON u.user_id=s.user_id WHERE s.shift='$shift' GROUP BY s.user_id, u.username ORDER BY total DESC");
+$cash_waiter_totals_side = mysqli_query($connection, "SELECT s.user_id, u.username, COALESCE(SUM(s.amount),0) AS total, COUNT(s.sale_id) AS bills FROM kp_sales s LEFT JOIN kp_users u ON u.user_id=s.user_id WHERE s.shift='$shift' GROUP BY s.user_id, u.username ORDER BY total DESC");
 ?>
 <link href="cash.css" rel="stylesheet" />
    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
@@ -128,7 +129,7 @@ $cash_waiter_totals = mysqli_query($connection, "SELECT s.user_id, u.username, C
                   <span><?php echo $today_uncleared_bills; ?></span>
                   <small>Unpaid bills waiting for cashier action.</small>
                 </button>
-                <button type="button" class="cash-mission-card cash-mission-secondary" id="cash-card-returns"<?php echo !$return_cashier_mode ? ' disabled' : ''; ?>>
+                <!-- <button type="button" class="cash-mission-card cash-mission-secondary" id="cash-card-returns"<?php echo !$return_cashier_mode ? ' disabled' : ''; ?>>
                   <strong>Approve Returns</strong>
                   <span><?php echo $pending_returns_count; ?></span>
                   <small><?php echo htmlspecialchars($pending_returns_label); ?></small>
@@ -137,7 +138,7 @@ $cash_waiter_totals = mysqli_query($connection, "SELECT s.user_id, u.username, C
                   <strong>Reprint Waiter Bills</strong>
                   <span><?php echo $reprintable_bills; ?></span>
                   <small>Open today's bill list and reprint from there.</small>
-                </button>
+                </button> -->
                 <button type="button" class="cash-mission-card cash-mission-soft" id="cash-card-clear-waiters">
                   <strong>Clear Waiters</strong>
                   <span><?php echo $waiters_to_clear; ?></span>
@@ -284,7 +285,12 @@ $cash_waiter_totals = mysqli_query($connection, "SELECT s.user_id, u.username, C
             <div class="cash-work-pane cash-work-pane-side">
               <div class="cash-panel">
                 <div class="cash-panel-head"><h4>Selected Bills</h4></div>
-                <div class="cash-panel-body cash-scroll-box" id="sale-items"></div>
+                <div class="cash-panel-body cash-scroll-box" id="sale-items">
+                  <div class="cash-selected-collections">
+                    <div class="cash-selected-collections-total"><small>TOTAL WAITER COLLECTIONS</small><strong><?php echo number_format($cashbox_total_today, 2); ?></strong></div>
+                    <div class="cash-selected-collections-list"><h5>Waiter Totals</h5><?php if ($cash_waiter_totals_side && mysqli_num_rows($cash_waiter_totals_side)) { while ($waiter_side=mysqli_fetch_assoc($cash_waiter_totals_side)) { ?><div class="cash-selected-waiter"><span><?php echo htmlspecialchars($waiter_side['username'] ?: 'Unknown user'); ?><small><?php echo (int)$waiter_side['bills']; ?> bills</small></span><b><?php echo number_format((float)$waiter_side['total'], 2); ?></b></div><?php } } else { ?><div class="cash-desk-placeholder">No waiter collections recorded.</div><?php } ?></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
