@@ -424,6 +424,16 @@ td {
   line-height: 1.1;
   color: var(--cash-text);
 }
+/* Clear hierarchy: sales and collections first, supporting figures below. */
+.cash-hero-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:8px;}
+.cash-hero-grid .cash-hero-card:nth-child(1){order:3;grid-column:span 4;}
+.cash-hero-grid .cash-hero-card:nth-child(2){order:1;grid-column:span 6;}
+.cash-hero-grid .cash-hero-card:nth-child(3){order:2;grid-column:span 6;}
+.cash-hero-grid .cash-hero-card:nth-child(4){order:4;grid-column:span 4;}
+.cash-hero-grid .cash-hero-card:nth-child(5){order:5;grid-column:span 4;}
+.cash-hero-grid .cash-hero-card{min-height:82px;padding:10px;border-radius:7px;}
+.cash-hero-grid .cash-hero-card:nth-child(2),.cash-hero-grid .cash-hero-card:nth-child(3){min-height:96px;}
+@media(max-width:767px){.cash-hero-grid .cash-hero-card:nth-child(1),.cash-hero-grid .cash-hero-card:nth-child(4),.cash-hero-grid .cash-hero-card:nth-child(5){grid-column:span 1}.cash-hero-grid .cash-hero-card:nth-child(2),.cash-hero-grid .cash-hero-card:nth-child(3){grid-column:span 2}.cash-hero-grid .cash-hero-card{min-height:70px;padding:8px}.cash-hero-grid .cash-hero-card:nth-child(2),.cash-hero-grid .cash-hero-card:nth-child(3){min-height:82px}}
 .cash-panel {
   border-radius: 18px;
   overflow: hidden;
