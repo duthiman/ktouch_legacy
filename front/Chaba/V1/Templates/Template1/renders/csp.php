@@ -11,12 +11,12 @@ require_once $projectRoot . '/back/counter/funcs.php';
 // the V1 renderer always owns a usable connection even when the shared boot
 // file was included earlier with a different connection variable.
 if (!isset($connection) || !($connection instanceof mysqli)) {
-    $connection = mysqli_connect(
-        (string)($dbhost ?? 'localhost'),
-        (string)($dbuser ?? 'root'),
-        (string)($dbpass ?? ''),
-        (string)($dbname ?? '')
-    );
+    foreach (['conn', 'mysqli', 'db'] as $connectionAlias) {
+        if (isset($$connectionAlias) && $$connectionAlias instanceof mysqli) {
+            $connection = $$connectionAlias;
+            break;
+        }
+    }
 }
 if (!($connection instanceof mysqli)) {
     throw new RuntimeException('Counter summary database connection is unavailable');
