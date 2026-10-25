@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('../../inc/connection.php');
-include('../../front/ret/funcs.php');
+include_once('../../front/ret/API/ret_schema.php');
 
 kp_return_ensure_schema($connection);
 $settings = kp_return_settings($connection);
