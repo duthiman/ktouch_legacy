@@ -36,6 +36,8 @@ if (!function_exists('close_modal_waiter_name')) {
   }
 }
 ?> 
+<link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
+<script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
 <style>
   .close-check-shell .modal-content {
     border-radius: 5px;
@@ -409,6 +411,7 @@ if (!function_exists('close_modal_waiter_name')) {
 </div>
 <script type="text/javascript">
   (function ($) {
+    var closeCounterTestMode = true;
     var closePin = <?php echo json_encode($close_pin); ?>;
     var $pinOverlay = $('#close-pin-overlay');
     var $pinInput = $('#close-pin-input');
@@ -441,6 +444,12 @@ if (!function_exists('close_modal_waiter_name')) {
       $pinOverlay.css('display','none');
       $pinInput.val('');
       $processOverlay.css('display','flex');
+      if (closeCounterTestMode) {
+        $processOverlay.find('#close-counter-progress-text').text('TEST MODE: counter close is disabled.');
+        $processOverlay.find('#close-steps .close-step').removeClass('active complete failed');
+        setCloseStep(1, 'active');
+        return;
+      }
       $closeButton.data('pin-verified', true).trigger('click');
     });
     $(document).off('click.closeCounterAjax', '#confirm-counter-close').on('click.closeCounterAjax', '#confirm-counter-close', function (e) {
