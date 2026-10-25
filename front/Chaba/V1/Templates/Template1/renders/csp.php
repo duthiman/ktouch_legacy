@@ -22,7 +22,7 @@ $section = static function (string $title, array $headers, array $items, callabl
 <html><head><meta charset="utf-8"><title><?= $e($counterName) ?> Counter Summary</title>
 <style>
 @page{size:79mm auto;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;width:79mm;background:#fff;color:#000;font:11px Arial,sans-serif}#receipt{width:79mm;padding:0}#bord{width:100%;border:2px solid #000;padding:2px}.divider{text-align:center;white-space:nowrap;overflow:hidden;font-weight:bold;margin:2px 0}h1{font-size:16px;text-align:center;margin:3px 0}h2{text-align:center;font-size:13px;margin:4px 0;border-top:1px solid #000;border-bottom:1px solid #000;padding:3px 0}table{width:100%;border-collapse:collapse;table-layout:auto}th,td{border:1px solid #000;padding:3px 2px;vertical-align:top;overflow-wrap:anywhere}th{font-size:11px}td.num,th.num{text-align:right;white-space:nowrap}.meta td:first-child{font-weight:bold;width:28%}.meta td:nth-child(2){width:32%}.meta td:last-child{width:40%}.total td{font-weight:bold}@media print{html,body,#receipt{width:79mm!important;margin:0!important;padding:0!important}#bord{width:79mm!important}}
-</style></head><body><div id="receipt"><div id="bord">
+</style><style>@page{size:80mm auto;margin:0!important}html,body,#receipt{width:80mm!important;max-width:80mm!important;margin:0!important;padding:0!important}#bord{width:100%!important}</style></head><body><div id="receipt"><div id="bord">
 <div class="divider">**************************************************</div>
 <h1><?= $e($counterName) ?> COUNTER SUMMARY</h1>
 <div class="divider">**************************************************</div>
