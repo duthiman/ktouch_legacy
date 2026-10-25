@@ -556,7 +556,7 @@ if (empty($counter) OR $counter==0) {
 						$count=open_counters();
 						if ($count==1) {
 							//UPDATE COUNTERS
-							$update_counter= close_counter_safe_query($connection,"UPDATE kp_counters SET take_status=2,counter_status=2,close_status=2",'close all counters');
+							$update_counter= close_counter_safe_query($connection,"UPDATE kp_counters SET user_id=0,take_status=2,counter_status=2,close_status=2",'close all counters');
 							if ($update_counter) {
 								//UPDATE THE CASHIER CLOSING COUNTER STATUS
 								$cashier= close_counter_safe_query($connection,"UPDATE kp_users SET job=2,shift_status=2,counter=0,cleared=1,counter_status=2",'reset all users');
@@ -619,7 +619,7 @@ if (empty($counter) OR $counter==0) {
 							}
 						}else{
 							//UPDATE COUNTERS
-							$update_counter= close_counter_safe_query($connection,"UPDATE kp_counters SET take_status=2,counter_status=2,close_status=3  WHERE cntr_id='$counter'",'close one counter');
+							$update_counter= close_counter_safe_query($connection,"UPDATE kp_counters SET user_id=0,take_status=2,counter_status=2,close_status=3  WHERE cntr_id='$counter'",'close one counter');
 							if ($update_counter) {
 								//UPDATE THE CASHIER CLOSING COUNTER STATUS
 								$cashier= close_counter_safe_query($connection,"UPDATE kp_users SET job=2,shift_status=2,counter=0,cleared=1,counter_status=2 WHERE user_id='$user_id'",'reset cashier status');
