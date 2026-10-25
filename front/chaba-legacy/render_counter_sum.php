@@ -651,6 +651,8 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     #bord table.returned-items-table td:nth-child(2), #bord table.returned-items-table th:nth-child(2) { width:12%; white-space:nowrap !important; }
     #bord table.returned-items-table td:nth-child(3), #bord table.returned-items-table th:nth-child(3) { width:16%; white-space:nowrap !important; }
     #bord table.returned-items-table td:nth-child(4), #bord table.returned-items-table th:nth-child(4) { width:20%; }
+    #bord table.req-items-table td:first-child { font-size:14px !important; font-weight:700; line-height:1.25; }
+    #bord table.req-items-table .category-heading td { font-size:15px !important; }
     #bord .category-heading td { font-size:16px !important; line-height:1.2; font-weight:900 !important; text-align:left !important; white-space:normal !important; border-top:2px solid #000; border-bottom:1px solid #000; padding:7px 4px !important; letter-spacing:.05em; }
     #bord .category-total td { font-size:13px !important; font-weight:900 !important; white-space:normal !important; border-top:1px dashed #000; padding:5px 4px !important; }
     #receipt-body > table td.compact-right, #receipt-body > table th.compact-right { text-align: right !important; white-space: nowrap; }
@@ -859,7 +861,7 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <h4 style="margin:0;text-align:center;"><b>STOCK IN<br>REQUISITIONS</b></h4>
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
-    <table class="table">
+    <table class="table req-items-table">
       <tbody>
         <tr><td><b>ITEM</b></td><td class="text-right"><b>QTY</b></td><td><b>STATUS</b></td><td><b>ISSUER</b></td></tr>
         <?php
