@@ -77,6 +77,7 @@ $pending_returns_count = $return_cashier_mode
   ? (int)column_count('kp_ret_items','id',"cashier_status=2 AND ret_status!=1")
   : 0;
 $pending_returns_label = $return_cashier_mode ? 'Awaiting cashier approval' : 'Counter handles returns';
+$cash_waiter_totals = mysqli_query($connection, "SELECT s.user_id, u.username, COALESCE(SUM(s.amount),0) AS total, COUNT(s.sale_id) AS bills FROM kp_sales s LEFT JOIN kp_users u ON u.user_id=s.user_id WHERE s.shift='$shift' GROUP BY s.user_id, u.username ORDER BY total DESC");
 ?>
 <link href="cash.css" rel="stylesheet" />
    <!-- ================== BEGIN PAGE LEVEL STYLE ================== -->
@@ -117,6 +118,7 @@ $pending_returns_label = $return_cashier_mode ? 'Awaiting cashier approval' : 'C
              <strong>Active Cashier</strong>
              <span><?php echo get_column('kp_users','username',"user_id='$user_id'"); ?></span>
           </div>
+          <button type="button" class="cash-refresh-dashboard" id="cash-refresh-dashboard"><i class="fa fa-refresh"></i> Refresh Dashboard</button>
           <div class="cash-panel">
             <div class="cash-panel-head"><h4>Today</h4></div>
             <div class="cash-panel-body">
@@ -207,8 +209,8 @@ $pending_returns_label = $return_cashier_mode ? 'Awaiting cashier approval' : 'C
           </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <div class="cash-hero-grid">
+      <div id="cash-main-area" class="col-md-9">
+        <div class=" cash-hero-grid">
           <button type="button" class="cash-hero-card cash-hero-wide cash-hero-accent cash-hero-button" id="cash-hero-expenses">
             <strong>Today's Expenses</strong>
             <span id="cash-expense-total"><?php echo $expense_total; ?></span>
@@ -266,14 +268,15 @@ $pending_returns_label = $return_cashier_mode ? 'Awaiting cashier approval' : 'C
           </button>
           <button type="button" class="cash-hero-card cash-hero-button" id="cash-hero-credit-customers"><strong>Credit Customers</strong><span id="cash-credit-customers"><?php echo $credit_customer_count; ?></span></button>
         </div>  
-        <div id="cash-main-area">
+        <div>
           <div class="cash-work-row">
             <div class="cash-work-pane cash-work-pane-main">
               <div class="cash-panel">
                 <div class="cash-panel-head"><h4>Work Area</h4></div>
                 <div class="cash-panel-body cash-scroll-box" id="cleardiv">
-                  <div class="cash-desk-placeholder">
-                    Pick an action from the left to load Cash Box, KPesa, Clear Staff, Credit, or Expenses here.
+                  <div class="cash-dashboard-stack">
+                    <div class="cash-dashboard-total"><small>TOTAL COLLECTED</small><strong><?php echo number_format($cashbox_total_today, 2); ?></strong><span><?php echo $cashbox_entries; ?> payment entries this shift</span></div>
+                    <div class="cash-dashboard-card"><h4>Waiter Totals</h4><?php if ($cash_waiter_totals && mysqli_num_rows($cash_waiter_totals)) { while ($waiter_total=mysqli_fetch_assoc($cash_waiter_totals)) { ?><div class="cash-dashboard-waiter"><span><?php echo htmlspecialchars($waiter_total['username'] ?: 'Unknown user'); ?><small><?php echo (int)$waiter_total['bills']; ?> bills</small></span><b><?php echo number_format((float)$waiter_total['total'], 2); ?></b></div><?php } } else { ?><div class="cash-desk-placeholder">No waiter collections recorded for this shift.</div><?php } ?></div>
                   </div>
                 </div>
               </div>
@@ -313,6 +316,11 @@ $pending_returns_label = $return_cashier_mode ? 'Awaiting cashier approval' : 'C
   function isCashModalActive() {
     return $('#modal').hasClass('show') || $('#modal2').hasClass('show');
   }
+
+  $(document).on('click', '#cash-refresh-dashboard', function(){
+    var button=$(this); button.prop('disabled',true).html('<i class="fa fa-refresh fa-spin"></i> Refreshing...');
+    window.location.reload();
+  });
 
   function loadCashLive() {
     $.ajax({
