@@ -10,7 +10,7 @@ $summary_id = (int)($_REQUEST['summary_id'] ?? 0);
 $action = trim((string)($_REQUEST['action'] ?? ''));
 $user_id = (int)($_SESSION['user_id'] ?? 0);
 
-if ($id < 1) {
+if ($id < 1 && $action !== 'queue_shift') {
     exit;
 }
 
@@ -43,6 +43,36 @@ if ($action === 'queue') {
     } else {
         echo json_encode(['ok' => false, 'message' => 'Could not queue counter summary.']);
     }
+    exit;
+}
+
+if ($action === 'queue_shift') {
+    header('Content-Type: application/json');
+    if ($user_id < 1) {
+        echo json_encode(['ok' => false, 'message' => 'User session missing.']);
+        exit;
+    }
+    ensure_chaba_print_system($connection);
+    $payload = json_encode([
+        'payload_version' => 1,
+        'document_type' => 'SSP',
+        'title' => 'SHIFT SUMMARY PRINT',
+        'header' => ['shift_date' => $shift, 'print_time' => date('Y-m-d H:i:s')],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $queue_id = kp_print_enqueue($connection, [
+        'sale_id' => 0,
+        'ref_id' => 0,
+        'print_type' => 'ssp',
+        'label' => 'SHIFT SUMMARY',
+        'cntr_id' => 0,
+        'route_path' => 'ssp.php',
+        'route_query' => 'shift=' . urlencode($shift),
+        'requested_by' => $user_id,
+        'payload_json' => $payload,
+    ]);
+    echo json_encode($queue_id > 0
+        ? ['ok' => true, 'message' => 'Shift summary queued to the global print queue.']
+        : ['ok' => false, 'message' => 'Could not queue the shift summary.']);
     exit;
 }
 
