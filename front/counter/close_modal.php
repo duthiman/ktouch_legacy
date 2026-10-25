@@ -433,7 +433,7 @@ if (!function_exists('close_modal_waiter_name')) {
 </div>
 <script type="text/javascript">
   (function ($) {
-    var closeCounterTestMode = true;
+    var closeCounterTestMode = false;
     var closePin = <?php echo json_encode($close_pin); ?>;
     var $pinOverlay = $('#close-pin-overlay');
     var $pinInput = $('#close-pin-input');
