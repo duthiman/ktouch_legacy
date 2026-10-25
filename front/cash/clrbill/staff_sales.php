@@ -166,33 +166,13 @@ if (mysqli_num_rows($staff) < 1) {
           <?php echo $title; ?>
         </th>
       </tr>
-      <tr>
-        <th class="text-left"><label class="cash-staff-select-all"><input type="checkbox" id="cash-staff-select-all"> <span>ALL</span></label></th>
-        <th><h4>ORDER NO:</h4></th>
-        <th><h4>SHIFT</h4></th>
-        <th><h4>STAFF</h4></th>
-        <th><h4>COUNTER</h4></th>
-        <th><h4>AMOUNT</h4></th>
-      </tr>
     </thead>
     <?php if ($st == 1 && $user_id_int > 0) { ?>
       <tbody>
         <tr>
           <td colspan="6" style="padding:0;">
             <div class="cash-staff-sales-summary">
-              <div class="cash-staff-sales-summary-head">
-                <div>
-                  <h4><?php echo htmlspecialchars($user_name); ?> Sale Cap</h4>
-                  <p>Review the current sale against the user max, then open the modal to increase the cap.</p>
-                </div>
-                <button
-                  type="button"
-                  class="btn btn-outline-primary btn-sm"
-                  onclick="cashOpenMaxSaleModal(<?php echo $user_id_int; ?>, '<?php echo htmlspecialchars(addslashes($user_name), ENT_QUOTES); ?>')"
-                >
-                  Increase Max Sale
-                </button>
-              </div>
+              
               <div class="cash-staff-sales-stats">
                 <div class="cash-staff-sales-stat">
                   <strong>Current Sale</strong>
@@ -208,6 +188,16 @@ if (mysqli_num_rows($staff) < 1) {
                 </div>
               </div>
               <div class="cash-max-progress-wrap">
+                <div class="cash-staff-sales-summary-head">
+               
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  onclick="cashOpenMaxSaleModal(<?php echo $user_id_int; ?>, '<?php echo htmlspecialchars(addslashes($user_name), ENT_QUOTES); ?>')"
+                >
+                  Increase Max Sale
+                </button>
+              </div>
                 <div class="cash-max-progress-meta">
                   <span><?php echo number_format($current_sale, 2); ?> of <?php echo number_format($max_sale, 2); ?> used</span>
                   <span>
@@ -232,6 +222,15 @@ if (mysqli_num_rows($staff) < 1) {
       </tbody>
     <?php } ?>
     <tbody>
+      
+      <tr>
+        <th class="text-left"><label class="cash-staff-select-all"><input type="checkbox" id="cash-staff-select-all"> <span>ALL</span></label></th>
+        <th><h4>ORDER NO:</h4></th>
+        <th><h4>SHIFT</h4></th>
+        <th><h4>STAFF</h4></th>
+        <th><h4>COUNTER</h4></th>
+        <th><h4>AMOUNT</h4></th>
+      </tr>
       <?php while ($row = mysqli_fetch_assoc($staff)) {
         $sale_user_id = $row['user_id'];
         $sale_id = $row['sale_id'];

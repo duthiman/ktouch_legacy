@@ -172,46 +172,7 @@ $cash_waiter_totals_side = mysqli_query($connection, "SELECT s.user_id, u.userna
                 </button>
               </div>
             </div>
-          </div>
-          <div class="cash-panel">
-            <div class="cash-panel-head"><h4>Coming Next</h4></div>
-            <div class="cash-panel-body">
-              <div class="cash-plan-grid">
-                <div class="cash-plan-card">
-                  <strong>Stock Desk</strong>
-                  <small>Buy stock, raise requests, and transfer approvals will live here.</small>
-                </div>
-                <div class="cash-plan-card">
-                  <strong>Cashbox Reports</strong>
-                  <small>Shift reporting, summaries, and deeper cashbox controls will follow next.</small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="cash-panel">
-            <div class="cash-panel-head"><h4>Legacy Shortcuts</h4></div>
-            <div class="cash-panel-body cash-legacy-shortcuts">
-              <div class="cash-action-stack">
-                <div class="cash-actions-grid">
-                  <button id="clearb" class="cash-action-btn">Clear Current Bills</button>
-                  <button id="clearp" class="cash-action-btn">Clear Previous Bills</button>
-                  <button id="clearsta" class="cash-action-btn">Clear Staff</button>
-                  <button id="mergebills" class="cash-action-btn">Merge Bills</button>
-                  <button id="cashbox" class="cash-action-btn">Cash Box</button>
-                  <button id="kpesa" class="cash-action-btn has-badge">KPesa<?php if ($kpesa_unapproved_count > 0) { ?><span class="cash-action-badge" id="cash-kpesa-badge"><?php echo $kpesa_unapproved_count; ?></span><?php } ?></button>
-                  <?php if ($print_mode == 1) { ?>
-                    <button id="printsum" class="cash-action-btn">Print Shift Summary</button>
-                  <?php } else { ?>
-                    <a href="<?php echo htmlspecialchars($shift_sum_href); ?>" class="cash-action-btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none;">Print Shift Summary</a>
-                  <?php } ?>
-                  <button id="handover" class="cash-action-btn">Shift Handover</button>
-                  <button id="customer-credit" class="cash-action-btn">Credit Customers</button>
-                  <button id="expenses" class="cash-action-btn">Add Expense</button>
-                </div>
- 
-              </div>
-            </div>
-          </div>
+          </div> 
         </div>
       </div>
       <div id="cash-main-area" class="col-md-9">

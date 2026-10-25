@@ -82,11 +82,7 @@ if ($result) {
           
 
           <div class="cash-clearb-row">
-            <div class="cash-clearb-work">
-              <div class="cash-clearb-card-head">
-                <h4>Work Area</h4>
-                <p>The orders list loads here for payment selection.</p>
-              </div>
+            <div class="cash-clearb-work"> 
               <div class="cash-clearb-work-body" id="stasales">
                 <div class="cash-clearb-placeholder">Pick a user on the left to load the current unpaid bills here.</div>
               </div>

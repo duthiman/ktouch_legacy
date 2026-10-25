@@ -3,6 +3,28 @@ session_start();
 include('../../../inc/connection.php');
 include('../funcs.php');
 
+mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_staff_clearances (
+    clearance_id INT NOT NULL AUTO_INCREMENT,
+    staff_user_id INT NOT NULL DEFAULT 0,
+    cleared_by INT NOT NULL DEFAULT 0,
+    shift_date DATE NOT NULL,
+    total_sales DECIMAL(10,2) NOT NULL DEFAULT 0,
+    paid_sales DECIMAL(10,2) NOT NULL DEFAULT 0,
+    unpaid_sales DECIMAL(10,2) NOT NULL DEFAULT 0,
+    credit_sales DECIMAL(10,2) NOT NULL DEFAULT 0,
+    mpesa_total DECIMAL(10,2) NOT NULL DEFAULT 0,
+    pdq_total DECIMAL(10,2) NOT NULL DEFAULT 0,
+    expected_cash DECIMAL(10,2) NOT NULL DEFAULT 0,
+    actual_cash DECIMAL(10,2) NOT NULL DEFAULT 0,
+    variance_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+    variance_type VARCHAR(20) NOT NULL DEFAULT '',
+    snapshot_json LONGTEXT NULL,
+    note TEXT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (clearance_id),
+    KEY idx_staff_shift (staff_user_id, shift_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4") or die(mysqli_error($connection));
+
 $user_id = (int)($_GET['id'] ?? 0);
 $scope = 'previous';
 $shift = get_column('kp_shift', 'shift', "1");
