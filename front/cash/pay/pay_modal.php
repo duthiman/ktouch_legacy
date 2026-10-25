@@ -318,6 +318,30 @@ $pay_modes = mysqli_query($connection, "SELECT * FROM kp_pay_mode WHERE del_stat
   }
 </style>
 
+<style>
+  .cash-pay-modal{border-radius:7px;}
+  .cash-pay-dialog{width:min(920px,calc(100vw - 20px));max-width:920px;margin:8px auto;}
+  .cash-pay-head{padding:10px 14px;}
+  .cash-pay-head h4{font-size:17px;margin:0 0 2px;}
+  .cash-pay-head p{font-size:11px;line-height:1.2;}
+  .cash-pay-body{padding:10px 14px;}
+  .cash-pay-summary{gap:7px;margin-bottom:8px;}
+  .cash-pay-card{border-radius:7px;padding:8px;}
+  .cash-pay-card span{margin-top:4px;font-size:20px;}
+  .cash-pay-card .form-control{margin-top:4px;height:34px;border-radius:7px;font-size:17px;}
+  .cash-pay-mode-shell,.cash-pay-fields{border-radius:7px;padding:8px;margin-bottom:8px;}
+  .cash-pay-mode-head p{margin-bottom:6px;font-size:10px;}
+  .cash-pay-helperbar{margin-bottom:6px;}
+  .cash-pay-fillbtn{border-radius:7px;padding:5px 9px;font-size:11px;}
+  .cash-pay-mode-grid{gap:5px;}
+  .cash-pay-mode-pill span{min-height:32px;padding:0 10px;border-radius:7px;font-size:10px;}
+  .cash-pay-row{gap:7px;margin-bottom:7px;}
+  .cash-pay-field .form-control{height:36px;border-radius:7px;font-size:15px;}
+  .cash-pay-foot{padding:7px 14px;}
+  .cash-pay-foot .btn{padding:6px 10px;font-size:11px;border-radius:7px;}
+  @media(max-width:767px){.cash-pay-dialog{width:calc(100vw - 10px);max-width:calc(100vw - 10px);margin:5px auto}.cash-pay-body{padding:7px}.cash-pay-summary{grid-template-columns:repeat(3,minmax(0,1fr))}.cash-pay-card strong{font-size:9px}.cash-pay-card span{font-size:16px}.cash-pay-mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.cash-pay-mode-pill span{width:100%;}.cash-pay-foot{padding:6px 7px;}}
+</style>
+
 <script type="text/javascript">
   function showPaymentAlert(status, message, callback) {
     if (typeof swal === 'function') {
