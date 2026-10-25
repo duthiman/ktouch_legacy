@@ -646,6 +646,11 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     #bord table td.text-right, #bord table th.text-right { width:1%; white-space:nowrap !important; overflow:visible; }
     #bord table td.text-center, #bord table th.text-center { width:1%; }
     #bord table td:first-child, #bord table th:first-child { overflow-wrap:anywhere; word-break:break-word; }
+    #bord table.returned-items-table { table-layout:fixed; }
+    #bord table.returned-items-table td:first-child, #bord table.returned-items-table th:first-child { width:52%; }
+    #bord table.returned-items-table td:nth-child(2), #bord table.returned-items-table th:nth-child(2) { width:12%; white-space:nowrap !important; }
+    #bord table.returned-items-table td:nth-child(3), #bord table.returned-items-table th:nth-child(3) { width:16%; white-space:nowrap !important; }
+    #bord table.returned-items-table td:nth-child(4), #bord table.returned-items-table th:nth-child(4) { width:20%; }
     #bord .category-heading td { font-size:16px !important; line-height:1.2; font-weight:900 !important; text-align:left !important; white-space:normal !important; border-top:2px solid #000; border-bottom:1px solid #000; padding:7px 4px !important; letter-spacing:.05em; }
     #bord .category-total td { font-size:13px !important; font-weight:900 !important; white-space:normal !important; border-top:1px dashed #000; padding:5px 4px !important; }
     #receipt-body > table td.compact-right, #receipt-body > table th.compact-right { text-align: right !important; white-space: nowrap; }
@@ -873,7 +878,7 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <h4 style="margin:0;text-align:center;"><b>DELETED BILLS</b></h4>
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
-    <table class="table">
+    <table class="table returned-items-table">
       <tbody>
         <?php
         $deletedCounterWhere = kp_local_column_exists($connection, 'kp_del_orders', 'counter') ? " AND counter='$counter'" : (kp_local_column_exists($connection, 'kp_del_orders', 'cntr_id') ? " AND cntr_id='$counter'" : '');
