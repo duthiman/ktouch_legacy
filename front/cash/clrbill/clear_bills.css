@@ -26,6 +26,19 @@
 .cash-clearb-shell .cash-clearb-toggle { margin-bottom: 7px; padding: 3px; }
 .cash-clearb-shell .cash-clearb-toggle button { padding: 6px 10px; }
 .cash-clearb-shell .cash-clearb-summarybar { margin: 1px; padding: 8px 10px; }
+.cash-clearb-shell .cash-clearb-selector-body { padding: 4px 6px; }
+.cash-clearb-shell .cash-clearb-toggle { margin: 0 0 4px; gap: 3px; }
+.cash-clearb-shell .cash-clearb-toggle button { padding: 4px 8px; font-size: 11px; line-height: 1.1; }
+.cash-clearb-shell .cash-clearb-scrollnav { min-height: 20px; margin: 2px 0 4px; font-size: 10px; line-height: 1.1; }
+.cash-clearb-shell .cash-clearb-scrollbtn { width: 22px; height: 22px; padding: 0; font-size: 16px; line-height: 20px; }
+.cash-clearb-shell .cash-clearb-buttons { gap: 5px; padding-bottom: 2px; }
+.cash-clearb-shell .cash-clearb-chip { width: 150px; min-width: 150px; flex-basis: 150px; padding: 5px 7px; font-size: 11px; line-height: 1.1; }
+.cash-clearb-shell .cash-clearb-chip small { font-size: 9px; }
+.cash-clearb-shell .cash-clearb-chip span { margin-top: 2px; font-size: 12px; }
+.cash-clearb-shell .cash-clearb-chip b { margin-top: 2px; font-size: 11px; }
+.cash-clearb-shell .cash-clearb-chip div { font-size: 9px !important; margin-top: 2px; }
+.cash-clearb-shell .cash-clearb-load { margin-top: 4px; padding: 6px 10px; font-size: 11px; line-height: 1.15; }
+.cash-clearb-shell .cash-clearb-select .select2-selection--single { height: 30px; }
 
 .cash-clearb-head,
 .cash-clearp-head {
