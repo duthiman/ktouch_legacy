@@ -25,6 +25,7 @@ while ($row = mysqli_fetch_assoc($unreceived_transfers_q)) {
 }
 
 $can_close = empty($pending_returns) && empty($unreceived_transfers);
+$close_pin = str_pad((string)random_int(0, 9999), 4, '0', STR_PAD_LEFT);
 
 if (!function_exists('close_modal_waiter_name')) {
   function close_modal_waiter_name($id) {
@@ -207,6 +208,37 @@ if (!function_exists('close_modal_waiter_name')) {
     background: #a61c21;
     animation: closeCounterProgress 1.2s ease-in-out infinite;
   }
+  .close-pin-overlay {
+    display:none;
+    position:fixed;
+    z-index:1060;
+    inset:0;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(20,28,38,.68);
+  }
+  .close-pin-card {
+    width:min(360px,100%);
+    padding:24px;
+    border-radius:10px;
+    background:#fff;
+    box-shadow:0 18px 55px rgba(0,0,0,.28);
+    text-align:center;
+  }
+  .close-pin-code {
+    margin:10px 0 16px;
+    padding:10px;
+    border-radius:8px;
+    background:#fff4e8;
+    color:#9b321c;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:8px;
+  }
+  .close-pin-input { text-align:center; font-size:22px; letter-spacing:5px; }
+  .close-pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+  .close-pin-pad button { min-height:42px; border:1px solid #d8e1ea; border-radius:7px; background:#f7faff; color:#243b53; font-size:18px; font-weight:700; }
   @keyframes closeCounterProgress {
     0% { transform: translateX(-110%); }
     100% { transform: translateX(310%); }
@@ -312,14 +344,62 @@ if (!function_exists('close_modal_waiter_name')) {
     </div>
   </div>
 </div>
+<div class="close-pin-overlay" id="close-pin-overlay" role="dialog" aria-modal="true" aria-labelledby="close-pin-title">
+  <div class="close-pin-card">
+    <h4 id="close-pin-title" style="margin-top:0;color:#243b53;font-weight:800;">Confirm Counter Close</h4>
+    <p style="color:#718096;margin-bottom:6px;">Enter this PIN using the numpad exactly as shown.</p>
+    <div class="close-pin-code" id="close-pin-code"><?php echo $close_pin; ?></div>
+    <input type="text" inputmode="numeric" maxlength="4" class="form-control close-pin-input" id="close-pin-input" autocomplete="off" readonly>
+    <div class="close-pin-pad" id="close-pin-pad">
+      <?php for ($pin_digit = 1; $pin_digit <= 9; $pin_digit++) { ?><button type="button" data-pin-digit="<?php echo $pin_digit; ?>"><?php echo $pin_digit; ?></button><?php } ?>
+      <button type="button" data-pin-action="clear">Clear</button>
+      <button type="button" data-pin-digit="0">0</button>
+      <button type="button" data-pin-action="backspace">⌫</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button type="button" class="btn btn-default" id="close-pin-cancel" style="flex:1;">Cancel</button>
+      <button type="button" class="btn btn-danger" id="close-pin-submit" style="flex:1;">Verify &amp; Close</button>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
   (function ($) {
+    var closePin = <?php echo json_encode($close_pin); ?>;
+    var $pinOverlay = $('#close-pin-overlay');
+    var $pinInput = $('#close-pin-input');
+    var $closeButton = $('#confirm-counter-close');
+    $('#close-pin-pad').on('click', 'button', function () {
+      var action = $(this).data('pin-action');
+      var digit = $(this).data('pin-digit');
+      var value = String($pinInput.val() || '');
+      if (action === 'clear') value = '';
+      else if (action === 'backspace') value = value.slice(0, -1);
+      else if (digit !== undefined && value.length < 4) value += String(digit);
+      $pinInput.val(value);
+    });
+    $('#close-pin-cancel').on('click', function () { $pinOverlay.css('display','none'); $pinInput.val(''); });
+    $('#close-pin-submit').on('click', function () {
+      if (String($pinInput.val()) !== closePin) {
+        if (window.Swal) Swal.fire({icon:'error', title:'Incorrect PIN', text:'Enter the displayed PIN exactly as shown.'});
+        else alert('Incorrect PIN.');
+        $pinInput.val('');
+        return;
+      }
+      $pinOverlay.css('display','none');
+      $pinInput.val('');
+      $closeButton.data('pin-verified', true).trigger('click');
+    });
     $(document).off('click.closeCounterAjax', '#confirm-counter-close').on('click.closeCounterAjax', '#confirm-counter-close', function (e) {
       e.preventDefault();
       var $btn = $(this);
       if ($btn.prop('disabled')) {
         return;
       }
+      if (!$btn.data('pin-verified')) {
+        $pinOverlay.css('display','flex');
+        return;
+      }
+      $btn.removeData('pin-verified');
       var $modal = $btn.closest('.modal-content');
       var $progress = $modal.find('#close-counter-progress');
       var $progressText = $modal.find('#close-counter-progress-text');
