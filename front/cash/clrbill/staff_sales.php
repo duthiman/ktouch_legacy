@@ -148,6 +148,7 @@ if (mysqli_num_rows($staff) < 1) {
     }
     .cash-staff-select-all { margin:0; display:inline-flex; align-items:center; gap:4px; font-size:11px; cursor:pointer; }
     .cash-staff-select-all input { margin:0; }
+    .cash-clearb-work input.cash-bill-pick { width:14px; height:14px; margin:0; vertical-align:middle; }
     .cash-clearb-work table { margin:1px 0; }
     .cash-clearb-work table th { padding:5px 6px; font-size:10px; }
     .cash-clearb-work table td { padding:5px 6px; font-size:11px; line-height:1.1; }
