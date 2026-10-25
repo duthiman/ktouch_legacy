@@ -37,18 +37,26 @@ document.getElementById('assign_cash').addEventListener('click', assign_cash);
     var cntr_id = '<?php echo $id; ?>';
     //var reason = $("#reason").val(); 
     var stat = $("#stat").val(); 
+    var $button = $('#assign_cash');
+    if (!stat || stat === '----SELECT STATUS----') { Swal.fire({icon:'warning', title:'Select a status', text:'Please select the counter take status.'}); return; }
+    $button.prop('disabled', true).text('Saving...');
     $.ajax({
       url: 'change_stat_act.php',
       typr: 'POST',                           
       data: 'counter='+cntr_id+'&stat='+stat,
-      dataType: 'html'
+      dataType: 'json'
     })
     .done(function(data){
-        $('#results').html(''); // blank before load.
-        $('#results').html(data);
+        if (data && data.ok) {
+          Swal.fire({icon:'success', title:'Status updated', text:data.message || 'Counter take status updated.', timer:1400, showConfirmButton:false}).then(function(){ window.location.reload(); });
+        } else {
+          $button.prop('disabled', false).text('Assign');
+          $('#results').html('<div class="alert alert-danger">'+((data && data.message) || 'Could not update status.')+'</div>');
+        }
     })
-    .fail(function(){
-      $('#results').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Warning!</strong> Error occured.</div>');
+    .fail(function(xhr){
+      $button.prop('disabled', false).text('Assign');
+      Swal.fire({icon:'error', title:'Update failed', text:(xhr.responseJSON && xhr.responseJSON.message) || 'Could not update status.'});
     });
   }
 </script> 

@@ -96,18 +96,26 @@ document.getElementById('assign_cash').addEventListener('click', assign_cash);
     var cntr_id = '<?php echo $id; ?>';
     var reason = $("#reason").val(); 
     var user = $("#users").val(); 
+    var $button = $('#assign_cash');
+    if (!user) { Swal.fire({icon:'warning', title:'Select a cashier', text:'Please select the new counter cashier.'}); return; }
+    $button.prop('disabled', true).text('Assigning...');
     $.ajax({
       url: 'assign_cashier_act.php',
       type: 'POST',
       data: 'counter='+encodeURIComponent(cntr_id)+'&reason='+encodeURIComponent(reason)+'&user_id='+encodeURIComponent(user)+'&current_user_id='+encodeURIComponent('<?php echo $current_cashier_id; ?>'),
-      dataType: 'html'
+      dataType: 'json'
     })
     .done(function(data){
-        $('#results').html(''); // blank before load.
-        $('#results').html(data);
+        if (data && data.ok) {
+          Swal.fire({icon:'success', title:'Cashier assigned', text:data.message || 'The cashier was assigned successfully.', timer:1400, showConfirmButton:false}).then(function(){ window.location.reload(); });
+        } else {
+          $button.prop('disabled', false).text('Assign');
+          $('#results').html('<div class="alert alert-danger">'+((data && data.message) || 'Could not assign cashier.')+'</div>');
+        }
     })
-    .fail(function(){
-      $('#results').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Warning!</strong> Error occured.</div>');
+    .fail(function(xhr){
+      $button.prop('disabled', false).text('Assign');
+      Swal.fire({icon:'error', title:'Assignment failed', text:(xhr.responseJSON && xhr.responseJSON.message) || 'Could not assign cashier.'});
     });
   }
 </script>

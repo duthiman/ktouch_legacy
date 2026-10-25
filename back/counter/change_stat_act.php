@@ -1,21 +1,18 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
 session_start();
 include('../../inc/connection.php');
 include('../clude/funcs.php');
-$counter=$_REQUEST['counter']; 
-$stat=$_REQUEST['stat'];
+$counter=(int)($_REQUEST['counter'] ?? 0);
+$stat=(int)($_REQUEST['stat'] ?? 0);
 $reason=mysqli_real_escape_string($connection, $_REQUEST['reason'] ?? '');
-$trans_by=$_SESSION['user_id'];
+$trans_by=(int)($_SESSION['user_id'] ?? 0);
 $shift=shift();
- if ($stat==0) {
-	?>
-	<script type="text/javascript">
-	var hulla = new hullabaloo();
-	hulla.send("Make sure you select Status", "success"); 
-
-
-</script><?php
-}else{
+if ($counter < 1 || !in_array($stat,[1,2,3],true)) {
+    http_response_code(422);
+    echo json_encode(['ok'=>false,'message'=>'Please select a valid counter take status.']);
+    exit;
+} else {
 if ($stat==1) {
 	$stock="FINISHED";
 }elseif ($stat==3) {
@@ -32,15 +29,6 @@ $transaction="CHANGED COUNTER STATUS  TO ".strtoupper($stock);
 $update_counter= mysqli_query($connection,"UPDATE kp_counters SET take_status='$stat' WHERE cntr_id='$counter'") or die(mysqli_error($connection));
 
 $shift= mysqli_query($connection,"INSERT INTO kp_counter_history(cntr_id,transaction,reason,user_id,shift) VALUES('$counter','$transaction','$reason','$trans_by','$shift') ") or die(mysqli_error($connection));
-?>
-<script type="text/javascript">
-	var hulla = new hullabaloo();
-	hulla.send("Assigned Successfully", "success");
-    $('#modal').modal('toggle');
-    window.location.reload(); 
-
-
-</script>
-<?php
+echo json_encode(['ok'=>true,'message'=>'Counter take status updated successfully.']);
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
 session_start();
 include('../../inc/connection.php');
 include('../clude/funcs.php');
@@ -15,7 +16,8 @@ $prev_user=$current_user_id;
 
 if ($counter < 1 || $user_id < 1) {
     http_response_code(422);
-    exit('Missing counter or selected cashier.');
+    echo json_encode(['ok' => false, 'message' => 'Missing counter or selected cashier.']);
+    exit;
 }
 
 $transaction="CHANGED CASHIER FROM ".strtoupper($cashier=get_column('kp_counters','user_id',"cntr_id='$counter'"))." TO ".strtoupper(get_user($user_id));
@@ -28,12 +30,4 @@ if ($prev_user > 0 && $prev_user !== $user_id) {
 $update_counter= mysqli_query($connection,"UPDATE kp_counters SET user_id='$user_id' WHERE cntr_id='$counter'") or die(mysqli_error($connection));
 
 $shift= mysqli_query($connection,"INSERT INTO kp_counter_history(cntr_id,transaction,reason,user_id,shift) VALUES('$counter','$transaction','$reason','$trans_by','$shift') ") or die(mysqli_error($connection));
-?>
-<script type="text/javascript">
-	var hulla = new hullabaloo();
-	hulla.send("Assigned Successfully", "success");
-    $('#modal').modal('toggle');
-    window.location.reload(); 
-
-
-</script>
+echo json_encode(['ok' => true, 'message' => 'Cashier assigned successfully.']);
