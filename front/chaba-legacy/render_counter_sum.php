@@ -863,21 +863,19 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
       <tbody>
         <tr><td><b>ITEM</b></td><td class="text-right"><b>QTY</b></td><td><b>STATUS</b></td><td><b>ISSUER</b></td></tr>
         <?php
-        $reqRows = mysqli_query($connection, "SELECT r.req_id, r.req_user, COUNT(ri.id) AS item_count, COALESCE(SUM(ri.issue_qty), SUM(ri.req_qty), 0) AS qty FROM kp_counter_req r LEFT JOIN kp_counter_req_items ri ON ri.req_id=r.req_id WHERE r.req_shift='$shift' AND r.counter='$counter' GROUP BY r.req_id, r.req_user ORDER BY r.req_id DESC");
+        $reqRows = mysqli_query($connection, "SELECT ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status, SUM(COALESCE(ri.issue_qty, ri.req_qty, 0)) AS qty FROM kp_counter_req r INNER JOIN kp_counter_req_items ri ON ri.req_id=r.req_id LEFT JOIN kp_items i ON i.item_id=ri.item_id WHERE r.req_shift='$shift' AND r.counter='$counter' GROUP BY ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status ORDER BY r.issue_status ASC, i.cat_id ASC, ri.item_id ASC");
         if (!$reqRows || mysqli_num_rows($reqRows) < 1) {
             echo '<tr><td colspan="4">No requisitions recorded for this counter.</td></tr>';
         } else {
-            $reqItems = mysqli_query($connection, "SELECT r.req_id, r.req_user, r.issue_user, ri.item_id, COALESCE(ri.issue_qty, ri.req_qty, 0) AS qty, i.cat_id, r.issue_status, r.rec_status FROM kp_counter_req r INNER JOIN kp_counter_req_items ri ON ri.req_id=r.req_id LEFT JOIN kp_items i ON i.item_id=ri.item_id WHERE r.req_shift='$shift' AND r.counter='$counter' ORDER BY r.req_id DESC, i.cat_id ASC, ri.item_id ASC");
-            $lastReq = null;
+            $lastReqStatus = null;
             $lastReqCategory = null;
-            if ($reqItems && mysqli_num_rows($reqItems) > 0) while ($req = mysqli_fetch_assoc($reqItems)) {
-                $reqId = (int)$req['req_id'];
-                if ($lastReq !== $reqId) {
-                    echo '<tr class="category-heading"><td colspan="4">REQ #' . $reqId . ' - ' . htmlspecialchars(get_user((int)$req['req_user'])) . '</td></tr>';
-                    $lastReq = $reqId;
+            while ($req = mysqli_fetch_assoc($reqRows)) {
+                $reqStatus = ((int)$req['issue_status'] === 1) ? 'ISSUED' : 'PENDING';
+                if ($lastReqStatus !== $reqStatus) {
+                    echo '<tr class="category-heading"><td colspan="4">' . $reqStatus . '</td></tr>';
+                    $lastReqStatus = $reqStatus;
                     $lastReqCategory = null;
                 }
-                $reqStatus = ((int)$req['rec_status'] === 1) ? 'RECEIVED' : (((int)$req['issue_status'] === 1) ? 'ISSUED' : 'PENDING');
                 $catName = ((int)($req['cat_id'] ?? 0) > 0) ? get_cat((int)$req['cat_id']) : 'UNCATEGORISED';
                 if ($lastReqCategory !== $catName) {
                     echo '<tr class="category-heading"><td colspan="4">' . htmlspecialchars($catName) . '</td></tr>';
