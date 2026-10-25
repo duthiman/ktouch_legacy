@@ -246,6 +246,15 @@ if (!function_exists('close_modal_waiter_name')) {
     0% { transform: translateX(-110%); }
     100% { transform: translateX(310%); }
   }
+  .close-steps { display:grid; gap:7px; margin-top:14px; }
+  .close-step { display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid #ead8cb; border-radius:7px; background:#fff; color:#7b8794; font-size:13px; transition:all .2s ease; }
+  .close-step-number { display:flex; align-items:center; justify-content:center; width:25px; height:25px; border-radius:50%; background:#e9eef3; color:#66788a; font-size:12px; font-weight:800; flex:0 0 25px; }
+  .close-step.active { border-color:#f0a43c; background:#fff8ed; color:#8a4b08; font-weight:700; }
+  .close-step.active .close-step-number { background:#f39c12; color:#fff; }
+  .close-step.complete { border-color:#b7e3c8; background:#f0fbf4; color:#237a43; }
+  .close-step.complete .close-step-number { background:#2f9e5b; color:#fff; }
+  .close-step.failed { border-color:#efb2b8; background:#fff2f3; color:#a61c21; }
+  .close-step.failed .close-step-number { background:#dc3545; color:#fff; }
   @media (max-width: 767px) {
     .close-check-shell .modal-dialog {
       width: calc(100vw - 18px);
@@ -274,6 +283,18 @@ if (!function_exists('close_modal_waiter_name')) {
       <div id="tt"></div>
       <div class="close-check-intro">
         The counter can close as long as it has no unapproved returns.
+      </div>
+      <div class="close-check-panel">
+        <h5>Counter closing sequence</h5>
+        <div class="close-steps" id="close-steps">
+          <div class="close-step" data-close-step="1"><span class="close-step-number">1</span><span>Check returns and unreceived stock</span></div>
+          <div class="close-step" data-close-step="2"><span class="close-step-number">2</span><span>Prepare the closing stock snapshot</span></div>
+          <div class="close-step" data-close-step="3"><span class="close-step-number">3</span><span>Update the stock-take closing quantities</span></div>
+          <div class="close-step" data-close-step="4"><span class="close-step-number">4</span><span>Close the counter and cashier records</span></div>
+          <div class="close-step" data-close-step="5"><span class="close-step-number">5</span><span>Save the counter summary</span></div>
+          <div class="close-step" data-close-step="6"><span class="close-step-number">6</span><span>Queue the counter and shift prints</span></div>
+          <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Complete closing and redirect</span></div>
+        </div>
       </div>
 
       <div class="close-check-grid">
@@ -371,6 +392,13 @@ if (!function_exists('close_modal_waiter_name')) {
     var $pinOverlay = $('#close-pin-overlay');
     var $pinInput = $('#close-pin-input');
     var $closeButton = $('#confirm-counter-close');
+    var stepTimers = [];
+    function setCloseStep(number, state) {
+      $('#close-steps .close-step[data-close-step="' + number + '"]').removeClass('active complete failed').addClass(state);
+    }
+    function completeCloseStepsThrough(number) {
+      for (var i = 1; i <= number; i++) setCloseStep(i, 'complete');
+    }
     $('#close-pin-pad').on('click', 'button', function () {
       var action = $(this).data('pin-action');
       var digit = $(this).data('pin-digit');
@@ -410,6 +438,16 @@ if (!function_exists('close_modal_waiter_name')) {
       $modal.find('[data-dismiss="modal"]').prop('disabled', true);
       $progress.css('display', 'block');
       $progressText.text('Closing counter and saving the summary...');
+      $('#close-steps .close-step').removeClass('active complete failed');
+      setCloseStep(1, 'active');
+      stepTimers.forEach(function (timer) { window.clearTimeout(timer); });
+      stepTimers = [
+        window.setTimeout(function () { completeCloseStepsThrough(1); setCloseStep(2, 'active'); }, 650),
+        window.setTimeout(function () { completeCloseStepsThrough(2); setCloseStep(3, 'active'); }, 1300),
+        window.setTimeout(function () { completeCloseStepsThrough(3); setCloseStep(4, 'active'); }, 1900),
+        window.setTimeout(function () { completeCloseStepsThrough(4); setCloseStep(5, 'active'); }, 2500),
+        window.setTimeout(function () { completeCloseStepsThrough(5); setCloseStep(6, 'active'); }, 3100)
+      ];
       window.setTimeout(function () {
         $progressText.text('Finalizing stock and counter records...');
       }, 900);
@@ -419,6 +457,9 @@ if (!function_exists('close_modal_waiter_name')) {
         dataType: 'json',
         data: { ajax: 1 }
       }).done(function (res) {
+        completeCloseStepsThrough(6);
+        setCloseStep(7, 'active');
+        window.setTimeout(function () { setCloseStep(7, 'complete'); }, 250);
         var message = (res && res.message) ? res.message : 'Counter is closed.';
         if (res && res.redirect) {
           window.location.href = res.redirect;
@@ -426,6 +467,8 @@ if (!function_exists('close_modal_waiter_name')) {
           window.location.href = '../log_out.php';
         }
       }).fail(function (xhr) {
+        var $activeStep = $('#close-steps .close-step.active').last();
+        $activeStep.removeClass('active').addClass('failed');
         var message = 'Could not close the counter right now. Please try again.';
         if (xhr.responseJSON && xhr.responseJSON.message) {
           message = xhr.responseJSON.message;
