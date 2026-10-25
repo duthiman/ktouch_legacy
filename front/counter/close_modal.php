@@ -533,12 +533,11 @@ if (!function_exists('close_modal_waiter_name')) {
             window.clearInterval(finishTimer);
             $progressText.text('All closing steps completed successfully.');
             if (window.Swal) {
-              Swal.fire({ icon:'success', title:'Counter Closed', text:'All closing steps completed successfully.', timer:1200, showConfirmButton:false, allowOutsideClick:false }).then(function () {
-                if (res && res.redirect) window.location.href = res.redirect;
-                else window.location.href = '../log_out.php';
+              Swal.fire({ icon:'success', title:'Counter Closed', text:'All closing steps completed successfully. Logging out...', timer:1800, showConfirmButton:false, allowOutsideClick:false, allowEscapeKey:false }).then(function () {
+                window.location.href = '../log_out.php';
               });
             } else {
-              window.setTimeout(function () { window.location.href = (res && res.redirect) ? res.redirect : '../log_out.php'; }, 1200);
+              window.setTimeout(function () { window.location.href = '../log_out.php'; }, 1800);
             }
           }
         }, 625);
