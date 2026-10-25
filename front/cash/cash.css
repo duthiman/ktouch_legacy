@@ -4,6 +4,30 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+/* Compact cashier layout: keep the work area visible with less scrolling. */
+body.cashier-compact *,
+body.cashier-compact *::before,
+body.cashier-compact *::after { border-radius: 7px !important; }
+body.cashier-compact .cash-desktop-shell { padding: 8px 8px 12px; }
+body.cashier-compact .cash-page-head { padding: 10px 12px; margin-bottom: 8px; }
+body.cashier-compact .cash-page-head h2 { font-size: 22px; }
+body.cashier-compact .cash-hero-grid,
+body.cashier-compact .cash-section-rail,
+body.cashier-compact .cash-work-row,
+body.cashier-compact .cash-sidebar-stack { gap: 7px; }
+body.cashier-compact .cash-hero-card,
+body.cashier-compact .cash-mission-card,
+body.cashier-compact .cash-focus-card,
+body.cashier-compact .cash-plan-card { padding: 9px; min-height: 0; }
+body.cashier-compact .cash-section-pill { padding: 9px 10px; }
+body.cashier-compact .cash-panel,
+body.cashier-compact .cash-card,
+body.cashier-compact .cash-work-pane { padding: 0; }
+body.cashier-compact .cash-panel .panel-heading,
+body.cashier-compact .cash-panel .panel-body { padding: 8px 10px; }
+body.cashier-compact .cash-work-row { margin-bottom: 8px; }
+body.cashier-compact td { height: 26px; padding: 5px 7px; }
 :root {
   --cash-bg: #f7f2ea;
   --cash-surface: #ffffff;

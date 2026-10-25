@@ -20,7 +20,7 @@ if (function_exists('kp_return_ensure_schema')) {
 <link href="../../assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
 <link href="../assets/css/virtual_keyboard.css" rel="stylesheet" />
 <!-- ================== END DATATABLE ================== -->  
-<body class="fixed-sn deep-orange-skin">
+<body class="fixed-sn deep-orange-skin cashier-compact">
   <!-- <header>
     <nav class="navbar navbar-fixed-top scrolling-navbar" style="padding: 1px;">
       <ul class="nav navbar-nav navbar-left"> 
