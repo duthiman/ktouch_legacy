@@ -387,6 +387,8 @@ if (!function_exists('queue_counter_close_summary')) {
 			created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (queue_id), KEY idx_queue_counter_status (cntr_id, status), KEY idx_queue_status_created (status, created_at)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+		// Older installations may have the queue table without snapshot columns.
+		mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN payload_json LONGTEXT NULL");
 		$sale_id = (int)($job['sale_id'] ?? 0);
 		$ref_id = (int)($job['ref_id'] ?? 0);
 		$type = mysqli_real_escape_string($connection, (string)($job['print_type'] ?? 'bill'));
@@ -399,7 +401,25 @@ if (!function_exists('queue_counter_close_summary')) {
 		$payload_sql = $payload === '' ? "NULL" : "'$payload'";
 		$sql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,payload_json)
 			VALUES ('$sale_id','$ref_id','$type','$label','$counter','$route','$query','$user',0,0,$payload_sql)";
-		return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+		for ($attempt = 1; $attempt <= 3; $attempt++) {
+			if (mysqli_query($connection, $sql)) {
+				$id = (int)mysqli_insert_id($connection);
+				if ($id > 0) return $id;
+			}
+			usleep(100000);
+		}
+		error_log('Counter close print queue insert failed after retries: ' . mysqli_error($connection));
+		return 0;
+	}
+
+	function counter_close_queue_required($connection, array $job, $description) {
+		for ($attempt = 1; $attempt <= 3; $attempt++) {
+			$id = counter_close_enqueue_print_job($connection, $job);
+			if ($id > 0) return $id;
+			usleep(150000);
+		}
+		error_log('Required close print job could not be queued: ' . $description);
+		return 0;
 	}
 
 	function queue_counter_close_summary($connection, $summary_id, $counter, $user_id, $shift) {
@@ -412,8 +432,7 @@ if (!function_exists('queue_counter_close_summary')) {
 		$routeQuery = 'summary_id=' . urlencode((string)$summary_id)
 			. '&cntr_id=' . urlencode((string)$counter)
 			. '&shift=' . urlencode((string)$shift);
-		$enqueue = function_exists('kp_print_enqueue') ? 'kp_print_enqueue' : 'counter_close_enqueue_print_job';
-		return (int)$enqueue($connection, [
+		return (int)counter_close_queue_required($connection, [
 			'sale_id' => 0,
 			'ref_id' => $summary_id,
 			'print_type' => 'counter_sum',
@@ -428,14 +447,13 @@ if (!function_exists('queue_counter_close_summary')) {
 
 if (!function_exists('queue_shift_close_summary')) {
 	function queue_shift_close_summary($connection, $counter, $user_id, $shift) {
-		$enqueue = function_exists('kp_print_enqueue') ? 'kp_print_enqueue' : 'counter_close_enqueue_print_job';
 		$payload = json_encode([
 			'payload_version' => 1,
 			'document_type' => 'SSP',
 			'title' => 'SHIFT SUMMARY PRINT',
 			'header' => ['shift_date' => (string)$shift, 'print_time' => date('Y-m-d H:i:s')],
 		], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-		return (int)$enqueue($connection, [
+		return (int)counter_close_queue_required($connection, [
 			'sale_id' => 0,
 			'ref_id' => 0,
 			'print_type' => 'ssp',
@@ -562,11 +580,11 @@ if (empty($counter) OR $counter==0) {
 																				close_counter_progress($connection, $close_operation_id, 6, 'Queueing counter and shift summaries.');
 												$queued = queue_counter_close_summary($connection, $close_sum_id, $counter, $user_id, $shift);
 												if ($queued < 1) {
-													error_log('Counter close summary queue failed for summary #' . $close_sum_id . ' mode ' . $print_mode);
+																							close_counter_alert_redirect('The counter summary could not be placed in the print queue. Please retry closing this counter.');
 												}
 											$shift_queued = queue_shift_close_summary($connection, $counter, $user_id, $shift);
 											if ($shift_queued < 1) {
-												error_log('Shift summary queue failed for shift ' . $shift);
+																							close_counter_alert_redirect('The final shift summary could not be placed in the print queue. Please retry closing this counter.');
 											}
 											} elseif ($close_sum_id > 0) {
 												redirect_counter_close_summary_print($close_sum_id, $counter, $shift, '../log_out.php');
