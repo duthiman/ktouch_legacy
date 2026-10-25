@@ -49,10 +49,10 @@ if (mysqli_num_rows($staff) < 1) {
 ?>
   <style type="text/css">
     .cash-staff-sales-summary {
-      margin: 12px;
-      padding: 14px 16px;
+      margin: 1px;
+      padding: 8px 10px;
       border: 1px solid #eee2d6;
-      border-radius: 16px;
+      border-radius: 7px;
       background: linear-gradient(135deg, #fffaf3 0%, #ffffff 100%);
       box-shadow: 0 8px 18px rgba(77, 48, 22, 0.06);
     }
@@ -61,7 +61,7 @@ if (mysqli_num_rows($staff) < 1) {
       justify-content: space-between;
       gap: 12px;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 7px;
       flex-wrap: wrap;
     }
     .cash-staff-sales-summary-head h4 {
@@ -87,9 +87,9 @@ if (mysqli_num_rows($staff) < 1) {
     }
     .cash-staff-sales-stat {
       border: 1px solid #efe4d7;
-      border-radius: 14px;
+      border-radius: 7px;
       background: #fff;
-      padding: 12px;
+      padding: 8px;
     }
     .cash-staff-sales-stat strong,
     .cash-staff-sales-stat span {
@@ -110,9 +110,9 @@ if (mysqli_num_rows($staff) < 1) {
     }
     .cash-max-progress-wrap {
       border: 1px solid #efe4d7;
-      border-radius: 14px;
+      border-radius: 7px;
       background: #fff;
-      padding: 12px;
+      padding: 8px;
     }
     .cash-max-progress-meta {
       display: flex;
@@ -146,6 +146,12 @@ if (mysqli_num_rows($staff) < 1) {
     .cash-max-progress-red {
       background: linear-gradient(90deg, #d53032 0%, #f05a5a 100%);
     }
+    .cash-staff-select-all { margin:0; display:inline-flex; align-items:center; gap:4px; font-size:11px; cursor:pointer; }
+    .cash-staff-select-all input { margin:0; }
+    .cash-clearb-work table { margin:1px 0; }
+    .cash-clearb-work table th { padding:5px 6px; font-size:10px; }
+    .cash-clearb-work table td { padding:5px 6px; font-size:11px; line-height:1.1; }
+    .cash-clearb-work table h4 { margin:0; font-size:11px; }
     @media (max-width: 767px) {
       .cash-staff-sales-stats {
         grid-template-columns: 1fr;
@@ -160,7 +166,7 @@ if (mysqli_num_rows($staff) < 1) {
         </th>
       </tr>
       <tr>
-        <th class="text-left"><h4>SELECT</h4></th>
+        <th class="text-left"><label class="cash-staff-select-all"><input type="checkbox" id="cash-staff-select-all"> <span>ALL</span></label></th>
         <th><h4>ORDER NO:</h4></th>
         <th><h4>SHIFT</h4></th>
         <th><h4>STAFF</h4></th>
@@ -244,6 +250,9 @@ if (mysqli_num_rows($staff) < 1) {
     </tbody>
   </table>
   <script type="text/javascript">
+    $('#cash-staff-select-all').off('change.cashStaff').on('change.cashStaff', function(){
+      $('input.bulk.cash-bill-pick').prop('checked', this.checked).trigger('change');
+    });
     function cashOpenMaxSaleModal(userId, userName) {
       window.cashReloadMaxSaleContext = function() {
         if (typeof cashLoadCurrentBills === 'function') {
