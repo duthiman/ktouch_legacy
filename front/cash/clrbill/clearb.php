@@ -198,12 +198,5 @@ if ($result) {
     cashUpdateCurrentBillSummary();
   });
 
-  var clearBRail = document.getElementById('cash-clearb-buttons');
-  if (clearBRail) {
-    clearBRail.addEventListener('scroll', function(){ cashSyncUserRailButtons('cash-clearb-buttons'); });
-    window.addEventListener('resize', function(){ cashSyncUserRailButtons('cash-clearb-buttons'); });
-    setTimeout(function(){ cashSyncUserRailButtons('cash-clearb-buttons'); }, 120);
-  }
-
   cashLoadCurrentBills(0);
 </script>
