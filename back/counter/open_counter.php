@@ -82,7 +82,17 @@ document.getElementById('open_count').addEventListener('click', open_count);
     })
     .done(function(data){
       if (data && data.ok) {
-        $results.html('<div class="alert alert-success"><strong>Counter opened successfully.</strong><br>Refreshing...</div>');
+        $('.open-counter-modal').html(
+          '<div style="padding:34px 24px;text-align:center;background:#fff;border-radius:10px;">' +
+            '<div style="width:64px;height:64px;margin:0 auto 16px;border-radius:50%;background:#e6f7ee;color:#198754;font-size:38px;line-height:64px;font-weight:700;">✓</div>' +
+            '<h3 style="margin:0 0 8px;color:#17324d;font-weight:700;">Counter opened</h3>' +
+            '<p style="margin:0 0 18px;color:#6b7c93;font-size:14px;">The counter is ready for use.</p>' +
+            '<div style="display:inline-block;padding:8px 14px;border-radius:7px;background:#f1f6fb;color:#24445f;font-weight:700;">' +
+              '<?php echo htmlspecialchars($name, ENT_QUOTES, "UTF-8"); ?>' +
+            '</div>' +
+            '<div style="margin-top:20px;color:#8a99a8;font-size:12px;">Refreshing...</div>' +
+          '</div>'
+        );
         window.setTimeout(function(){ window.location.reload(); }, 900);
         return;
       }
