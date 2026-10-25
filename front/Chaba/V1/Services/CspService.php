@@ -111,13 +111,27 @@ final class CspService
     private function withNames(PDO $db, array $rows, string $idKey = 'item_id'): array
     {
         $cache = [];
+        $lookups = [
+            ['kp_items', 'name'],
+            ['kp_inventory_master', 'item_name'],
+            ['kp_inventory_items', 'item_name'],
+        ];
         foreach ($rows as &$row) {
             $id = (int)($row[$idKey] ?? 0);
             if ($id < 1) continue;
             if (!array_key_exists($id, $cache)) {
-                $q = $db->prepare('SELECT name FROM kp_items WHERE item_id = ? LIMIT 1');
-                $q->execute([$id]);
-                $cache[$id] = (string)($q->fetchColumn() ?: 'Item ' . $id);
+                $cache[$id] = '';
+                foreach ($lookups as [$table, $column]) {
+                    try {
+                        $q = $db->prepare("SELECT {$column} FROM {$table} WHERE item_id = ? LIMIT 1");
+                        $q->execute([$id]);
+                        $name = trim((string)($q->fetchColumn() ?: ''));
+                        if ($name !== '') { $cache[$id] = $name; break; }
+                    } catch (\Throwable $e) {
+                        // Older installations may not have every inventory table.
+                    }
+                }
+                if ($cache[$id] === '') $cache[$id] = 'Item ' . $id;
             }
             $row['item_name'] = $cache[$id];
             $row['name'] = $cache[$id];
