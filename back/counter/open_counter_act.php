@@ -5,7 +5,7 @@ include('../clude/funcs.php');
 $counter=$_REQUEST['counter'];
 $user_id=$_REQUEST['user_id'];
 $take_status=(int)($_REQUEST['take_status'] ?? 3);
-$take_status=in_array($take_status,[2,3],true) ? $take_status : 3;
+$take_status=in_array($take_status,[1,2,3],true) ? $take_status : 3;
 $reason=mysqli_real_escape_string($connection, $_REQUEST['reason'] ?? '');
 $trans_by=$_SESSION['user_id'];
 $shift=shift();

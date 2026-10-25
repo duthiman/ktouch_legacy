@@ -7,7 +7,7 @@ if(isset($_REQUEST['id'])){
   $counter_row = mysqli_query($connection, "SELECT take_status FROM kp_counters WHERE cntr_id='$id' LIMIT 1");
   $counter_data = $counter_row ? mysqli_fetch_assoc($counter_row) : null;
   $take_status = (int)($counter_data['take_status'] ?? 0);
-  $take_status_label = $take_status === 3 ? 'OPEN' : ($take_status === 2 ? 'CLOSED' : 'READY');
+  $take_status_label = $take_status === 1 ? 'FINISHED' : ($take_status === 2 ? 'NOT STARTED' : ($take_status === 3 ? 'CONTINUING' : 'UNKNOWN'));
 }
 ?>
 <div class="modal-content open-counter-modal">
@@ -47,8 +47,9 @@ if(isset($_REQUEST['id'])){
       <div class="form-group">
         <label for="take_status"><strong>Counter take status</strong></label>
         <select class="selectpicker form-control" id="take_status" name="take_status">
-          <option value="3" selected>Active take</option>
-          <option value="2">Closed / ready</option>
+          <option value="1">FINISHED</option>
+          <option value="2">NOT STARTED</option>
+          <option value="3" selected>CONTINUING</option>
         </select>
       </div>
          
