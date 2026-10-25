@@ -78,6 +78,50 @@ if (!function_exists('close_counter_safe_query')) {
 	}
 }
 
+if (!function_exists('close_counter_fast_backup')) {
+	function close_counter_fast_backup($connection) {
+		global $dbhost, $dbuser, $dbpass, $dbname;
+		$backup_dir = realpath(__DIR__ . '/../../assets/back/db');
+		$dump_bin = 'C:/Program Files/Ampps/mysql/bin/mysqldump.exe';
+		if ($backup_dir === false) {
+			$backup_dir = __DIR__ . '/../../assets/back/db';
+			if (!is_dir($backup_dir) && !mkdir($backup_dir, 0755, true)) {
+				return false;
+			}
+		}
+		if (!function_exists('exec') || !is_file($dump_bin)) {
+			error_log('Fast counter backup unavailable: mysqldump was not found or exec is disabled.');
+			return false;
+		}
+
+		$stamp = date('YMd_His');
+		$filename = $stamp . '.sql';
+		$filepath = $backup_dir . DIRECTORY_SEPARATOR . $filename;
+		$optfile = tempnam(sys_get_temp_dir(), 'counter_dump_');
+		if ($optfile === false) return false;
+		$host = $dbhost ?? 'localhost';
+		$user = $dbuser ?? 'root';
+		$pass = $dbpass ?? '';
+		$db = $dbname ?? '';
+		file_put_contents($optfile, "[mysqldump]\nuser={$user}\npassword={$pass}\nhost={$host}\n");
+		$command = '"' . $dump_bin . '" --defaults-extra-file="' . $optfile . '" --single-transaction --quick --routines --events --triggers ' . escapeshellarg($db) . ' > "' . $filepath . '" 2>&1';
+		$output = [];
+		$return_code = 1;
+		exec($command, $output, $return_code);
+		@unlink($optfile);
+		if ($return_code !== 0 || !is_file($filepath) || filesize($filepath) < 100) {
+			error_log('Fast counter backup failed: ' . implode(' ', $output));
+			return false;
+		}
+
+		$filename_sql = mysqli_real_escape_string($connection, $filename);
+		$ip_sql = mysqli_real_escape_string($connection, $_SERVER['REMOTE_ADDR'] ?? '');
+		$user_id = (int)($_SESSION['user_id'] ?? 0);
+		close_counter_safe_query($connection, "INSERT INTO kp_backdb (backupfilename,backupfiledate,username,ipaddress) VALUES ('$filename_sql',CURRENT_TIMESTAMP,'$user_id','$ip_sql')", 'record fast backup');
+		return true;
+	}
+}
+
 if (!function_exists('close_counter_clear_shift_table')) {
 	function close_counter_clear_shift_table($connection) {
 		$truncate = close_counter_safe_query($connection, 'TRUNCATE TABLE kp_shift', 'truncate shift table');
@@ -510,13 +554,9 @@ if (empty($counter) OR $counter==0) {
 											}
 											$action="CLOSED|-|-|COUNTER|".date('Y-m-d');
 											logs($action,'../logs');
-											if (function_exists('backup_tables')) {
-												try {
-													backup_tables();
-												} catch (Throwable $e) {
-													error_log('Counter close backup failed: ' . $e->getMessage());
+												if (!close_counter_fast_backup($connection)) {
+													error_log('Counter close fast backup failed.');
 												}
-											}
 											close_counter_success_redirect('Counter is closed.', '../log_out.php');
 										}else{
 											?>
