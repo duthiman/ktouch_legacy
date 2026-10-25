@@ -3,6 +3,9 @@ session_start();
 include_once('../../inc/connection.php');
 include_once('../../inc/gen_funcs.php');
 include_once('../../back/counter/funcs.php');
+if (isset($connection) && $connection instanceof mysqli) {
+    $GLOBALS['connection'] = $connection;
+}
 
 if (!function_exists('thermal_money')) {
     function thermal_money($amount) {
