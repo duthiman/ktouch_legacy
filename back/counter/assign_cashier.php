@@ -67,7 +67,17 @@ if(isset($_REQUEST['id'])){
                      <option value="">----SELECT USER----</option>
                  <?php
 
-          $item = "SELECT * FROM kp_users WHERE work_status=2 AND drole=1  ORDER BY username ASC";
+          $item = "SELECT u.user_id, u.username
+                   FROM kp_users u
+                   WHERE u.work_status=2
+                     AND u.drole=1
+                     AND NOT EXISTS (
+                       SELECT 1
+                       FROM kp_counters assigned_counter
+                       WHERE assigned_counter.user_id=u.user_id
+                         AND assigned_counter.cntr_id<>'$id'
+                     )
+                   ORDER BY u.username ASC";
           $item_r = mysqli_query($connection,$item) or die("Error getting categories");
           while ($ct = mysqli_fetch_assoc($item_r)) {
               $name = $ct['username'];
