@@ -40,30 +40,34 @@ if (!function_exists('close_modal_waiter_name')) {
 <script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
 <style>
   .close-check-shell .modal-content {
-    border-radius: 5px;
+    border-radius: 7px;
     overflow: hidden;
+    border: 0;
+    box-shadow: 0 20px 55px rgba(54, 25, 20, .22);
   }
   .close-check-shell .modal-header {
     background: linear-gradient(135deg, #7d1418 0%, #a61c21 100%);
     color: #fff;
     border-bottom: 0;
-    padding: 16px 18px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
   }
   .close-check-shell .modal-title {
     font-weight: 800;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: .3px;
   }
   .close-check-shell .modal-body {
     background: #fffaf5;
-    padding: 16px;
+    padding: 18px;
     max-height: 72vh;
     overflow-y: auto;
   }
   .close-check-shell .modal-footer {
     background: #fff7ef;
     border-top: 0;
-    padding: 14px 16px 16px;
+    padding: 14px 18px 18px;
     display: flex;
     gap: 10px;
     justify-content: flex-end;
@@ -78,7 +82,7 @@ if (!function_exists('close_modal_waiter_name')) {
     background: #fff;
     border: 1px solid #f0d2cb;
     border-left: 5px solid #a61c21;
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 14px 16px;
     margin-bottom: 14px;
     color: #5a2d20;
@@ -92,7 +96,7 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-check-card {
     background: #fff;
     border: 1px solid #ecdccf;
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 14px;
     box-shadow: 0 6px 18px rgba(84, 39, 26, .06);
   }
@@ -115,7 +119,7 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-check-panel {
     background: #fff;
     border: 1px solid #ead8cb;
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 14px;
     margin-bottom: 14px;
   }
@@ -137,7 +141,7 @@ if (!function_exists('close_modal_waiter_name')) {
   }
   .close-check-item {
     border: 1px solid #efe2d7;
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 12px;
     background: #fffaf6;
   }
@@ -157,7 +161,7 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-check-ok {
     background: #f2fff5;
     border: 1px solid #cfe7d4;
-    border-radius: 5px;
+    border-radius: 7px;
     padding: 18px;
     text-align: center;
     color: #1f6a3c;
@@ -165,7 +169,7 @@ if (!function_exists('close_modal_waiter_name')) {
   }
   .close-check-btn {
     min-width: 140px;
-    border-radius: 5px;
+    border-radius: 7px;
     font-weight: 800;
     padding: 12px 18px;
   }
@@ -190,7 +194,7 @@ if (!function_exists('close_modal_waiter_name')) {
     margin: 0 0 12px;
     padding: 12px 14px;
     border: 1px solid #ead8cb;
-    border-radius: 5px;
+    border-radius: 7px;
     background: #fff;
     color: #6f261e;
     font-weight: 700;
@@ -199,14 +203,14 @@ if (!function_exists('close_modal_waiter_name')) {
     height: 6px;
     margin-top: 8px;
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: 7px;
     background: #f1ddd2;
   }
   .close-counter-progress-bar span {
     display: block;
     width: 35%;
     height: 100%;
-    border-radius: 5px;
+    border-radius: 7px;
     background: #a61c21;
     animation: closeCounterProgress 1.2s ease-in-out infinite;
   }
@@ -223,7 +227,7 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-pin-card {
     width:min(360px,100%);
     padding:24px;
-    border-radius:10px;
+    border-radius:7px;
     background:#fff;
     box-shadow:0 18px 55px rgba(0,0,0,.28);
     text-align:center;
@@ -231,14 +235,14 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-pin-code {
     margin:10px 0 16px;
     padding:10px;
-    border-radius:8px;
+    border-radius:7px;
     background:#fff4e8;
     color:#9b321c;
     font-size:30px;
     font-weight:800;
     letter-spacing:8px;
   }
-  .close-pin-input { text-align:center; font-size:22px; letter-spacing:5px; }
+  .close-pin-input { text-align:center; font-size:22px; letter-spacing:5px; border-radius:7px; border:2px solid #e7c9b9; height:48px; }
   .close-pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
   .close-pin-pad button { min-height:50px; border:1px solid #d8e1ea; border-radius:7px; background:#f7faff; color:#243b53; font-size:21px; font-weight:700; }
   .close-pin-action { min-height:50px; border:0; border-radius:7px; color:#fff; font-size:16px; font-weight:800; }
@@ -250,7 +254,7 @@ if (!function_exists('close_modal_waiter_name')) {
   }
   .close-steps { display:grid; gap:7px; margin-top:14px; }
   .close-step { display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid #ead8cb; border-radius:7px; background:#fff; color:#7b8794; font-size:13px; transition:all .2s ease; }
-  .close-step-number { display:flex; align-items:center; justify-content:center; width:25px; height:25px; border-radius:50%; background:#e9eef3; color:#66788a; font-size:12px; font-weight:800; flex:0 0 25px; }
+  .close-step-number { display:flex; align-items:center; justify-content:center; width:25px; height:25px; border-radius:7px; background:#e9eef3; color:#66788a; font-size:12px; font-weight:800; flex:0 0 25px; }
   .close-step.active { border-color:#f0a43c; background:#fff8ed; color:#8a4b08; font-weight:700; }
   .close-step.active .close-step-number { background:#f39c12; color:#fff; }
   .close-step.complete { border-color:#b7e3c8; background:#f0fbf4; color:#237a43; }
@@ -258,23 +262,39 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-step.failed { border-color:#efb2b8; background:#fff2f3; color:#a61c21; }
   .close-step.failed .close-step-number { background:#dc3545; color:#fff; }
   .close-process-overlay { display:none; position:fixed; z-index:1070; inset:0; align-items:center; justify-content:center; padding:18px; background:rgba(20,28,38,.68); }
-  .close-process-card { width:min(520px,100%); max-height:90vh; overflow:auto; padding:24px; border-radius:10px; background:#fff; box-shadow:0 18px 55px rgba(0,0,0,.28); }
+  .close-process-card { width:min(520px,100%); max-height:90vh; overflow:auto; padding:24px; border-radius:7px; background:#fff; box-shadow:0 18px 55px rgba(0,0,0,.28); }
+  .close-pin-pad button, .close-pin-action, .close-check-btn { transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+  .close-pin-pad button:hover, .close-pin-action:hover, .close-check-btn:hover { transform: translateY(-1px); box-shadow:0 5px 12px rgba(54,25,20,.14); filter:brightness(1.03); }
   @media (max-width: 767px) {
     .close-check-shell .modal-dialog {
       width: calc(100vw - 18px);
       margin: 10px auto;
     }
+    .close-check-shell .modal-header { padding: 15px 16px; }
+    .close-check-shell .modal-title { font-size: 17px; }
+    .close-check-shell .modal-body { padding: 12px; max-height: 76vh; }
+    .close-check-intro { padding: 12px; font-size: 12px; }
     .close-check-grid {
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
+    .close-check-card { padding: 11px; }
+    .close-check-card span { font-size: 16px; }
+    .close-check-panel { padding: 11px; }
+    .close-check-item { padding: 10px; }
     .close-check-shell .modal-footer {
       justify-content: stretch;
+      padding: 12px;
+      gap: 8px;
     }
     .close-check-shell .modal-footer .close-check-btn {
       flex: 1 1 calc(50% - 5px);
       min-width: 0;
+      padding: 12px 8px;
+      font-size: 12px;
     }
+    .close-pin-card, .close-process-card { padding: 18px; }
+    .close-pin-code { font-size: 27px; letter-spacing: 6px; }
   }
 </style>
 <div class="close-check-shell">
