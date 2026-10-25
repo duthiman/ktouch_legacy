@@ -1251,10 +1251,17 @@ if (!function_exists('bill_service_queue_unprinted_tickets')) {
         unset($item);
         $sale = function_exists('repo_get_sales_header') ? (repo_get_sales_header($sale_id) ?: []) : [];
         $waiter_id = (int)($sale['user_id'] ?? $sale['waiter_id'] ?? $user_id);
+        // Docket headings must identify the production counter. A KOT is
+        // routed to the configured kitchen default, even when the sale was
+        // raised from BAR or another front counter. BOT/BILL keep the sale
+        // counter identity.
+        $display_counter_id = strtoupper((string)$type) === 'KOT'
+            ? $counter_id
+            : ($sale_counter_id > 0 ? $sale_counter_id : $counter_id);
         $header = [
             'sale_id' => $sale_id,
-            'counter_id' => $sale_counter_id > 0 ? $sale_counter_id : $counter_id,
-            'counter_name' => function_exists('get_counter') ? (string)get_counter($sale_counter_id > 0 ? $sale_counter_id : $counter_id) : '',
+            'counter_id' => $display_counter_id,
+            'counter_name' => function_exists('get_counter') ? (string)get_counter($display_counter_id) : '',
             'waiter_id' => $waiter_id,
             'waiter_name' => function_exists('get_user') ? (string)get_user($waiter_id) : '',
             'served_by' => function_exists('get_user') ? (string)get_user($waiter_id) : '',
