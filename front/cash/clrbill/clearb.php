@@ -40,13 +40,13 @@ if ($result) {
             <button type="button" data-view="select" onclick="cashSetClearBMode('select')">Select Box</button>
           </div>
 
-          <div class="cash-clearb-scrollnav">
+          <!-- <div class="cash-clearb-scrollnav">
             <span>Swipe or use arrows to view more users.</span>
             <div class="cash-clearb-scrollbtns">
               <button type="button" class="cash-clearb-scrollbtn cash-clearb-scrollbtn-left is-hidden" data-rail="cash-clearb-buttons" onclick="cashScrollUserRail('cash-clearb-buttons', -260)">&lsaquo;</button>
               <button type="button" class="cash-clearb-scrollbtn cash-clearb-scrollbtn-right is-hidden" data-rail="cash-clearb-buttons" onclick="cashScrollUserRail('cash-clearb-buttons', 260)">&rsaquo;</button>
             </div>
-          </div>
+          </div> -->
 
           <div class="cash-clearb-buttons is-active" id="cash-clearb-buttons">
             <button type="button" class="cash-clearb-chip is-active" data-clearb-user="0" onclick="cashPickClearBUser(0, 'All Users')">
@@ -121,35 +121,6 @@ if ($result) {
    
 <script type="text/javascript">
   $('.pickers').select2({});
-
-  function cashScrollUserRail(id, amount) {
-    var rail = document.getElementById(id);
-    if (!rail) {
-      return;
-    }
-    rail.scrollBy({ left: amount, behavior: 'smooth' });
-    setTimeout(function(){ cashSyncUserRailButtons(id); }, 220);
-  }
-
-  function cashSyncUserRailButtons(id) {
-    var rail = document.getElementById(id);
-    if (!rail) {
-      return;
-    }
-    var leftBtn = document.querySelector('.cash-clearb-scrollbtn-left[data-rail="' + id + '"]');
-    var rightBtn = document.querySelector('.cash-clearb-scrollbtn-right[data-rail="' + id + '"]');
-    var maxLeft = rail.scrollWidth - rail.clientWidth;
-    var canScroll = maxLeft > 8;
-    var atLeft = rail.scrollLeft <= 4;
-    var atRight = rail.scrollLeft >= (maxLeft - 4);
-
-    if (leftBtn) {
-      leftBtn.classList.toggle('is-hidden', !canScroll || atLeft);
-    }
-    if (rightBtn) {
-      rightBtn.classList.toggle('is-hidden', !canScroll || atRight);
-    }
-  }
 
   function cashSetClearBMode(mode) {
     $('.cash-clearb-toggle button').removeClass('is-active');
