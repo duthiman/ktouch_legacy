@@ -276,7 +276,7 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
       font-size: 11px;
       margin: 1px 0;
     }
-    .meta span { white-space: nowrap; }
+    .meta span { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
     .meta.center { justify-content: center; text-align: center; }
     h1.title {
       font-size: 22px;
@@ -639,7 +639,11 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <?php endif; ?>
     /* Keep every summary table compact and use the full receipt width. */
     #receipt-body > table { width: 100% !important; max-width: 100% !important; table-layout: fixed !important; }
-    #receipt-body > table th, #receipt-body > table td { padding: 3px 4px !important; vertical-align: middle; white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; overflow-wrap: normal; word-break: normal; }
+    #receipt-body > table th, #receipt-body > table td,
+    #bord table th, #bord table td { padding: 3px 4px !important; vertical-align: middle; white-space: normal !important; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; word-break: break-word; }
+    #bord table { width:100%; max-width:100%; table-layout:fixed; }
+    #bord .category-heading td { font-size:16px !important; line-height:1.2; font-weight:900 !important; text-align:left !important; white-space:normal !important; border-top:2px solid #000; border-bottom:1px solid #000; padding:7px 4px !important; letter-spacing:.05em; }
+    #bord .category-total td { font-size:13px !important; font-weight:900 !important; white-space:normal !important; border-top:1px dashed #000; padding:5px 4px !important; }
     #receipt-body > table td.compact-right, #receipt-body > table th.compact-right { text-align: right !important; white-space: nowrap; }
     #receipt-body > table td.compact-center, #receipt-body > table th.compact-center { text-align: center !important; }
     #receipt-body > table:nth-of-type(1) td:first-child { width: 72%; }
