@@ -214,6 +214,7 @@ if (!function_exists('close_modal_waiter_name')) {
     background: #a61c21;
     animation: closeCounterProgress 1.2s ease-in-out infinite;
   }
+  .close-counter-progress-count { float:right; color:#8a4b08; font-size:12px; font-weight:800; }
   .close-pin-overlay {
     display:none;
     position:fixed;
@@ -426,7 +427,7 @@ if (!function_exists('close_modal_waiter_name')) {
       <div class="close-step" data-close-step="8"><span class="close-step-number">8</span><span>Complete closing and redirect</span></div>
     </div>
     <div class="close-counter-progress" id="close-counter-progress" style="display:block;margin-top:16px;" role="status" aria-live="polite">
-      <span id="close-counter-progress-text">Starting counter close...</span>
+      <span id="close-counter-progress-text">Starting counter close...</span><span class="close-counter-progress-count" id="close-counter-progress-count">0 / 8</span>
       <div class="close-counter-progress-bar"><span></span></div>
     </div>
   </div>
@@ -445,6 +446,7 @@ if (!function_exists('close_modal_waiter_name')) {
     }
     function completeCloseStepsThrough(number) {
       for (var i = 1; i <= number; i++) setCloseStep(i, 'complete');
+      $processOverlay.find('#close-counter-progress-count').text(Math.max(0, Math.min(8, number)) + ' / 8');
     }
     $('#close-pin-pad').on('click', 'button', function () {
       var action = $(this).data('pin-action');
@@ -470,6 +472,7 @@ if (!function_exists('close_modal_waiter_name')) {
         $processOverlay.find('#close-counter-progress-text').text('TEST MODE: counter close is disabled.');
         $processOverlay.find('#close-steps .close-step').removeClass('active complete failed');
         setCloseStep(1, 'active');
+        $processOverlay.find('#close-counter-progress-count').text('0 / 8');
         return;
       }
       $closeButton.data('pin-verified', true).trigger('click');
@@ -503,6 +506,7 @@ if (!function_exists('close_modal_waiter_name')) {
           var state = progressRes.data.state === 'failed' ? 'failed' : (progressRes.data.state === 'complete' ? 'complete' : 'active');
           completeCloseStepsThrough(Math.max(0, step - 1));
           setCloseStep(step, state);
+          $processOverlay.find('#close-counter-progress-count').text(Math.max(0, Math.min(8, state === 'complete' ? step : step - 1)) + ' / 8');
           if (progressRes.data.message) $progressText.text(progressRes.data.message);
         });
       }, 300);
@@ -514,16 +518,13 @@ if (!function_exists('close_modal_waiter_name')) {
         data: { ajax: 1, operation_id: operationId }
       }).done(function (res) {
         window.clearInterval(progressPoll);
-        completeCloseStepsThrough(6);
-        setCloseStep(7, 'active');
-        window.setTimeout(function () { completeCloseStepsThrough(7); setCloseStep(8, 'active'); }, 250);
-        window.setTimeout(function () { setCloseStep(8, 'complete'); }, 500);
+        completeCloseStepsThrough(8);
+        $progressText.text('Counter close completed successfully.');
         var message = (res && res.message) ? res.message : 'Counter is closed.';
-        if (res && res.redirect) {
-          window.location.href = res.redirect;
-        } else {
-          window.location.href = '../log_out.php';
-        }
+        window.setTimeout(function () {
+          if (res && res.redirect) window.location.href = res.redirect;
+          else window.location.href = '../log_out.php';
+        }, 1400);
       }).fail(function (xhr) {
         window.clearInterval(progressPoll);
         var $activeStep = $processOverlay.find('#close-steps .close-step.active').last();
