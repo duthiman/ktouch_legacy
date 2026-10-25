@@ -473,24 +473,27 @@ if (!function_exists('close_modal_waiter_name')) {
       $progress.css('display', 'block');
       $progressText.text('Closing counter and saving the summary...');
       $processOverlay.find('#close-steps .close-step').removeClass('active complete failed');
+      var operationId = 'close_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
       setCloseStep(1, 'active');
       stepTimers.forEach(function (timer) { window.clearTimeout(timer); });
-      stepTimers = [
-        window.setTimeout(function () { completeCloseStepsThrough(1); setCloseStep(2, 'active'); }, 650),
-        window.setTimeout(function () { completeCloseStepsThrough(2); setCloseStep(3, 'active'); }, 1300),
-        window.setTimeout(function () { completeCloseStepsThrough(3); setCloseStep(4, 'active'); }, 1900),
-        window.setTimeout(function () { completeCloseStepsThrough(4); setCloseStep(5, 'active'); }, 2500),
-        window.setTimeout(function () { completeCloseStepsThrough(5); setCloseStep(6, 'active'); }, 3100)
-      ];
-      window.setTimeout(function () {
-        $progressText.text('Finalizing stock and counter records...');
-      }, 900);
+      var progressPoll = window.setInterval(function () {
+        $.getJSON('../counter/close_progress.php', { operation_id: operationId }).done(function (progressRes) {
+          if (!progressRes || !progressRes.ok || !progressRes.data) return;
+          var step = Number(progressRes.data.step_no || 1);
+          var state = progressRes.data.state === 'failed' ? 'failed' : (progressRes.data.state === 'complete' ? 'complete' : 'active');
+          completeCloseStepsThrough(Math.max(0, step - 1));
+          setCloseStep(step, state);
+          if (progressRes.data.message) $progressText.text(progressRes.data.message);
+        });
+      }, 300);
+      stepTimers = [progressPoll];
       $.ajax({
         url: '../counter/close_counter.php',
         type: 'POST',
         dataType: 'json',
-        data: { ajax: 1 }
+        data: { ajax: 1, operation_id: operationId }
       }).done(function (res) {
+        window.clearInterval(progressPoll);
         completeCloseStepsThrough(6);
         setCloseStep(7, 'active');
         window.setTimeout(function () { completeCloseStepsThrough(7); setCloseStep(8, 'active'); }, 250);
@@ -502,6 +505,7 @@ if (!function_exists('close_modal_waiter_name')) {
           window.location.href = '../log_out.php';
         }
       }).fail(function (xhr) {
+        window.clearInterval(progressPoll);
         var $activeStep = $processOverlay.find('#close-steps .close-step.active').last();
         $activeStep.removeClass('active').addClass('failed');
         var message = 'Could not close the counter right now. Please try again.';

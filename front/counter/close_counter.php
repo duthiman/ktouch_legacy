@@ -4,6 +4,7 @@ include_once('../../inc/connection.php');
 include_once('funcs.php');
 include_once('../../back/counter/funcs.php');
 $is_ajax_close = isset($_POST['ajax']) && (int)$_POST['ajax'] === 1;
+$close_operation_id = preg_replace('/[^A-Za-z0-9_-]/', '', (string)($_POST['operation_id'] ?? ''));
 
 if (!function_exists('close_counter_alert_redirect')) {
 	function close_counter_alert_redirect($message, $path = '../dash/dash.php') {
@@ -75,6 +76,18 @@ if (!function_exists('close_counter_safe_query')) {
 			error_log('Close counter query failed' . ($context !== '' ? ' [' . $context . ']' : '') . ': ' . $e->getMessage() . ' | SQL: ' . $sql);
 			return false;
 		}
+	}
+}
+
+if (!function_exists('close_counter_progress')) {
+	function close_counter_progress($connection, $operation_id, $step_no, $message, $state = 'active') {
+		$operation_id = trim((string)$operation_id);
+		if ($operation_id === '') return;
+		$operation_sql = mysqli_real_escape_string($connection, $operation_id);
+		$message_sql = mysqli_real_escape_string($connection, trim((string)$message));
+		$state_sql = mysqli_real_escape_string($connection, trim((string)$state));
+		close_counter_safe_query($connection, "CREATE TABLE IF NOT EXISTS kp_counter_close_progress (operation_id varchar(80) NOT NULL, step_no tinyint unsigned NOT NULL DEFAULT 1, state varchar(16) NOT NULL DEFAULT 'active', message varchar(255) NOT NULL DEFAULT '', updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (operation_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", 'heal close progress');
+		close_counter_safe_query($connection, "INSERT INTO kp_counter_close_progress (operation_id,step_no,state,message) VALUES ('$operation_sql'," . (int)$step_no . ",'$state_sql','$message_sql') ON DUPLICATE KEY UPDATE step_no=VALUES(step_no),state=VALUES(state),message=VALUES(message),updated_at=CURRENT_TIMESTAMP", 'save close progress');
 	}
 }
 
@@ -487,6 +500,7 @@ if (empty($counter) OR $counter==0) {
 	</script>
 	<?php
 }else{ 
+	close_counter_progress($connection, $close_operation_id, 1, 'Checking pending returns and open orders.');
 	// Heal the counter schema before TRUNCATE/INSERT/UPDATE operations below.
 	if (!ensure_counter_close_dependencies($connection, $counter)) {
 		close_counter_alert_redirect('The counter closing tables could not be prepared. Check the database permissions and try again.');
@@ -508,15 +522,18 @@ if (empty($counter) OR $counter==0) {
 		$qty_column="cntr".$counter."_qty";
 		$closing_stock = close_counter_safe_query($connection,"INSERT INTO kp_cntr".$counter."_closing_stock(item_id,qty,shift) SELECT item_id,$qty_column,'$shift' as shift FROM kp_items",'insert closing stock');
 		if ($closing_stock) {
+			close_counter_progress($connection, $close_operation_id, 2, 'Preparing the closing stock snapshot.');
 			//UPDATE STOCK CLOSING IN TAKE
 			$update_take = close_counter_safe_query($connection,"UPDATE kp_cntr".$counter."_stock_take  SET closing=(SELECT qty FROM kp_cntr".$counter."_closing_stock WHERE kp_cntr".$counter."_stock_take.item_id=kp_cntr".$counter."_closing_stock.item_id) WHERE shift='$shift'",'update stock take closing');
 			if ($update_take) {
+				close_counter_progress($connection, $close_operation_id, 3, 'Updating stock-take closing quantities.');
 				//UPDATE COUNTER HISTORY
 				$counter_hist= close_counter_safe_query($connection,"UPDATE kp_counter_hist SET  closing=CURRENT_TIMESTAMP, close_by='$user_id',close_ord='$last' WHERE shift='$shift' AND  cntr_id='$counter'",'update counter history');
 				if ($counter_hist) {
 					//UPDATE THE CASHIERS SHIFT HISTORY
 					$cashier_shift_hist= close_counter_safe_query($connection,"UPDATE kp_user_shift_hist SET closing=CURRENT_TIME,closing_datime=CURRENT_TIMESTAMP WHERE shift='$shift' AND user_id='$user_id'",'update user shift history');
 					if ($cashier_shift_hist) {
+					close_counter_progress($connection, $close_operation_id, 4, 'Closing counter and cashier records.');
 						//GET NO OF COUNTERS OPEN
 						$count=open_counters();
 						if ($count==1) {
@@ -533,6 +550,7 @@ if (empty($counter) OR $counter==0) {
 										$empty_s = close_counter_clear_shift_table($connection);
 										if ($empty_s) {
 											$close_sum_id = store_counter_close_totals($shift,$counter,$user_id,$last,$counter_open_orders,$pending_returns,$pending_transfers);
+																				close_counter_progress($connection, $close_operation_id, 5, 'Saving the counter summary.');
 											if ($close_sum_id > 0 && function_exists('store_counter_close_stock_take_snapshot')) {
 												try {
 													store_counter_close_stock_take_snapshot($connection, $close_sum_id, $counter, $shift);
@@ -541,6 +559,7 @@ if (empty($counter) OR $counter==0) {
 												}
 											}
 											if ($close_sum_id > 0 && $use_queue_print) {
+																				close_counter_progress($connection, $close_operation_id, 6, 'Queueing counter and shift summaries.');
 												$queued = queue_counter_close_summary($connection, $close_sum_id, $counter, $user_id, $shift);
 												if ($queued < 1) {
 													error_log('Counter close summary queue failed for summary #' . $close_sum_id . ' mode ' . $print_mode);
@@ -554,9 +573,11 @@ if (empty($counter) OR $counter==0) {
 											}
 											$action="CLOSED|-|-|COUNTER|".date('Y-m-d');
 											logs($action,'../logs');
-												if (!close_counter_fast_backup($connection)) {
+																						close_counter_progress($connection, $close_operation_id, 7, 'Backing up database tables.');
+																						if (!close_counter_fast_backup($connection)) {
 													error_log('Counter close fast backup failed.');
 												}
+																						close_counter_progress($connection, $close_operation_id, 8, 'Counter close completed.', 'complete');
 											close_counter_success_redirect('Counter is closed.', '../log_out.php');
 										}else{
 											?>
