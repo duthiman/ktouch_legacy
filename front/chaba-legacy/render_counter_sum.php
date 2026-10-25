@@ -956,34 +956,38 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     </table>
 
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
-    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>RETURNED ITEMS</b></h4>
+    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>RETURNED ITEMS BY USER</b></h4>
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <table class="table">
       <tbody>
         <?php
-        $delete = mysqli_query($connection, "SELECT * FROM kp_ret_items WHERE shift='$shift' AND stock_counter='$counter'") or die('Error fetching the staff data.:' . mysqli_error($connection));
+        $delete = mysqli_query($connection, "SELECT user_id, item_id, confirm_by, confirm_status, SUM(qty) AS qty FROM kp_ret_items WHERE shift='$shift' AND stock_counter='$counter' GROUP BY user_id, item_id, confirm_by, confirm_status ORDER BY user_id ASC, confirm_status ASC, item_id ASC") or die('Error fetching the staff data.:' . mysqli_error($connection));
         if (mysqli_num_rows($delete) < 1) {
-            echo "<tr><td colspan='6'>No orders have been Returned Today</td></tr>";
+            echo "<tr><td colspan='4'>No orders have been Returned Today</td></tr>";
         } else {
             ?>
             <tr>
-              <td class="text-center"><b>Id</b></td>
-              <td class="text-center"><b>Item</b></td>
-              <td class="text-center"><b>Ord By</b></td>
-              <td class="text-center"><b>App By</b></td>
-              <td class="text-center"><b>Qty</b></td>
-              <td class="text-center"><b>AMT</b></td>
+              <td class="text-center"><b>ITEM</b></td>
+              <td class="text-center"><b>QTY</b></td>
+              <td class="text-center"><b>STATUS</b></td>
+              <td class="text-center"><b>APPR BY</b></td>
             </tr>
             <?php
+            $lastReturnUser = null;
             while ($row = mysqli_fetch_assoc($delete)) {
+                $returnUserId = (int)($row['user_id'] ?? 0);
+                if ($lastReturnUser !== $returnUserId) {
+                    echo '<tr class="category-heading"><td colspan="4">USER: ' . htmlspecialchars(get_user($returnUserId)) . '</td></tr>';
+                    $lastReturnUser = $returnUserId;
+                }
+                $confirmStatus = (int)($row['confirm_status'] ?? 0);
+                $returnStatus = $confirmStatus === 1 ? 'APPROVED' : ($confirmStatus === 3 ? 'REJECTED' : 'PENDING');
                 ?>
                 <tr>
-                  <td><?php echo $row['sale_id']; ?></td>
-                  <td><?php echo get_item($row['item_id']); ?></td>
-                  <td><?php echo get_user($row['user_id']); ?></td>
-                  <td><?php echo get_user($row['confirm_by']); ?></td>
-                  <td><?php echo $row['qty']; ?></td>
-                  <td><?php echo $row['amount']; ?></td>
+                  <td><?php echo htmlspecialchars(get_item((int)$row['item_id'])); ?></td>
+                  <td><?php echo thermal_money($row['qty']); ?></td>
+                  <td><?php echo $returnStatus; ?></td>
+                  <td><?php echo htmlspecialchars(get_user((int)($row['confirm_by'] ?? 0))); ?></td>
                 </tr>
                 <?php
             }
