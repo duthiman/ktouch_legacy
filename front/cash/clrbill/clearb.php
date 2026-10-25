@@ -57,8 +57,7 @@ if ($result) {
             <?php foreach ($waiters as $waiter) { ?>
               <div class="cash-clearb-chip" data-clearb-user="<?php echo $waiter['user_id']; ?>" data-max-sale="<?php echo number_format($waiter['max_sale'], 2, '.', ''); ?>" onclick="cashPickClearBUser(<?php echo $waiter['user_id']; ?>, '<?php echo addslashes($waiter['name']); ?>')">
                 <span class="cash-clearb-user-name"><?php echo htmlspecialchars($waiter['name']); ?></span>
-                <b class="cash-clearb-user-sales"><?php echo number_format($waiter['amount'], 2); ?></b>
-                <div class="cash-clearb-user-limit">Max: <?php echo number_format($waiter['max_sale'], 2); ?></div>
+                <span class="cash-clearb-user-values"><b class="cash-clearb-user-sales"><?php echo number_format($waiter['amount'], 2); ?></b><small class="cash-clearb-user-limit">Max: <?php echo number_format($waiter['max_sale'], 2); ?></small></span>
               </div>
             <?php } ?>
             <?php if (count($waiters) < 1) { ?>

@@ -37,9 +37,10 @@
 .cash-clearb-shell .cash-clearb-chip span { margin-top: 1px; font-size: 11px; }
 .cash-clearb-shell .cash-clearb-chip b { margin-top: 1px; font-size: 10px; }
 .cash-clearb-shell .cash-clearb-chip div { font-size: 9px !important; margin-top: 2px; }
-.cash-clearb-shell .cash-clearb-user-name { display: block; padding-right: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cash-clearb-shell .cash-clearb-user-sales { position: absolute; top: 50%; right: 7px; transform: translateY(-50%); margin: 0; font-size: 11px; color: #b86a1a; }
-.cash-clearb-shell .cash-clearb-user-limit { display: none; }
+.cash-clearb-shell .cash-clearb-user-name { display: block; max-width: 72px; padding-right: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cash-clearb-shell .cash-clearb-user-values { position: absolute; top: 50%; right: 7px; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; line-height: 1.05; }
+.cash-clearb-shell .cash-clearb-user-sales { margin: 0; font-size: 11px; color: #b86a1a; }
+.cash-clearb-shell .cash-clearb-user-limit { display: block; margin-top: 2px; font-size: 8px; color: #777; }
 .cash-clearb-shell .cash-clearb-load { margin-top: 4px; padding: 6px 10px; font-size: 11px; line-height: 1.15; }
 .cash-clearb-shell .cash-clearb-select .select2-selection--single { height: 30px; }
 
