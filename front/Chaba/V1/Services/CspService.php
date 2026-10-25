@@ -30,7 +30,7 @@ final class CspService
         $counterName = (string)($this->scalar($db, 'SELECT name FROM kp_counters WHERE cntr_id = ? LIMIT 1', [$counterId]) ?? '');
         $salesTotal = (float)($summary['total_sales'] ?? $this->scalar($db, 'SELECT COALESCE(SUM(amount),0) FROM kp_sales WHERE shift = ? AND counter = ?', [$shift, $counterId]) ?? 0);
 
-        $salesItems = $this->withNames($db, $this->rows($db, 'SELECT si.item_id, i.cat_id, SUM(si.qty) qty, SUM(si.total) amount FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id = si.item_id WHERE si.shift = ? AND si.stock_counter = ? GROUP BY si.item_id, i.cat_id ORDER BY i.cat_id ASC, amount DESC', [$shift, $counterId]));
+        $salesItems = $this->withCategoryNames($db, $this->withNames($db, $this->rows($db, 'SELECT si.item_id, i.cat_id, SUM(si.qty) qty, SUM(si.total) amount FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id = si.item_id WHERE si.shift = ? AND si.stock_counter = ? GROUP BY si.item_id, i.cat_id ORDER BY i.cat_id ASC, amount DESC', [$shift, $counterId])));
         $billCount = (int)($this->scalar($db, 'SELECT COUNT(sale_id) FROM kp_sales WHERE shift = ? AND counter = ?', [$shift, $counterId]) ?? 0);
         $staffSales = $this->withUserNames($db, $this->rows($db, 'SELECT user_id, SUM(total) sales_total FROM kp_sale_items WHERE shift = ? AND stock_counter = ? GROUP BY user_id ORDER BY sales_total DESC', [$shift, $counterId]));
 
@@ -155,6 +155,25 @@ final class CspService
             $row['username'] = $cache[$id];
             if ($idKey === 'confirm_by') $row['approver_name'] = $cache[$id];
             if ($idKey === 'user_from') $row['from_user_name'] = $cache[$id];
+        }
+        unset($row);
+        return $rows;
+    }
+
+    private function withCategoryNames(PDO $db, array $rows): array
+    {
+        $cache = [];
+        foreach ($rows as &$row) {
+            $id = (int)($row['cat_id'] ?? 0);
+            if (!array_key_exists($id, $cache)) {
+                try {
+                    $q = $db->prepare('SELECT name FROM kp_cat WHERE cat_id = ? LIMIT 1');
+                    $q->execute([$id]);
+                    $cache[$id] = trim((string)($q->fetchColumn() ?: ''));
+                } catch (\Throwable $e) { $cache[$id] = ''; }
+                if ($cache[$id] === '') $cache[$id] = $id > 0 ? 'Category ' . $id : 'Uncategorised';
+            }
+            $row['category_name'] = $cache[$id];
         }
         unset($row);
         return $rows;
