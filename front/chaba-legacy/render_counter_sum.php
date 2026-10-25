@@ -882,7 +882,11 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
                     $lastReqCategory = $catName;
                 }
                 $issuerId = (int)($req['issue_user'] ?? 0);
-                echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td>' . $reqStatus . '</td><td>' . htmlspecialchars($issuerId > 0 ? get_user($issuerId) : '-') . '</td></tr>';
+                if ($reqStatus === 'PENDING') {
+                    echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td colspan="2">PENDING</td></tr>';
+                } else {
+                    echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td>' . $reqStatus . '</td><td>' . htmlspecialchars($issuerId > 0 ? get_user($issuerId) : '-') . '</td></tr>';
+                }
             }
         }
         ?>
