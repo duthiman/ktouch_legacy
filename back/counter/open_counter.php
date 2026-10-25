@@ -66,19 +66,33 @@ document.getElementById('open_count').addEventListener('click', open_count);
     var cntr_id = '<?php echo $id; ?>'; 
     var user = $("#users").val(); 
     var take_status = $("#take_status").val();
+    var $button = $('#open_count');
+    var $results = $('#results');
+    if (!user) {
+      $results.html('<div class="alert alert-warning">Please select a counter cashier.</div>');
+      return;
+    }
+    $button.prop('disabled', true).html('<span class="glyphicon glyphicon-refresh spinning"></span> Opening...');
+    $results.html('<div class="alert alert-info">Opening counter, please wait...</div>');
     $.ajax({
       url: 'open_counter_act.php',
       type: 'POST',
       data: 'counter='+encodeURIComponent(cntr_id)+'&user_id='+encodeURIComponent(user)+'&take_status='+encodeURIComponent(take_status),
-      dataType: 'html'
+      dataType: 'json'
     })
     .done(function(data){
-      console.log(data);
-        $('#results').html(''); // blank before load.
-        $('#results').html(data);
+      if (data && data.ok) {
+        $results.html('<div class="alert alert-success"><strong>Counter opened successfully.</strong><br>Refreshing...</div>');
+        window.setTimeout(function(){ window.location.reload(); }, 900);
+        return;
+      }
+      $button.prop('disabled', false).text('Open Counter');
+      $results.html('<div class="alert alert-danger">'+((data && data.message) || 'Could not open the counter.')+'</div>');
     })
-    .fail(function(){
-      $('#results').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Warning!</strong> Error occured.</div>');
+    .fail(function(xhr){
+      $button.prop('disabled', false).text('Open Counter');
+      var message = (xhr.responseJSON && xhr.responseJSON.message) || 'Could not open the counter.';
+      $results.html('<div class="alert alert-danger">'+message+'</div>');
     });
   }
 </script> 
