@@ -18,6 +18,15 @@ if (!function_exists('kp_local_table_exists')) {
     }
 }
 
+if (!function_exists('kp_local_column_exists')) {
+    function kp_local_column_exists($connection, $table, $column) {
+        $table = preg_replace('/[^A-Za-z0-9_]/', '', (string)$table);
+        $column = mysqli_real_escape_string($connection, (string)$column);
+        $result = mysqli_query($connection, "SHOW COLUMNS FROM `$table` LIKE '$column'");
+        return $result && mysqli_num_rows($result) > 0;
+    }
+}
+
 if (!function_exists('kp_counter_stock_take_summary')) {
     function kp_counter_stock_take_summary($connection, $counter, $shift) {
         $table = "kp_cntr" . (int)$counter . "_stock_take";
@@ -781,17 +790,23 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     </table>
 
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
-    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>SOLD ITEMS SUMMARY</b></h4>
+    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>STOCK OUT<br>COUNTER SALES BY CATEGORY</b></h4>
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <table class="table">
       <tbody>
         <tr><td><b>ITEM</b></td><td class="text-right"><b>QTY</b></td><td class="text-right"><b>AMOUNT</b></td></tr>
         <?php
-        $soldItems = mysqli_query($connection, "SELECT item_id, SUM(qty) AS qty, SUM(total) AS amount FROM kp_sale_items WHERE shift='$shift' AND stock_counter='$counter' GROUP BY item_id ORDER BY amount DESC");
+        $soldItems = mysqli_query($connection, "SELECT si.item_id, i.cat_id, SUM(si.qty) AS qty, SUM(si.total) AS amount FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id=si.item_id WHERE si.shift='$shift' AND si.stock_counter='$counter' GROUP BY si.item_id, i.cat_id ORDER BY i.cat_id ASC, amount DESC");
         if (!$soldItems || mysqli_num_rows($soldItems) < 1) {
             echo '<tr><td colspan="3">No sold items recorded for this counter.</td></tr>';
         } else {
+            $lastCategory = null;
             while ($sold = mysqli_fetch_assoc($soldItems)) {
+                $categoryId = (int)($sold['cat_id'] ?? 0);
+                if ($lastCategory !== $categoryId) {
+                    echo '<tr><td colspan="3"><b>' . htmlspecialchars($categoryId > 0 ? get_cat($categoryId) : 'UNCATEGORISED') . '</b></td></tr>';
+                    $lastCategory = $categoryId;
+                }
                 echo '<tr><td>' . htmlspecialchars(get_item((int)$sold['item_id'])) . '</td><td class="text-right">' . thermal_money($sold['qty']) . '</td><td class="text-right">' . thermal_money($sold['amount']) . '</td></tr>';
             }
         }
@@ -800,18 +815,27 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     </table>
 
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
-    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>REQUISITIONS</b></h4>
+    <h4 style="margin:0;text-align:center;"><b>STOCK IN<br><?php echo $counterName; ?><br>REQUISITIONS - ALL ITEMS</b></h4>
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <table class="table">
       <tbody>
-        <tr><td><b>REQ NO.</b></td><td><b>REQUESTED BY</b></td><td class="text-right"><b>ITEMS</b></td><td class="text-right"><b>QTY</b></td></tr>
+        <tr><td><b>REQ NO.</b></td><td><b>ITEM / CATEGORY</b></td><td class="text-right"><b>QTY</b></td><td class="text-right"><b>STATUS</b></td></tr>
         <?php
         $reqRows = mysqli_query($connection, "SELECT r.req_id, r.req_user, COUNT(ri.id) AS item_count, COALESCE(SUM(ri.issue_qty), SUM(ri.req_qty), 0) AS qty FROM kp_counter_req r LEFT JOIN kp_counter_req_items ri ON ri.req_id=r.req_id WHERE r.req_shift='$shift' AND r.counter='$counter' GROUP BY r.req_id, r.req_user ORDER BY r.req_id DESC");
         if (!$reqRows || mysqli_num_rows($reqRows) < 1) {
             echo '<tr><td colspan="4">No requisitions recorded for this counter.</td></tr>';
         } else {
-            while ($req = mysqli_fetch_assoc($reqRows)) {
-                echo '<tr><td>#' . (int)$req['req_id'] . '</td><td>' . htmlspecialchars(get_user((int)$req['req_user'])) . '</td><td class="text-right">' . (int)$req['item_count'] . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td></tr>';
+            $reqItems = mysqli_query($connection, "SELECT r.req_id, r.req_user, ri.item_id, COALESCE(ri.issue_qty, ri.req_qty, 0) AS qty, i.cat_id, r.issue_status, r.rec_status FROM kp_counter_req r INNER JOIN kp_counter_req_items ri ON ri.req_id=r.req_id LEFT JOIN kp_items i ON i.item_id=ri.item_id WHERE r.req_shift='$shift' AND r.counter='$counter' ORDER BY r.req_id DESC, i.cat_id ASC, ri.item_id ASC");
+            $lastReq = null;
+            if ($reqItems && mysqli_num_rows($reqItems) > 0) while ($req = mysqli_fetch_assoc($reqItems)) {
+                $reqId = (int)$req['req_id'];
+                if ($lastReq !== $reqId) {
+                    echo '<tr><td colspan="4"><b>REQ #' . $reqId . ' - ' . htmlspecialchars(get_user((int)$req['req_user'])) . '</b></td></tr>';
+                    $lastReq = $reqId;
+                }
+                $reqStatus = ((int)$req['rec_status'] === 1) ? 'RECEIVED' : (((int)$req['issue_status'] === 1) ? 'ISSUED' : 'PENDING');
+                $catName = ((int)($req['cat_id'] ?? 0) > 0) ? get_cat((int)$req['cat_id']) : 'UNCATEGORISED';
+                echo '<tr><td>#' . $reqId . '</td><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '<br><small>' . htmlspecialchars($catName) . '</small></td><td class="text-right">' . thermal_money($req['qty']) . '</td><td class="text-right">' . $reqStatus . '</td></tr>';
             }
         }
         ?>
@@ -964,7 +988,8 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <table class="table">
       <tbody>
         <?php
-        $delete = mysqli_query($connection, "SELECT * FROM kp_del_orders WHERE shift='$shift'") or die('Error fetching the staff data.:' . mysqli_error($connection));
+        $deletedCounterWhere = kp_local_column_exists($connection, 'kp_del_orders', 'counter') ? " AND counter='$counter'" : (kp_local_column_exists($connection, 'kp_del_orders', 'cntr_id') ? " AND cntr_id='$counter'" : '');
+        $delete = mysqli_query($connection, "SELECT * FROM kp_del_orders WHERE shift='$shift'" . $deletedCounterWhere) or die('Error fetching the staff data.:' . mysqli_error($connection));
         if (mysqli_num_rows($delete) < 1) {
             echo "<tr><td colspan='4'>No orders have been deleted Today</td></tr>";
         } else {
@@ -1077,7 +1102,7 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     </table>
 
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
-    <h4 style="margin:0;text-align:center;"><b><?php echo $counterName; ?><br>STOCK TRANSFERS</b></h4>
+    <h4 style="margin:0;text-align:center;"><b>STOCK IN / OUT<br><?php echo $counterName; ?><br>TRANSFERS BY CATEGORY</b></h4>
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <table class="table">
       <tbody>
@@ -1090,7 +1115,12 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
             <td class="text-center"><b>FROM</b></td>
             <td class="text-center"><b>TO</b></td>
           </tr>
-          <?php foreach ($transferRows as $transferRow) { ?>
+          <?php $lastTransferDirection = null; $lastTransferCategory = null; foreach ($transferRows as $transferRow) {
+            $transferDirection = ((int)$transferRow['cntr_to'] === $counter) ? 'STOCK IN' : 'STOCK OUT';
+            $transferCategory = (int)get_column('kp_items', 'cat_id', "item_id='" . (int)$transferRow['item_id'] . "'");
+            if ($lastTransferDirection !== $transferDirection) { echo '<tr><td colspan="4"><b>' . $transferDirection . '</b></td></tr>'; $lastTransferDirection = $transferDirection; $lastTransferCategory = null; }
+            if ($lastTransferCategory !== $transferCategory) { echo '<tr><td colspan="4"><b>' . htmlspecialchars($transferCategory > 0 ? get_cat($transferCategory) : 'UNCATEGORISED') . '</b></td></tr>'; $lastTransferCategory = $transferCategory; }
+          ?>
             <tr>
               <td><?php echo htmlspecialchars(get_item($transferRow['item_id'])); ?></td>
               <td><?php echo thermal_money($transferRow['qty']); ?></td>
