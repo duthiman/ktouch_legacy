@@ -80,7 +80,9 @@ final class ChabaService
         if(!$row)throw new ApiException('Print job not found',404,'chaba_job');
         $legacy=empty($row['payload_json']);
         if($legacy) {
-            if(in_array((string)($row['route_path']??''),['render_counter_sum.php','csp.php'],true)) {
+            $isCounterSummary = in_array((string)($row['route_path']??''),['render_counter_sum.php','csp.php'],true)
+                || strtolower((string)($row['print_type']??'')) === 'counter_sum';
+            if($isCounterSummary) {
                 $query=[];parse_str((string)($row['route_query']??''),$query);
                 $previousGet=$_GET;$_GET=array_merge($_GET,$query);
                 $summaryRenderer=dirname(__DIR__).'/Templates/Template1/renders/csp.php';
