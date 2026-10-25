@@ -85,6 +85,9 @@ final class ChabaService
                 $previousGet=$_GET;$_GET=array_merge($_GET,$query);
                 $legacyRenderer=dirname(__DIR__,3).'/chaba-legacy/render_counter_sum.php';
                 if(!is_file($legacyRenderer)) throw new ApiException('Counter summary renderer not found',404,'chaba_renderer');
+                $legacyConnectionFile=dirname(__DIR__,4).'/inc/connection.php';
+                if(is_file($legacyConnectionFile)) require_once $legacyConnectionFile;
+                if(isset($connection) && $connection instanceof \mysqli) $GLOBALS['connection']=$connection;
                 ob_start();
                 try { include $legacyRenderer; $html=ob_get_clean(); }
                 catch(\Throwable $e) { if(ob_get_level()>0)ob_end_clean();$_GET=$previousGet;throw new ApiException('Counter summary render failed: '.$e->getMessage(),409,'chaba_renderer'); }
