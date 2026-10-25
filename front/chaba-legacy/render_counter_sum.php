@@ -335,6 +335,21 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
       text-decoration: underline;
       padding-top: 4px;
     }
+    .category-heading td {
+      font-size: 15px;
+      font-weight: 900;
+      text-align: left;
+      padding-top: 7px;
+      padding-bottom: 3px;
+      border-top: 2px solid #000;
+      letter-spacing: .04em;
+    }
+    .category-total td {
+      font-size: 12px;
+      font-weight: 900;
+      border-top: 1px dashed #555;
+      padding-top: 3px;
+    }
     .grand td {
       font-size: 16px;
       font-weight: bold;
@@ -801,13 +816,25 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
             echo '<tr><td colspan="3">No sold items recorded for this counter.</td></tr>';
         } else {
             $lastCategory = null;
+            $categoryQty = 0.0;
+            $categoryAmount = 0.0;
             while ($sold = mysqli_fetch_assoc($soldItems)) {
                 $categoryId = (int)($sold['cat_id'] ?? 0);
                 if ($lastCategory !== $categoryId) {
-                    echo '<tr><td colspan="3"><b>' . htmlspecialchars($categoryId > 0 ? get_cat($categoryId) : 'UNCATEGORISED') . '</b></td></tr>';
+                    if ($lastCategory !== null) {
+                        echo '<tr class="category-total"><td><b>CATEGORY TOTAL</b></td><td class="text-right"><b>' . thermal_money($categoryQty) . '</b></td><td class="text-right"><b>' . thermal_money($categoryAmount) . '</b></td></tr>';
+                    }
+                    echo '<tr class="category-heading"><td colspan="3">' . htmlspecialchars($categoryId > 0 ? get_cat($categoryId) : 'UNCATEGORISED') . '</td></tr>';
                     $lastCategory = $categoryId;
+                    $categoryQty = 0.0;
+                    $categoryAmount = 0.0;
                 }
+                $categoryQty += (float)$sold['qty'];
+                $categoryAmount += (float)$sold['amount'];
                 echo '<tr><td>' . htmlspecialchars(get_item((int)$sold['item_id'])) . '</td><td class="text-right">' . thermal_money($sold['qty']) . '</td><td class="text-right">' . thermal_money($sold['amount']) . '</td></tr>';
+            }
+            if ($lastCategory !== null) {
+                echo '<tr class="category-total"><td><b>CATEGORY TOTAL</b></td><td class="text-right"><b>' . thermal_money($categoryQty) . '</b></td><td class="text-right"><b>' . thermal_money($categoryAmount) . '</b></td></tr>';
             }
         }
         ?>
