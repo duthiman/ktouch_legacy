@@ -113,8 +113,12 @@ final class CspService
         $cache = [];
         $lookups = [
             ['kp_items', 'name'],
+            ['kp_items', 'item_name'],
+            ['kp_items', 'item'],
             ['kp_inventory_master', 'item_name'],
+            ['kp_inventory_master', 'name'],
             ['kp_inventory_items', 'item_name'],
+            ['kp_inventory_items', 'name'],
         ];
         foreach ($rows as &$row) {
             $id = (int)($row[$idKey] ?? 0);
@@ -135,6 +139,7 @@ final class CspService
             }
             $row['item_name'] = $cache[$id];
             $row['name'] = $cache[$id];
+            $row['item'] = $cache[$id];
         }
         unset($row);
         return $rows;

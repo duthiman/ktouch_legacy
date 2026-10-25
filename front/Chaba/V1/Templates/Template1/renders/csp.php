@@ -6,7 +6,13 @@ $header = is_array($doc['header'] ?? null) ? $doc['header'] : [];
 $e = static fn($v): string => htmlspecialchars((string)$v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $money = static fn($v): string => number_format((float)$v, 2);
 $rows = static function ($value): array { return is_array($value) ? $value : []; };
-$item = static function (array $row): string { return (string)($row['item_name'] ?? $row['name'] ?? ('Item ' . (int)($row['item_id'] ?? 0))); };
+$item = static function (array $row): string {
+    foreach (['item_name', 'name', 'item', 'description'] as $key) {
+        $value = trim((string)($row[$key] ?? ''));
+        if ($value !== '') return $value;
+    }
+    return 'Item ' . (int)($row['item_id'] ?? 0);
+};
 $user = static function (array $row): string { return (string)($row['user_name'] ?? $row['username'] ?? ('User ' . (int)($row['user_id'] ?? 0))); };
 $counter = (int)($header['counter_id'] ?? $data['counter_id'] ?? 0);
 $counterName = (string)($header['counter_name'] ?? $data['counter_name'] ?? '');
