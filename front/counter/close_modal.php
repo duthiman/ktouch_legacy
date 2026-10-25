@@ -255,6 +255,8 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-step.complete .close-step-number { background:#2f9e5b; color:#fff; }
   .close-step.failed { border-color:#efb2b8; background:#fff2f3; color:#a61c21; }
   .close-step.failed .close-step-number { background:#dc3545; color:#fff; }
+  .close-process-overlay { display:none; position:fixed; z-index:1070; inset:0; align-items:center; justify-content:center; padding:18px; background:rgba(20,28,38,.68); }
+  .close-process-card { width:min(520px,100%); max-height:90vh; overflow:auto; padding:24px; border-radius:10px; background:#fff; box-shadow:0 18px 55px rgba(0,0,0,.28); }
   @media (max-width: 767px) {
     .close-check-shell .modal-dialog {
       width: calc(100vw - 18px);
@@ -284,7 +286,7 @@ if (!function_exists('close_modal_waiter_name')) {
       <div class="close-check-intro">
         The counter can close as long as it has no unapproved returns.
       </div>
-      <div class="close-check-panel">
+      <div class="close-check-panel" id="close-steps-panel" style="display:none;">
         <h5>Counter closing sequence</h5>
         <div class="close-steps" id="close-steps">
           <div class="close-step" data-close-step="1"><span class="close-step-number">1</span><span>Check returns and unreceived stock</span></div>
@@ -386,15 +388,35 @@ if (!function_exists('close_modal_waiter_name')) {
     </div>
   </div>
 </div>
+<div class="close-process-overlay" id="close-process-overlay" role="dialog" aria-modal="true" aria-labelledby="close-process-title">
+  <div class="close-process-card">
+    <h4 id="close-process-title" style="margin:0 0 6px;color:#243b53;font-weight:800;">Closing Counter</h4>
+    <p style="margin:0;color:#718096;font-size:13px;">Please wait while each closing stage is completed.</p>
+    <div class="close-steps" id="close-steps">
+      <div class="close-step" data-close-step="1"><span class="close-step-number">1</span><span>Check returns and unreceived stock</span></div>
+      <div class="close-step" data-close-step="2"><span class="close-step-number">2</span><span>Prepare the closing stock snapshot</span></div>
+      <div class="close-step" data-close-step="3"><span class="close-step-number">3</span><span>Update the stock-take closing quantities</span></div>
+      <div class="close-step" data-close-step="4"><span class="close-step-number">4</span><span>Close the counter and cashier records</span></div>
+      <div class="close-step" data-close-step="5"><span class="close-step-number">5</span><span>Save the counter summary</span></div>
+      <div class="close-step" data-close-step="6"><span class="close-step-number">6</span><span>Queue the counter and shift prints</span></div>
+      <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Complete closing and redirect</span></div>
+    </div>
+    <div class="close-counter-progress" id="close-counter-progress" style="display:block;margin-top:16px;" role="status" aria-live="polite">
+      <span id="close-counter-progress-text">Starting counter close...</span>
+      <div class="close-counter-progress-bar"><span></span></div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
   (function ($) {
     var closePin = <?php echo json_encode($close_pin); ?>;
     var $pinOverlay = $('#close-pin-overlay');
     var $pinInput = $('#close-pin-input');
     var $closeButton = $('#confirm-counter-close');
+    var $processOverlay = $('#close-process-overlay');
     var stepTimers = [];
     function setCloseStep(number, state) {
-      $('#close-steps .close-step[data-close-step="' + number + '"]').removeClass('active complete failed').addClass(state);
+      $processOverlay.find('#close-steps .close-step[data-close-step="' + number + '"]').removeClass('active complete failed').addClass(state);
     }
     function completeCloseStepsThrough(number) {
       for (var i = 1; i <= number; i++) setCloseStep(i, 'complete');
@@ -418,6 +440,7 @@ if (!function_exists('close_modal_waiter_name')) {
       }
       $pinOverlay.css('display','none');
       $pinInput.val('');
+      $processOverlay.css('display','flex');
       $closeButton.data('pin-verified', true).trigger('click');
     });
     $(document).off('click.closeCounterAjax', '#confirm-counter-close').on('click.closeCounterAjax', '#confirm-counter-close', function (e) {
@@ -432,13 +455,13 @@ if (!function_exists('close_modal_waiter_name')) {
       }
       $btn.removeData('pin-verified');
       var $modal = $btn.closest('.modal-content');
-      var $progress = $modal.find('#close-counter-progress');
-      var $progressText = $modal.find('#close-counter-progress-text');
+      var $progress = $processOverlay.find('#close-counter-progress');
+      var $progressText = $processOverlay.find('#close-counter-progress-text');
       $btn.prop('disabled', true).text('Closing...');
       $modal.find('[data-dismiss="modal"]').prop('disabled', true);
       $progress.css('display', 'block');
       $progressText.text('Closing counter and saving the summary...');
-      $('#close-steps .close-step').removeClass('active complete failed');
+      $processOverlay.find('#close-steps .close-step').removeClass('active complete failed');
       setCloseStep(1, 'active');
       stepTimers.forEach(function (timer) { window.clearTimeout(timer); });
       stepTimers = [
@@ -467,7 +490,7 @@ if (!function_exists('close_modal_waiter_name')) {
           window.location.href = '../log_out.php';
         }
       }).fail(function (xhr) {
-        var $activeStep = $('#close-steps .close-step.active').last();
+        var $activeStep = $processOverlay.find('#close-steps .close-step.active').last();
         $activeStep.removeClass('active').addClass('failed');
         var message = 'Could not close the counter right now. Please try again.';
         if (xhr.responseJSON && xhr.responseJSON.message) {
@@ -479,6 +502,7 @@ if (!function_exists('close_modal_waiter_name')) {
         $btn.prop('disabled', false).text('Confirm Close');
         $modal.find('[data-dismiss="modal"]').prop('disabled', false);
         $progress.hide();
+        $processOverlay.css('display','none');
       });
     });
   })(jQuery);
