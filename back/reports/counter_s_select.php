@@ -24,8 +24,8 @@ body{background:#f4f6f9}.report-shell{width:100%;margin:0;padding:5px}.report-he
  <div id="items-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header" style="background:#753f91;color:#fff"><h4 id="items-title" class="modal-title">Sale items</h4><button type="button" class="close" data-dismiss="modal" style="color:#fff;opacity:1">&times;</button></div><div id="items-body" class="modal-body"></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div>
 </main></div></div>
 <?php require_once __DIR__ . '/../clude/foot.php'; ?>
-<link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
-<script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet" href="../../assets/plugins/sweetalert/backup_20251002_140623/sweetalert2.min.css">
+<script src="../../assets/plugins/sweetalert/backup_20251002_140623/sweetalert2.all.min.js"></script>
 <script>
 (function($){
  function esc(v){return $('<div>').text(v==null?'':v).html()} function money(v){return Number(v||0).toFixed(2)}

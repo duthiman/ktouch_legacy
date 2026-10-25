@@ -7,8 +7,8 @@ if(isset($_REQUEST['id'])){
 }
 ?>
 <div class="modal-content">
-  <link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
-  <script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" href="../../assets/plugins/sweetalert/backup_20251002_140623/sweetalert2.min.css">
+  <script src="../../assets/plugins/sweetalert/backup_20251002_140623/sweetalert2.all.min.js"></script>
   <div id="results"></div>
   <div class="modal-header">
     <h4 class="modal-title"> <strong>CHANGE TAKE STATUS FOR  <?php echo $name; ?>  COUNTER</strong></h4> 

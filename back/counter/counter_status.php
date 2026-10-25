@@ -169,8 +169,8 @@ $no=0;
   <script src="../../assets/plugins/DataTables/extensions/ColReorder/js/dataTables.colReorder.min.js"></script>
   <script src="../../assets/plugins/DataTables/extensions/KeyTable/js/dataTables.keyTable.min.js"></script>
   <script src="../../assets/plugins/DataTables/extensions/RowReorder/js/dataTables.rowReorder.min.js"></script> 
-  <link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
-  <script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
+  <link rel="stylesheet" href="../../assets/plugins/sweetalert/backup_20251002_140623/sweetalert2.min.css">
+  <script src="../../assets/plugins/sweetalert/backup_20251002_140623/sweetalert2.all.min.js"></script>
   <script src="../../assets/js/demo/table-manage-combine.demo.min.js"></script> 
      <!-- ================== BEGIN PAGE LEVEL JS ================== -->
     <script src="../../assets/plugins/Hullabaloo/js/hullabaloo.js"></script> 
