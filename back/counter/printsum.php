@@ -2,7 +2,29 @@
 session_start();
 include_once('../../inc/connection.php');
 include_once('funcs.php');
-include_once('../../front/chaba/funcs.php');
+
+// This endpoint writes directly to the current Chaba V1 queue table. It must
+// not depend on the removed legacy Chaba helper file.
+if (!function_exists('printsum_enqueue')) {
+    function printsum_enqueue($connection, array $job) {
+        $values = [
+            (int)($job['sale_id'] ?? 0), (int)($job['ref_id'] ?? 0),
+            (string)($job['print_type'] ?? ''), (string)($job['label'] ?? ''),
+            (int)($job['cntr_id'] ?? 0), (string)($job['route_path'] ?? ''),
+            (string)($job['route_query'] ?? ''), (int)($job['requested_by'] ?? 0),
+            (string)($job['shift'] ?? ''), (string)($job['payload_json'] ?? ''),
+        ];
+        foreach ($values as &$value) {
+            $value = "'" . mysqli_real_escape_string($connection, (string)$value) . "'";
+        }
+        unset($value);
+        $sql = "INSERT INTO kp_print_queue
+            (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json)
+            VALUES (" . implode(',', [$values[0],$values[1],$values[2],$values[3],$values[4],$values[5],$values[6],$values[7],"'0'","'0'","'0'","''",$values[8],$values[9],"''"]) . ")";
+        if (!mysqli_query($connection, $sql)) return 0;
+        return (int)mysqli_insert_id($connection);
+    }
+}
 
 $id = (int)($_REQUEST['id'] ?? 0);
 $shift = trim((string)($_REQUEST['shift'] ?? ''));
@@ -24,11 +46,11 @@ if ($action === 'queue') {
         echo json_encode(['ok' => false, 'message' => 'User session missing.']);
         exit;
     }
-    ensure_chaba_print_system($connection);
+    // The V1 schema is created during Chaba startup; this endpoint only queues.
     $routeQuery = 'summary_id=' . urlencode((string)$summary_id)
         . '&cntr_id=' . urlencode((string)$id)
         . '&shift=' . urlencode($shift);
-    $queue_id = kp_print_enqueue($connection, [
+    $queue_id = printsum_enqueue($connection, [
         'sale_id' => 0,
         'ref_id' => $summary_id,
         'print_type' => 'counter_sum',
@@ -52,14 +74,13 @@ if ($action === 'queue_shift') {
         echo json_encode(['ok' => false, 'message' => 'User session missing.']);
         exit;
     }
-    ensure_chaba_print_system($connection);
     $payload = json_encode([
         'payload_version' => 1,
         'document_type' => 'SSP',
         'title' => 'SHIFT SUMMARY PRINT',
         'header' => ['shift_date' => $shift, 'print_time' => date('Y-m-d H:i:s')],
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    $queue_id = kp_print_enqueue($connection, [
+    $queue_id = printsum_enqueue($connection, [
         'sale_id' => 0,
         'ref_id' => 0,
         'print_type' => 'ssp',
