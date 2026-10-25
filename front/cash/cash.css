@@ -38,6 +38,31 @@ body.cashier-compact td { height: 26px; padding: 5px 7px; }
 .cash-dashboard-card h4{margin:0 0 6px;color:var(--cash-primary-dark);font-size:13px;}
 .cash-dashboard-waiter{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0e7dc;padding:6px 0;font-size:12px;}
 .cash-dashboard-waiter span{font-weight:800;color:var(--cash-text);}.cash-dashboard-waiter small{display:block;color:var(--cash-muted);font-size:9px;font-weight:normal;}.cash-dashboard-waiter b{color:var(--cash-primary-dark);font-size:12px;}
+@media (max-width: 767px){
+  body.cashier-compact{padding-top:52px;}
+  body.cashier-compact nav.navbar{min-height:48px;padding:2px 6px!important;}
+  body.cashier-compact nav.navbar a{height:40px!important;width:auto!important;min-width:78px;padding:10px 8px!important;font-size:11px!important;border-radius:7px!important;}
+  body.cashier-compact .cash-desktop-shell{padding:5px 4px 10px;}
+  body.cashier-compact .cash-page-head{padding:8px 9px;margin-bottom:5px;gap:5px;}
+  body.cashier-compact .cash-page-head h2{font-size:18px;}
+  body.cashier-compact .cash-page-head p{font-size:10px;line-height:1.2;}
+  body.cashier-compact .cash-page-badge{padding:6px 8px;font-size:10px;}
+  body.cashier-compact .cash-main-layout{display:flex;flex-direction:column;margin:0;}
+  body.cashier-compact .cash-main-layout>.col-md-3,
+  body.cashier-compact #cash-main-area{width:100%;padding:0;}
+  body.cashier-compact .cash-sidebar-stack{gap:5px;}
+  body.cashier-compact .cash-panel-head{padding:7px 9px;}
+  body.cashier-compact .cash-panel-head h4{font-size:12px;margin:0;}
+  body.cashier-compact .cash-panel-body{padding:6px;}
+  body.cashier-compact .cash-mission-grid,.cash-focus-grid,.cash-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;}
+  body.cashier-compact .cash-mission-card,body.cashier-compact .cash-focus-card,body.cashier-compact .cash-plan-card{min-height:58px;padding:7px;}
+  body.cashier-compact .cash-mission-card span,body.cashier-compact .cash-focus-card span{font-size:18px;margin-top:3px;}
+  body.cashier-compact .cash-mission-card small,body.cashier-compact .cash-focus-card small,body.cashier-compact .cash-plan-card small{font-size:9px;margin-top:3px;line-height:1.15;}
+  body.cashier-compact .cash-hero-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:5px 0;}
+  body.cashier-compact .cash-hero-card{min-height:68px;padding:8px 7px;}
+  body.cashier-compact .cash-work-row{display:flex;flex-direction:column;gap:5px;}
+  body.cashier-compact .cash-work-pane-side{order:2;}
+}
 :root {
   --cash-bg: #f7f2ea;
   --cash-surface: #ffffff;

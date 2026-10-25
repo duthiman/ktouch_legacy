@@ -49,6 +49,25 @@
 .cash-clearb-shell .cash-clearb-user-limit { display: block; margin-top: 2px; font-size: 8px; color: #777; }
 .cash-clearb-shell .cash-clearb-load { margin-top: 4px; padding: 6px 10px; font-size: 11px; line-height: 1.15; }
 .cash-clearb-shell .cash-clearb-select .select2-selection--single { height: 30px; }
+@media (max-width: 767px){
+  .cash-clearb-shell .cash-clearb-head{padding:8px 9px;}
+  .cash-clearb-shell .cash-clearb-head h3{font-size:17px;}
+  .cash-clearb-shell .cash-clearb-head p{font-size:10px;line-height:1.2;}
+  .cash-clearb-shell .cash-clearb-selector-body{padding:5px;}
+  .cash-clearb-shell .cash-clearb-chip{width:100%;min-width:0;flex:1 1 100%;height:48px;min-height:48px;padding:6px 9px;font-size:12px;}
+  .cash-clearb-shell .cash-clearb-buttons{display:grid;grid-template-columns:1fr 1fr;gap:5px;overflow:visible;}
+  .cash-clearb-shell .cash-clearb-buttons.is-active{display:grid;}
+  .cash-clearb-shell .cash-clearb-chip span{font-size:12px;}
+  .cash-clearb-shell .cash-clearb-user-sales{font-size:12px;}
+  .cash-clearb-shell .cash-clearb-user-values{right:9px;}
+  .cash-clearb-shell .cash-clearb-main-body{padding:5px;}
+  .cash-clearb-shell .cash-clearb-row{display:flex;flex-direction:column;gap:5px;}
+  .cash-clearb-shell .cash-clearb-selected{order:2;}
+  .cash-clearb-shell .cash-clearb-work{order:1;}
+  .cash-clearb-shell .cash-clearb-work table{font-size:11px;}
+  .cash-clearb-shell .cash-clearb-work table th,.cash-clearb-shell .cash-clearb-work table td{padding:7px 5px;}
+  .cash-clearb-shell .cash-clearb-work input.cash-bill-pick{width:18px;height:18px;}
+}
 
 .cash-clearb-head,
 .cash-clearp-head {
