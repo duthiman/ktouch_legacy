@@ -86,10 +86,6 @@ if ($result) {
       </div>
 
       <div class="cash-clearb-main">
-        <div class="cash-clearb-card-head">
-          <h4>Current Bills Desk</h4>
-          <p>Work area stays on the left and selected bills stay on the right in one row.</p>
-        </div>
         <div class="cash-clearb-main-body">
           
 

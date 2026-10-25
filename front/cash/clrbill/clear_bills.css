@@ -6,6 +6,27 @@
   overflow: hidden;
 }
 
+/* Compact clearance cards. */
+.cash-clearb-shell,
+.cash-clearb-shell *,
+.cash-clearp-shell,
+.cash-clearp-shell * { border-radius: 7px !important; }
+.cash-clearb-shell .cash-clearb-head,
+.cash-clearb-shell .cash-clearb-body,
+.cash-clearb-shell .cash-clearb-selector-body,
+.cash-clearb-shell .cash-clearb-main-body { padding: 8px; }
+.cash-clearb-shell .cash-clearb-layout,
+.cash-clearb-shell .cash-clearb-row { gap: 7px; }
+.cash-clearb-shell .cash-clearb-selector,
+.cash-clearb-shell .cash-clearb-main,
+.cash-clearb-shell .cash-clearb-work,
+.cash-clearb-shell .cash-clearb-selected,
+.cash-clearb-shell .cash-panel { margin: 1px; }
+.cash-clearb-shell .cash-clearb-card-head { padding: 8px 10px; }
+.cash-clearb-shell .cash-clearb-toggle { margin-bottom: 7px; padding: 3px; }
+.cash-clearb-shell .cash-clearb-toggle button { padding: 6px 10px; }
+.cash-clearb-shell .cash-clearb-summarybar { margin: 1px; padding: 8px 10px; }
+
 .cash-clearb-head,
 .cash-clearp-head {
   padding: 16px 18px;
