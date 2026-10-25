@@ -863,31 +863,31 @@ $today_transfer_from_total = (int)($closeSummaryRow['today_transfer_from_total']
     <p class="receipt-divider"><?php echo htmlspecialchars($receiptDivider); ?></p>
     <table class="table req-items-table">
       <tbody>
-        <tr><td><b>ITEM</b></td><td class="text-right"><b>QTY</b></td><td><b>STATUS</b></td><td><b>ISSUER</b></td></tr>
+        <tr><td><b>ITEM</b></td><td class="text-right"><b>QTY</b></td><td><b>ISSUER</b></td></tr>
         <?php
         $reqRows = mysqli_query($connection, "SELECT ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status, SUM(COALESCE(ri.issue_qty, ri.req_qty, 0)) AS qty FROM kp_counter_req r INNER JOIN kp_counter_req_items ri ON ri.req_id=r.req_id LEFT JOIN kp_items i ON i.item_id=ri.item_id WHERE r.req_shift='$shift' AND r.counter='$counter' GROUP BY ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status ORDER BY r.issue_status ASC, i.cat_id ASC, ri.item_id ASC");
         if (!$reqRows || mysqli_num_rows($reqRows) < 1) {
-            echo '<tr><td colspan="4">No requisitions recorded for this counter.</td></tr>';
+            echo '<tr><td colspan="3">No requisitions recorded for this counter.</td></tr>';
         } else {
             $lastReqStatus = null;
             $lastReqCategory = null;
             while ($req = mysqli_fetch_assoc($reqRows)) {
                 $reqStatus = ((int)$req['issue_status'] === 1) ? 'ISSUED' : 'PENDING';
                 if ($lastReqStatus !== $reqStatus) {
-                    echo '<tr class="category-heading"><td colspan="4">' . $reqStatus . '</td></tr>';
+                    echo '<tr class="category-heading"><td colspan="3">' . $reqStatus . '</td></tr>';
                     $lastReqStatus = $reqStatus;
                     $lastReqCategory = null;
                 }
                 $catName = ((int)($req['cat_id'] ?? 0) > 0) ? get_cat((int)$req['cat_id']) : 'UNCATEGORISED';
                 if ($lastReqCategory !== $catName) {
-                    echo '<tr class="category-heading"><td colspan="4">' . htmlspecialchars($catName) . '</td></tr>';
+                    echo '<tr class="category-heading"><td colspan="3">' . htmlspecialchars($catName) . '</td></tr>';
                     $lastReqCategory = $catName;
                 }
                 $issuerId = (int)($req['issue_user'] ?? 0);
                 if ($reqStatus === 'PENDING') {
-                    echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td colspan="2">PENDING</td></tr>';
+                    echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td>-</td></tr>';
                 } else {
-                    echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td>' . $reqStatus . '</td><td>' . htmlspecialchars($issuerId > 0 ? get_user($issuerId) : '-') . '</td></tr>';
+                    echo '<tr><td>' . htmlspecialchars(get_item((int)$req['item_id'])) . '</td><td class="text-right">' . thermal_money($req['qty']) . '</td><td>' . htmlspecialchars($issuerId > 0 ? get_user($issuerId) : '-') . '</td></tr>';
                 }
             }
         }
