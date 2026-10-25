@@ -238,7 +238,10 @@ if (!function_exists('close_modal_waiter_name')) {
   }
   .close-pin-input { text-align:center; font-size:22px; letter-spacing:5px; }
   .close-pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
-  .close-pin-pad button { min-height:42px; border:1px solid #d8e1ea; border-radius:7px; background:#f7faff; color:#243b53; font-size:18px; font-weight:700; }
+  .close-pin-pad button { min-height:50px; border:1px solid #d8e1ea; border-radius:7px; background:#f7faff; color:#243b53; font-size:21px; font-weight:700; }
+  .close-pin-action { min-height:50px; border:0; border-radius:7px; color:#fff; font-size:16px; font-weight:800; }
+  #close-pin-cancel { background:#dc3545; }
+  #close-pin-submit { background:#f39c12; border-color:#f39c12; }
   @keyframes closeCounterProgress {
     0% { transform: translateX(-110%); }
     100% { transform: translateX(310%); }
@@ -357,8 +360,8 @@ if (!function_exists('close_modal_waiter_name')) {
       <button type="button" data-pin-action="backspace">⌫</button>
     </div>
     <div style="display:flex;gap:8px;margin-top:16px;">
-      <button type="button" class="btn btn-default" id="close-pin-cancel" style="flex:1;">Cancel</button>
-      <button type="button" class="btn btn-danger" id="close-pin-submit" style="flex:1;">Verify &amp; Close</button>
+      <button type="button" class="close-pin-action" id="close-pin-cancel" style="flex:1;">Close</button>
+      <button type="button" class="close-pin-action" id="close-pin-submit" style="flex:1;">Verify &amp; Close</button>
     </div>
   </div>
 </div>
