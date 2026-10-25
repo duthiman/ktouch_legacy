@@ -260,6 +260,8 @@ if (!function_exists('close_modal_waiter_name')) {
   .close-step.active .close-step-number { background:#f39c12; color:#fff; }
   .close-step.complete { border-color:#b7e3c8; background:#f0fbf4; color:#237a43; }
   .close-step.complete .close-step-number { background:#2f9e5b; color:#fff; }
+  .close-step.complete .close-step-number::after { content:'✓'; font-size:15px; }
+  .close-step.complete .close-step-number { font-size:0; }
   .close-step.failed { border-color:#efb2b8; background:#fff2f3; color:#a61c21; }
   .close-step.failed .close-step-number { background:#dc3545; color:#fff; }
   .close-process-overlay { display:none; position:fixed; z-index:1070; inset:0; align-items:center; justify-content:center; padding:18px; background:rgba(20,28,38,.68); }
@@ -442,7 +444,9 @@ if (!function_exists('close_modal_waiter_name')) {
     var $processOverlay = $('#close-process-overlay');
     var stepTimers = [];
     function setCloseStep(number, state) {
-      $processOverlay.find('#close-steps .close-step[data-close-step="' + number + '"]').removeClass('active complete failed').addClass(state);
+      var $step = $processOverlay.find('#close-steps .close-step[data-close-step="' + number + '"]');
+      $step.removeClass('active complete failed').addClass(state);
+      if (state !== 'complete') $step.find('.close-step-number').text(number);
     }
     function completeCloseStepsThrough(number) {
       for (var i = 1; i <= number; i++) setCloseStep(i, 'complete');
@@ -518,13 +522,27 @@ if (!function_exists('close_modal_waiter_name')) {
         data: { ajax: 1, operation_id: operationId }
       }).done(function (res) {
         window.clearInterval(progressPoll);
-        completeCloseStepsThrough(8);
-        $progressText.text('Counter close completed successfully.');
+        $processOverlay.find('#close-steps .close-step').removeClass('active complete failed');
+        $processOverlay.find('#close-steps .close-step-number').each(function (index) { $(this).text(index + 1); });
+        $progressText.text('Counter close completed. Finalizing each step...');
+        var displayedStep = 0;
+        var finishTimer = window.setInterval(function () {
+          displayedStep++;
+          completeCloseStepsThrough(displayedStep);
+          if (displayedStep >= 8) {
+            window.clearInterval(finishTimer);
+            $progressText.text('All closing steps completed successfully.');
+            if (window.Swal) {
+              Swal.fire({ icon:'success', title:'Counter Closed', text:'All closing steps completed successfully.', timer:1200, showConfirmButton:false, allowOutsideClick:false }).then(function () {
+                if (res && res.redirect) window.location.href = res.redirect;
+                else window.location.href = '../log_out.php';
+              });
+            } else {
+              window.setTimeout(function () { window.location.href = (res && res.redirect) ? res.redirect : '../log_out.php'; }, 1200);
+            }
+          }
+        }, 625);
         var message = (res && res.message) ? res.message : 'Counter is closed.';
-        window.setTimeout(function () {
-          if (res && res.redirect) window.location.href = res.redirect;
-          else window.location.href = '../log_out.php';
-        }, 1400);
       }).fail(function (xhr) {
         window.clearInterval(progressPoll);
         var $activeStep = $processOverlay.find('#close-steps .close-step.active').last();
