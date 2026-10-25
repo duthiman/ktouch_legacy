@@ -80,16 +80,16 @@ final class ChabaService
         if(!$row)throw new ApiException('Print job not found',404,'chaba_job');
         $legacy=empty($row['payload_json']);
         if($legacy) {
-            if((string)($row['route_path']??'')==='render_counter_sum.php') {
+            if(in_array((string)($row['route_path']??''),['render_counter_sum.php','csp.php'],true)) {
                 $query=[];parse_str((string)($row['route_query']??''),$query);
                 $previousGet=$_GET;$_GET=array_merge($_GET,$query);
-                $legacyRenderer=dirname(__DIR__,3).'/chaba-legacy/render_counter_sum.php';
-                if(!is_file($legacyRenderer)) throw new ApiException('Counter summary renderer not found',404,'chaba_renderer');
+                $summaryRenderer=dirname(__DIR__).'/Templates/Template1/renders/csp.php';
+                if(!is_file($summaryRenderer)) throw new ApiException('Counter summary renderer not found',404,'chaba_renderer');
                 $legacyConnectionFile=dirname(__DIR__,4).'/inc/connection.php';
                 if(is_file($legacyConnectionFile)) require_once $legacyConnectionFile;
                 if(isset($connection) && $connection instanceof \mysqli) $GLOBALS['connection']=$connection;
                 ob_start();
-                try { include $legacyRenderer; $html=ob_get_clean(); }
+                try { include $summaryRenderer; $html=ob_get_clean(); }
                 catch(\Throwable $e) { if(ob_get_level()>0)ob_end_clean();$_GET=$previousGet;throw new ApiException('Counter summary render failed: '.$e->getMessage(),409,'chaba_renderer'); }
                 $_GET=$previousGet;
                 return ['job'=>$row,'document'=>['document_type'=>'COUNTER_SUMMARY'],'legacy'=>true]+($render?['html'=>$html]:[]);

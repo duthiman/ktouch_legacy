@@ -435,10 +435,10 @@ if (!function_exists('queue_counter_close_summary')) {
 		return (int)counter_close_queue_required($connection, [
 			'sale_id' => 0,
 			'ref_id' => $summary_id,
-			'print_type' => 'counter_sum',
+			'print_type' => 'csp',
 			'label' => 'COUNTER SUMMARY',
 			'cntr_id' => $counter,
-			'route_path' => 'render_counter_sum.php',
+			'route_path' => 'csp.php',
 			'route_query' => $routeQuery,
 			'requested_by' => $user_id,
 		]);
