@@ -26,8 +26,8 @@ final class ChabaService
             'claim'=>$this->repo->claim($pdo,isset($data['cntr_id'])?self::id($data,'cntr_id',0):null),
             'next'=>$this->next($pdo,$data),
             'heartbeat'=>$this->repo->heartbeat($pdo,self::id($data,'queue_id'),self::id($data,'print_attempts',1,255)),
-            'complete'=>$this->repo->complete($pdo,self::id($data,'queue_id'),self::id($data,'print_attempts',1,255)),
-            'fail'=>$this->repo->fail($pdo,self::id($data,'queue_id'),self::id($data,'print_attempts',1,255),self::text($data,'last_error',255,'Printing failed')),
+            'complete'=>$this->repo->complete($pdo,self::id($data,'queue_id'),self::optionalId($data,'print_attempts',0,255)),
+            'fail'=>$this->repo->fail($pdo,self::id($data,'queue_id'),self::optionalId($data,'print_attempts',0,255),self::text($data,'last_error',255,'Printing failed')),
             'retry'=>$this->repo->retry($pdo,self::id($data,'queue_id')),
             'reprint'=>$this->repo->reprint($pdo,self::id($data,'source_queue_id'),$user),
             default=>throw new ValidationException('Unsupported Chaba action'),
@@ -217,6 +217,10 @@ final class ChabaService
         $v=$d[$key]??($min===0?0:null);
         if(filter_var($v,FILTER_VALIDATE_INT)===false||$v===null||(int)$v<$min||(int)$v>$max)throw new ValidationException("{$key} must be an integer between {$min} and {$max}");
         return (int)$v;
+    }
+    private static function optionalId(array $d,string $key,int $default=0,int $max=2147483647): int {
+        if(!array_key_exists($key,$d)||$d[$key]==='')return $default;
+        return self::id($d,$key,0,$max);
     }
     private static function text(array $d,string $key,int $max,string $default=''): string {
         $v=$d[$key]??$default;

@@ -40,21 +40,23 @@ namespace {
         if(isset($result['html']) && in_array($action, ['next', 'render'], true) && !$jsonRequest) {
             header('Content-Type: text/html; charset=utf-8'); echo $result['html'];
         } else {
-            echo json_encode(['ok'=>true,'data'=>$result],JSON_UNESCAPED_SLASHES);
+            $status=(string)($result['status']??'ok');
+            $message=(string)($result['message']??'Request completed');
+            $data=$result;
+            unset($data['status'],$data['message']);
+            echo json_encode(['ok'=>true,'status'=>$status,'message'=>$message,'data'=>$data],JSON_UNESCAPED_SLASHES);
         }
     } catch(\Throwable $e) {
         $status=$e->getCode()>=400&&$e->getCode()<600?$e->getCode():500;
         http_response_code($status);
         header('X-Chaba-Error: '.$status);
+        $errorData=['queue_id'=>(int)($data['queue_id']??0)];
         echo json_encode([
             'ok'=>false,
+            'status'=>'error',
+            'message'=>$e->getMessage(),
             'error'=>$e->getMessage(),
-            'data'=>[
-                'http_status'=>$status,
-                'request_id'=>$requestId,
-                'retryable'=>$status>=500 || $status===408 || $status===429,
-                'server_time'=>date('c'),
-            ],
+            'data'=>$errorData,
         ],JSON_UNESCAPED_SLASHES);
     }
 }

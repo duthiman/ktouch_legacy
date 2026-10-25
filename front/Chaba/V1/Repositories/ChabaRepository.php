@@ -57,7 +57,8 @@ final class ChabaRepository
             $row=$this->get($pdo,$id,false,true);
             if(!$row) {
                 $done=$this->get($pdo,$id,true);
-                if($done&&(int)$done['status']===1&&(int)$done['print_attempts']===$attempt)return ['completed'=>true,'queue_id'=>$id,'already_completed'=>true];
+                if($done&&(int)$done['status']===1)return ['status'=>'already_completed','message'=>'Job already completed; no retry needed','queue_id'=>$id];
+                throw new ApiException('Queue job not found',404,'chaba_job');
             }
             $this->assertClaim($row,$attempt);
             $pdo->prepare("UPDATE kp_print_queue SET status=1,printed_at=NOW(),last_error='' WHERE queue_id=? AND status=3 AND print_attempts=?")->execute([$id,$attempt]);
@@ -65,23 +66,37 @@ final class ChabaRepository
             $cols=implode(',',array_map(static fn($v)=>'`'.$v.'`',array_keys(Schema::COLUMNS)));
             $pdo->prepare("INSERT INTO kp_print_queue_printed ({$cols}) SELECT {$cols} FROM kp_print_queue WHERE queue_id=? AND status=1")->execute([$id]);
             $pdo->prepare('DELETE FROM kp_print_queue WHERE queue_id=? AND status=1')->execute([$id]);
-            return ['completed'=>true,'queue_id'=>$id];
+            return ['status'=>'completed','message'=>'Job marked as completed','queue_id'=>$id];
         });
     }
     public function fail(PDO $pdo,int $id,int $attempt,string $error): array {
         return $this->transaction($pdo,function() use($pdo,$id,$attempt,$error) {
-            $this->assertClaim($this->get($pdo,$id,false,true),$attempt);
+            $row=$this->get($pdo,$id,false,true);
+            if(!$row) {
+                $done=$this->get($pdo,$id,true);
+                if($done&&(int)$done['status']===1)return ['status'=>'already_completed','message'=>'Job already completed; no retry needed','queue_id'=>$id];
+                throw new ApiException('Print job not found',404,'chaba_job');
+            }
+            $this->assertClaim($row,$attempt);
             $pdo->prepare('UPDATE kp_print_queue SET status=2,last_error=? WHERE queue_id=?')->execute([$error,$id]);
-            return ['failed'=>true,'queue_id'=>$id];
+            return ['status'=>'failed','message'=>'Job marked as failed','queue_id'=>$id];
         });
     }
     private function assertClaim(?array $row,int $attempt): void {
-        if(!$row||(int)$row['status']!==3||(int)$row['print_attempts']!==$attempt)throw new ApiException('Job is not claimed by this print attempt',409,'chaba_state');
+        if(!$row)throw new ApiException('Queue job not found',404,'chaba_job');
+        if((int)$row['status']!==3||(int)$row['print_attempts']!==$attempt)throw new ApiException('Job is not claimed by this print attempt',409,'chaba_state');
     }
     public function retry(PDO $pdo,int $id): array {
+        $row=$this->get($pdo,$id,false,true);
+        if(!$row) {
+            $done=$this->get($pdo,$id,true);
+            if($done&&(int)$done['status']===1)return ['status'=>'already_completed','message'=>'Job already completed; no retry needed','queue_id'=>$id];
+            throw new ApiException('Queue job not found',404,'chaba_job');
+        }
+        if((int)$row['status']!==2 || (int)$row['print_attempts']>=255)throw new ApiException('Job is not in a retryable failed state',409,'chaba_state');
         $s=$pdo->prepare("UPDATE kp_print_queue SET status=0,last_error='' WHERE queue_id=? AND status=2 AND print_attempts<255");$s->execute([$id]);
-        if($s->rowCount()!==1)throw new ApiException('Only failed jobs below 255 attempts can be retried',409,'chaba_state');
-        return ['queued'=>true,'queue_id'=>$id];
+        if($s->rowCount()!==1)throw new ApiException('Job could not be requeued',409,'chaba_state');
+        return ['status'=>'requeued','message'=>'Job returned to queue','queue_id'=>$id];
     }
     public function reprint(PDO $pdo,int $source,int $user): array {
         return $this->transaction($pdo,function() use($pdo,$source,$user) {
