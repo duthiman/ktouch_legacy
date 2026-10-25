@@ -30,16 +30,16 @@ final class CspService
         $counterName = (string)($this->scalar($db, 'SELECT name FROM kp_counters WHERE cntr_id = ? LIMIT 1', [$counterId]) ?? '');
         $salesTotal = (float)($summary['total_sales'] ?? $this->scalar($db, 'SELECT COALESCE(SUM(amount),0) FROM kp_sales WHERE shift = ? AND counter = ?', [$shift, $counterId]) ?? 0);
 
-        $salesItems = $this->rows($db, 'SELECT si.item_id, i.cat_id, SUM(si.qty) qty, SUM(si.total) amount FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id = si.item_id WHERE si.shift = ? AND si.stock_counter = ? GROUP BY si.item_id, i.cat_id ORDER BY i.cat_id ASC, amount DESC', [$shift, $counterId]);
+        $salesItems = $this->withNames($db, $this->rows($db, 'SELECT si.item_id, i.cat_id, SUM(si.qty) qty, SUM(si.total) amount FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id = si.item_id WHERE si.shift = ? AND si.stock_counter = ? GROUP BY si.item_id, i.cat_id ORDER BY i.cat_id ASC, amount DESC', [$shift, $counterId]));
         $billCount = (int)($this->scalar($db, 'SELECT COUNT(sale_id) FROM kp_sales WHERE shift = ? AND counter = ?', [$shift, $counterId]) ?? 0);
-        $staffSales = $this->rows($db, 'SELECT user_id, SUM(total) sales_total FROM kp_sale_items WHERE shift = ? AND stock_counter = ? GROUP BY user_id ORDER BY sales_total DESC', [$shift, $counterId]);
+        $staffSales = $this->withUserNames($db, $this->rows($db, 'SELECT user_id, SUM(total) sales_total FROM kp_sale_items WHERE shift = ? AND stock_counter = ? GROUP BY user_id ORDER BY sales_total DESC', [$shift, $counterId]));
 
         $transfers = $this->transferRows($db, $shift, $counterId);
         $unitRows = $this->tableExists($db, 'kp_stock_track')
-            ? $this->rows($db, "SELECT item_id, user_id, SUM(qty) qty FROM kp_stock_track WHERE shift = ? AND stock_counter = ? AND `trans` = 'UNIT_GEN' GROUP BY item_id, user_id ORDER BY item_id ASC", [$shift, $counterId])
+            ? $this->withNames($db, $this->withUserNames($db, $this->rows($db, "SELECT item_id, user_id, SUM(qty) qty FROM kp_stock_track WHERE shift = ? AND stock_counter = ? AND `trans` = 'UNIT_GEN' GROUP BY item_id, user_id ORDER BY item_id ASC", [$shift, $counterId])))
             : [];
         $deletedBills = $this->tableExists($db, 'kp_del_orders')
-            ? $this->rows($db, 'SELECT * FROM kp_del_orders WHERE shift = ?', [$shift])
+            ? $this->withUserNames($db, $this->rows($db, 'SELECT * FROM kp_del_orders WHERE shift = ?', [$shift]))
             : [];
         $returnTotals = [
             'accepted' => (int)($summary['today_returns_accepted_total'] ?? $this->scalar($db, 'SELECT COUNT(item_id) FROM kp_ret_items WHERE shift = ? AND stock_counter = ? AND confirm_status = 1', [$shift, $counterId]) ?? 0),
@@ -75,16 +75,16 @@ final class CspService
             'return_totals' => $returnTotals,
             'movement_totals' => $movementTotals,
             'stock_take' => $this->stockTake($db, $counterId, $shift),
-            'requisitions' => $this->rows($db, 'SELECT ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status, SUM(COALESCE(ri.issue_qty, ri.req_qty, 0)) qty FROM kp_counter_req r INNER JOIN kp_counter_req_items ri ON ri.req_id = r.req_id LEFT JOIN kp_items i ON i.item_id = ri.item_id WHERE r.req_shift = ? AND r.counter = ? GROUP BY ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status ORDER BY r.issue_status ASC, i.cat_id ASC, ri.item_id ASC', [$shift, $counterId]),
+            'requisitions' => $this->withNames($db, $this->withUserNames($db, $this->rows($db, 'SELECT ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status, SUM(COALESCE(ri.issue_qty, ri.req_qty, 0)) qty FROM kp_counter_req r INNER JOIN kp_counter_req_items ri ON ri.req_id = r.req_id LEFT JOIN kp_items i ON i.item_id = ri.item_id WHERE r.req_shift = ? AND r.counter = ? GROUP BY ri.item_id, i.cat_id, r.issue_user, r.issue_status, r.rec_status ORDER BY r.issue_status ASC, i.cat_id ASC, ri.item_id ASC', [$shift, $counterId]))),
             'user_sales' => $this->rows($db, 'SELECT user_id, COUNT(sale_id) orders_count, SUM(amount) sales_total FROM kp_sales WHERE shift = ? AND counter = ? GROUP BY user_id ORDER BY sales_total DESC', [$shift, $counterId]),
-            'returns' => $this->rows($db, 'SELECT user_id, item_id, confirm_by, confirm_status, SUM(qty) qty FROM kp_ret_items WHERE shift = ? AND stock_counter = ? GROUP BY user_id, item_id, confirm_by, confirm_status ORDER BY user_id ASC, confirm_status ASC, item_id ASC', [$shift, $counterId]),
+            'returns' => $this->withNames($db, $this->withUserNames($db, $this->rows($db, 'SELECT user_id, item_id, confirm_by, confirm_status, SUM(qty) qty FROM kp_ret_items WHERE shift = ? AND stock_counter = ? GROUP BY user_id, item_id, confirm_by, confirm_status ORDER BY user_id ASC, confirm_status ASC, item_id ASC', [$shift, $counterId]), 'confirm_by')),
         ];
     }
 
     private function transferRows(PDO $db, string $shift, int $counterId): array
     {
         $rows = $this->rows($db, 'SELECT ti.trans_id, ti.item_id, SUM(ti.qty) qty, t.cntr_from, t.cntr_to, t.user_from, t.user_to, t.status FROM kp_counter_trans_items ti INNER JOIN kp_counter_trans t ON t.trans_id = ti.trans_id WHERE t.shift = ? AND (t.cntr_from = ? OR t.cntr_to = ?) GROUP BY ti.trans_id, ti.item_id, t.cntr_from, t.cntr_to, t.user_from, t.user_to, t.status ORDER BY ti.trans_id DESC, ti.item_id ASC', [$shift, $counterId, $counterId]);
-        return $rows;
+        return $this->withNames($db, $this->withUserNames($db, $rows, 'user_from'), 'item_id');
     }
 
     private function stockTake(PDO $db, int $counterId, string $shift): array
@@ -106,6 +106,44 @@ final class CspService
         $q = $db->prepare('SHOW TABLES LIKE ?');
         $q->execute([$table]);
         return (bool)$q->fetchColumn();
+    }
+
+    private function withNames(PDO $db, array $rows, string $idKey = 'item_id'): array
+    {
+        $cache = [];
+        foreach ($rows as &$row) {
+            $id = (int)($row[$idKey] ?? 0);
+            if ($id < 1) continue;
+            if (!array_key_exists($id, $cache)) {
+                $q = $db->prepare('SELECT name FROM kp_items WHERE item_id = ? LIMIT 1');
+                $q->execute([$id]);
+                $cache[$id] = (string)($q->fetchColumn() ?: 'Item ' . $id);
+            }
+            $row['item_name'] = $cache[$id];
+            $row['name'] = $cache[$id];
+        }
+        unset($row);
+        return $rows;
+    }
+
+    private function withUserNames(PDO $db, array $rows, string $idKey = 'user_id'): array
+    {
+        $cache = [];
+        foreach ($rows as &$row) {
+            $id = (int)($row[$idKey] ?? 0);
+            if ($id < 1) continue;
+            if (!array_key_exists($id, $cache)) {
+                $q = $db->prepare('SELECT username FROM kp_users WHERE user_id = ? LIMIT 1');
+                $q->execute([$id]);
+                $cache[$id] = (string)($q->fetchColumn() ?: 'User ' . $id);
+            }
+            $row['user_name'] = $cache[$id];
+            $row['username'] = $cache[$id];
+            if ($idKey === 'confirm_by') $row['approver_name'] = $cache[$id];
+            if ($idKey === 'user_from') $row['from_user_name'] = $cache[$id];
+        }
+        unset($row);
+        return $rows;
     }
 
     private function rows(PDO $db, string $sql, array $params = []): array
