@@ -27,12 +27,7 @@ if ($result) {
 }
 ?>
 <link rel="stylesheet" type="text/css" href="clrbill/clear_bills.css">
-<div class="cash-clearb-shell">
-  <div class="cash-clearb-head">
-    <h3>Clear Current Bills</h3>
-    <p>Select a waiter on the left, then review and tick today's unpaid bills in the work area.</p>
-  </div>
-  <div class="cash-clearb-body">
+
     <div class="cash-clearb-layout">
       <div class="cash-clearb-selector">
         <div class="cash-clearb-card-head">
@@ -81,7 +76,6 @@ if ($result) {
             </select>
           </div>
 
-          <button class="btn btn-outline-danger btn-md cash-clearb-load" type="button" id="cash-clearb-loadbtn" onclick="cashLoadCurrentBillsForSelected()">Load Bills</button>
         </div>
       </div>
 
@@ -126,8 +120,7 @@ if ($result) {
         </div>
       </div>
     </div>
-  </div>
-</div>
+   
 <script type="text/javascript">
   $('.pickers').select2({});
 
