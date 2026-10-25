@@ -44,6 +44,13 @@ if(isset($_REQUEST['id'])){
           ?>
                 </select>
       </div>
+      <div class="form-group">
+        <label for="take_status"><strong>Counter take status</strong></label>
+        <select class="selectpicker form-control" id="take_status" name="take_status">
+          <option value="3" selected>Active take</option>
+          <option value="2">Closed / ready</option>
+        </select>
+      </div>
          
   </div>
   <div class="modal-footer">
@@ -57,10 +64,11 @@ document.getElementById('open_count').addEventListener('click', open_count);
   function open_count(){  
     var cntr_id = '<?php echo $id; ?>'; 
     var user = $("#users").val(); 
+    var take_status = $("#take_status").val();
     $.ajax({
       url: 'open_counter_act.php',
       type: 'POST',
-      data: 'counter='+encodeURIComponent(cntr_id)+'&user_id='+encodeURIComponent(user),
+      data: 'counter='+encodeURIComponent(cntr_id)+'&user_id='+encodeURIComponent(user)+'&take_status='+encodeURIComponent(take_status),
       dataType: 'html'
     })
     .done(function(data){

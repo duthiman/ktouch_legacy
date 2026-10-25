@@ -4,6 +4,8 @@ include('../../inc/connection.php');
 include('../clude/funcs.php'); 
 $counter=$_REQUEST['counter'];
 $user_id=$_REQUEST['user_id'];
+$take_status=(int)($_REQUEST['take_status'] ?? 3);
+$take_status=in_array($take_status,[2,3],true) ? $take_status : 3;
 $reason=mysqli_real_escape_string($connection, $_REQUEST['reason'] ?? '');
 $trans_by=$_SESSION['user_id'];
 $shift=shift();
@@ -19,7 +21,7 @@ $update_waiter= mysqli_query($connection,"UPDATE kp_users SET job=1,counter_stat
 
 $update_waiter= mysqli_query($connection,"UPDATE kp_items SET ".$column."=2");
 
-$update_counter= mysqli_query($connection,"UPDATE kp_counters SET user_id='$user_id',take_status=3,counter_status=1 WHERE cntr_id='$counter'") or die(mysqli_error($connection));
+$update_counter= mysqli_query($connection,"UPDATE kp_counters SET user_id='$user_id',take_status='$take_status',counter_status=1,close_status=3 WHERE cntr_id='$counter'") or die(mysqli_error($connection));
 
 $counter_hist_result= mysqli_query($connection,"INSERT INTO kp_counter_hist(cntr_id,shift,opening,open_by,open_ord,status) VALUES('$counter',CURRENT_DATE,CURRENT_TIMESTAMP,'$user_id','$last_id',2) ") or die(mysqli_error($connection));
 
