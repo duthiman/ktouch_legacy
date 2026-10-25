@@ -12,6 +12,9 @@ namespace KTouch\Core\Router { interface ModuleInterface {} }
 namespace KTouch\Core\Exceptions { class ApiException extends \RuntimeException { public function __construct(string $message,int $status=400,public string $errorCode='api'){parent::__construct($message,$status);} public function status():int{return $this->getCode()?:400;} } class ValidationException extends ApiException {} }
 namespace {
     require_once dirname(__DIR__,3).'/inc/connection.php';
+    $requestId = bin2hex(random_bytes(8));
+    header('X-Chaba-Request: '.$requestId);
+    header('Cache-Control: no-store, no-cache, must-revalidate');
     $autoload = static function(string $class): void {
         $prefix='KTouch\\Modules\\Chaba\\V1\\';
         if(strncmp($class,$prefix,strlen($prefix))!==0)return;
@@ -39,5 +42,19 @@ namespace {
         } else {
             echo json_encode(['ok'=>true,'data'=>$result],JSON_UNESCAPED_SLASHES);
         }
-    } catch(\Throwable $e) { http_response_code($e->getCode()>=400&&$e->getCode()<600?$e->getCode():500); echo json_encode(['ok'=>false,'error'=>$e->getMessage()]); }
+    } catch(\Throwable $e) {
+        $status=$e->getCode()>=400&&$e->getCode()<600?$e->getCode():500;
+        http_response_code($status);
+        header('X-Chaba-Error: '.$status);
+        echo json_encode([
+            'ok'=>false,
+            'error'=>$e->getMessage(),
+            'data'=>[
+                'http_status'=>$status,
+                'request_id'=>$requestId,
+                'retryable'=>$status>=500 || $status===408 || $status===429,
+                'server_time'=>date('c'),
+            ],
+        ],JSON_UNESCAPED_SLASHES);
+    }
 }
