@@ -2,9 +2,10 @@
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
-require_once '../../../../../../inc/connection.php';
-require_once '../../../../../../inc/gen_funcs.php';
-require_once '../../../../../../back/counter/funcs.php';
+$projectRoot = dirname(__DIR__, 6);
+require_once $projectRoot . '/inc/connection.php';
+require_once $projectRoot . '/inc/gen_funcs.php';
+require_once $projectRoot . '/back/counter/funcs.php';
 
 // The counter-summary helpers use the procedural mysqli connection. Ensure
 // the V1 renderer always owns a usable connection even when the shared boot
