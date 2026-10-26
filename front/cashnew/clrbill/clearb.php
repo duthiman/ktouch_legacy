@@ -249,5 +249,13 @@ if ($result) {
     setTimeout(function(){ cashSyncUserRailButtons('cash-clearb-buttons'); }, 120);
   }
 
+  // The panel is injected dynamically; expose its handlers for inline buttons.
+  window.cashScrollUserRail = cashScrollUserRail;
+  window.cashSyncUserRailButtons = cashSyncUserRailButtons;
+  window.cashSetClearBMode = cashSetClearBMode;
+  window.cashPickClearBUser = cashPickClearBUser;
+  window.cashLoadCurrentBillsForSelected = cashLoadCurrentBillsForSelected;
+  window.cashLoadCurrentBills = cashLoadCurrentBills;
+
   cashLoadCurrentBills(0);
 </script>
