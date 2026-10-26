@@ -1,69 +1,449 @@
 <?php
 session_start();
-require_once '../../inc/connection.php';
-require_once '../../inc/gen_funcs.php';
+require_once('../../inc/connection.php');
+require_once('../../inc/gen_funcs.php');
 
-$userId = (int)($_SESSION['user_id'] ?? 0);
-$counterId = function_exists('user_counter') ? (int)user_counter($userId) : 0;
-$counterName = $counterId > 0 && function_exists('get_counter') ? (string)get_counter($counterId) : ('Counter ' . $counterId);
-$closePin = str_pad((string)random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+$user_id = $_SESSION['user_id'];
+$shift = get_column('kp_shift','shift',"1");
+$counter = user_counter($user_id);
+
+$pending_returns = array();
+$pending_returns_q = mysqli_query($connection, "SELECT sale_id,amount,user_id,stock_counter FROM kp_ret_items WHERE shift='$shift' AND stock_counter='$counter' AND ret_status=3 ORDER BY sale_id DESC, id DESC") or die(mysqli_error($connection));
+while ($row = mysqli_fetch_assoc($pending_returns_q)) {
+  $pending_returns[] = $row;
+}
+
+$unreceived_transfers = array();
+$unreceived_transfers_q = mysqli_query($connection, "SELECT req_id,req_user,issue_user FROM kp_counter_req WHERE counter='$counter' AND issue_status=1 AND rec_status=2 ORDER BY req_id DESC") or die(mysqli_error($connection));
+while ($row = mysqli_fetch_assoc($unreceived_transfers_q)) {
+  $req_id = (int)$row['req_id'];
+  $row['items'] = (int)column_count('kp_counter_req_items','id',"req_id='$req_id'");
+  $issued_qty = (float)column_total('kp_counter_req_items','issue_qty',"req_id='$req_id'");
+  $requested_qty = (float)column_total('kp_counter_req_items','req_qty',"req_id='$req_id'");
+  $row['qty'] = $issued_qty > 0 ? $issued_qty : $requested_qty;
+  $unreceived_transfers[] = $row;
+}
+
+$can_close = empty($pending_returns) && empty($unreceived_transfers);
+$close_pin = str_pad((string)random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
+if (!function_exists('close_modal_waiter_name')) {
+  function close_modal_waiter_name($id) {
+    if (empty($id)) {
+      return 'Unknown';
+    }
+    return get_user($id);
+  }
+}
 ?>
-<div class="counter-close-modal" data-counter-id="<?php echo $counterId; ?>" data-close-pin="<?php echo $closePin; ?>" style="background:#fff;color:#243b53;border-radius:7px;overflow:hidden;">
-  <div class="modal-header" style="background:#8f1722;color:#fff;border-radius:7px 7px 0 0;">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">Close Counter</h4>
-  </div>
-  <div class="modal-body" style="padding:18px;">
-    <p>Close <strong><?php echo htmlspecialchars($counterName, ENT_QUOTES, 'UTF-8'); ?></strong>?</p>
-    <p class="text-muted">Confirm the displayed PIN to start the counter closing process.</p>
-    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:14px;text-align:center;margin:12px 0;">
-      <small style="display:block;color:#9a3412;font-weight:700;">CLOSING PIN</small>
-      <strong style="font-size:30px;letter-spacing:8px;color:#9f1239;"><?php echo $closePin; ?></strong>
-      <input type="text" inputmode="numeric" maxlength="4" class="form-control counter-close-pin" placeholder="Enter PIN" style="max-width:180px;margin:10px auto 0;text-align:center;font-size:20px;letter-spacing:5px;">
+<link rel="stylesheet" href="../../assets/plugins/sweetalert/dist/sweetalert2.min.css">
+<script src="../../assets/plugins/sweetalert/dist/sweetalert2.all.min.js"></script>
+<style>
+  .close-check-shell .modal-content {
+    border-radius: 7px;
+    overflow: hidden;
+    border: 0;
+    box-shadow: 0 20px 55px rgba(54, 25, 20, .22);
+  }
+  .close-check-shell .modal-header {
+    background: linear-gradient(135deg, #7d1418 0%, #a61c21 100%);
+    color: #fff;
+    border-bottom: 0;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+  }
+  .close-check-shell .modal-title {
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: .3px;
+  }
+  .close-check-shell .modal-body {
+    background: #fffaf5;
+    padding: 18px;
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+  .close-check-shell .modal-footer {
+    background: #fff7ef;
+    border-top: 0;
+    padding: 14px 18px 18px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  .close-check-shell .close {
+    color: #fff;
+    opacity: 1;
+    text-shadow: none;
+  }
+  .close-check-intro {
+    background: #fff;
+    border: 1px solid #f0d2cb;
+    border-left: 5px solid #a61c21;
+    border-radius: 7px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    color: #5a2d20;
+  }
+  .close-check-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .close-check-card {
+    background: #fff;
+    border: 1px solid #ecdccf;
+    border-radius: 7px;
+    padding: 14px;
+    box-shadow: 0 6px 18px rgba(84, 39, 26, .06);
+  }
+  .close-check-card strong,
+  .close-check-card span {
+    display: block;
+  }
+  .close-check-card strong {
+    color: #7a4131;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+  }
+  .close-check-card span {
+    color: #24130d;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .close-check-panel {
+    background: #fff;
+    border: 1px solid #ead8cb;
+    border-radius: 7px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .close-check-panel h5 {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #6f261e;
+  }
+  .close-check-note {
+    margin: 0 0 10px;
+    color: #77584b;
+    font-size: 13px;
+  }
+  .close-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .close-check-item {
+    border: 1px solid #efe2d7;
+    border-radius: 7px;
+    padding: 12px;
+    background: #fffaf6;
+  }
+  .close-check-item b,
+  .close-check-item span {
+    display: block;
+  }
+  .close-check-item b {
+    color: #2e1a14;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  .close-check-item span {
+    color: #7c5d51;
+    font-size: 13px;
+  }
+  .close-check-ok {
+    background: #f2fff5;
+    border: 1px solid #cfe7d4;
+    border-radius: 7px;
+    padding: 18px;
+    text-align: center;
+    color: #1f6a3c;
+    font-weight: 700;
+  }
+  .close-check-btn {
+    min-width: 140px;
+    border-radius: 7px;
+    font-weight: 800;
+    padding: 12px 18px;
+  }
+  .close-check-btn.btn-default {
+    border-color: #d8c8bc;
+    background: #fff;
+    color: #6a5548;
+  }
+  .close-check-btn.btn-danger {
+    background: #a61c21;
+    border-color: #a61c21;
+  }
+  .close-check-btn.btn-muted {
+    background: #9b9b9b;
+    color: #fff;
+    border-color: #9b9b9b;
+    cursor: not-allowed;
+  }
+  .close-counter-progress {
+    display: none;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border: 1px solid #ead8cb;
+    border-radius: 7px;
+    background: #fff;
+    color: #6f261e;
+    font-weight: 700;
+  }
+  .close-counter-progress-bar {
+    height: 6px;
+    margin-top: 8px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #f1ddd2;
+  }
+  .close-counter-progress-bar span {
+    display: block;
+    width: 35%;
+    height: 100%;
+    border-radius: 7px;
+    background: #a61c21;
+    animation: closeCounterProgress 1.2s ease-in-out infinite;
+  }
+  .close-counter-progress-count { float:right; color:#8a4b08; font-size:12px; font-weight:800; }
+  .close-pin-overlay {
+    display:none;
+    position:fixed;
+    z-index:1060;
+    inset:0;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:rgba(20,28,38,.68);
+  }
+  .close-pin-card {
+    width:min(360px,100%);
+    padding:24px;
+    border-radius:7px;
+    background:#fff;
+    box-shadow:0 18px 55px rgba(0,0,0,.28);
+    text-align:center;
+  }
+  .close-pin-code {
+    margin:10px 0 16px;
+    padding:10px;
+    border-radius:7px;
+    background:#fff4e8;
+    color:#9b321c;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:8px;
+  }
+  .close-pin-input { text-align:center; font-size:22px; letter-spacing:5px; border-radius:7px; border:2px solid #e7c9b9; height:48px; }
+  .close-pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+  .close-pin-pad button { min-height:50px; border:1px solid #d8e1ea; border-radius:7px; background:#f7faff; color:#243b53; font-size:21px; font-weight:700; }
+  .close-pin-action { min-height:50px; border:0; border-radius:7px; color:#fff; font-size:16px; font-weight:800; }
+  #close-pin-cancel { background:#dc3545; }
+  #close-pin-submit { background:#f39c12; border-color:#f39c12; }
+  @keyframes closeCounterProgress {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(310%); }
+  }
+  .close-steps { display:grid; gap:7px; margin-top:14px; }
+  .close-step { display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid #ead8cb; border-radius:7px; background:#fff; color:#7b8794; font-size:13px; transition:all .2s ease; }
+  .close-step-number { display:flex; align-items:center; justify-content:center; width:25px; height:25px; border-radius:7px; background:#e9eef3; color:#66788a; font-size:12px; font-weight:800; flex:0 0 25px; }
+  .close-step.active { border-color:#f0a43c; background:#fff8ed; color:#8a4b08; font-weight:700; }
+  .close-step.active .close-step-number { background:#f39c12; color:#fff; }
+  .close-step.complete { border-color:#b7e3c8; background:#f0fbf4; color:#237a43; }
+  .close-step.complete .close-step-number { background:#2f9e5b; color:#fff; }
+  .close-step.complete .close-step-number::after { content:'✓'; font-size:15px; }
+  .close-step.complete .close-step-number { font-size:0; }
+  .close-step.failed { border-color:#efb2b8; background:#fff2f3; color:#a61c21; }
+  .close-step.failed .close-step-number { background:#dc3545; color:#fff; }
+  .close-process-overlay { display:none; position:fixed; z-index:1070; inset:0; align-items:center; justify-content:center; padding:18px; background:rgba(20,28,38,.68); }
+  .close-process-card { width:min(520px,100%); max-height:90vh; overflow:auto; padding:24px; border-radius:7px; background:#fff; box-shadow:0 18px 55px rgba(0,0,0,.28); }
+  .close-pin-pad button, .close-pin-action, .close-check-btn { transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+  .close-pin-pad button:hover, .close-pin-action:hover, .close-check-btn:hover { transform: translateY(-1px); box-shadow:0 5px 12px rgba(54,25,20,.14); filter:brightness(1.03); }
+  @media (max-width: 767px) {
+    .close-check-shell .modal-dialog {
+      width: calc(100vw - 18px);
+      margin: 10px auto;
+    }
+    .close-check-shell .modal-header { padding: 15px 16px; }
+    .close-check-shell .modal-title { font-size: 17px; }
+    .close-check-shell .modal-body { padding: 12px; max-height: 76vh; }
+    .close-check-intro { padding: 12px; font-size: 12px; }
+    .close-check-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .close-check-card { padding: 11px; }
+    .close-check-card span { font-size: 16px; }
+    .close-check-panel { padding: 11px; }
+    .close-check-item { padding: 10px; }
+    .close-check-shell .modal-footer {
+      justify-content: stretch;
+      padding: 12px;
+      gap: 8px;
+    }
+    .close-check-shell .modal-footer .close-check-btn {
+      flex: 1 1 calc(50% - 5px);
+      min-width: 0;
+      padding: 12px 8px;
+      font-size: 12px;
+    }
+    .close-pin-card, .close-process-card { padding: 18px; }
+    .close-pin-code { font-size: 27px; letter-spacing: 6px; }
+  }
+</style>
+<div class="close-check-shell">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">Close Counter Check</h4>
     </div>
-    <ol class="counter-close-steps" style="margin:14px 0;padding-left:28px;line-height:2;">
-      <li data-step="1">Checking pending returns and bills</li>
-      <li data-step="2">Saving counter summary</li>
-      <li data-step="3">Queueing counter summary</li>
-      <li data-step="4">Closing counter and cashier</li>
-      <li data-step="5">Queueing shift summary if this is the last counter</li>
-    </ol>
-    <div class="counter-close-result" aria-live="polite"></div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-    <button type="button" class="btn btn-danger counter-close-submit" disabled>Verify and Close</button>
+    <div class="modal-body">
+      <div id="tt"></div>
+      <div class="close-check-intro">
+        The counter can close as long as it has no unapproved returns.
+      </div>
+      <div class="close-check-panel" id="close-steps-panel" style="display:none;">
+        <h5>Counter closing sequence</h5>
+        <div class="close-steps" id="close-steps">
+          <div class="close-step" data-close-step="1"><span class="close-step-number">1</span><span>Check returns and unreceived stock</span></div>
+          <div class="close-step" data-close-step="2"><span class="close-step-number">2</span><span>Prepare the closing stock snapshot</span></div>
+          <div class="close-step" data-close-step="3"><span class="close-step-number">3</span><span>Update the stock-take closing quantities</span></div>
+          <div class="close-step" data-close-step="4"><span class="close-step-number">4</span><span>Close the counter and cashier records</span></div>
+          <div class="close-step" data-close-step="5"><span class="close-step-number">5</span><span>Save the counter summary</span></div>
+          <div class="close-step" data-close-step="6"><span class="close-step-number">6</span><span>Queue the counter and shift prints</span></div>
+          <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Back up the database tables</span></div>
+          <div class="close-step" data-close-step="8"><span class="close-step-number">8</span><span>Complete closing and redirect</span></div>
+        </div>
+      </div>
+
+      <div class="close-check-grid">
+        <div class="close-check-card">
+          <strong>Counter</strong>
+          <span><?php echo get_counter($counter); ?></span>
+        </div>
+        <div class="close-check-card">
+          <strong>Shift</strong>
+          <span><?php echo $shift; ?></span>
+        </div>
+        <div class="close-check-card">
+          <strong>Pending Stock</strong>
+          <span><?php echo count($unreceived_transfers); ?></span>
+        </div>
+      </div>
+
+      <div class="close-check-panel">
+        <h5>Pending Returns</h5>
+        <p class="close-check-note">These returns are still waiting to be confirmed or rejected before counter close.</p>
+        <?php if (!empty($pending_returns)) { ?>
+        <div class="close-check-list">
+          <?php foreach ($pending_returns as $row) { ?>
+          <div class="close-check-item">
+            <b>Bill <?php echo (int)$row['sale_id']; ?> | Return Value <?php echo number_format((float)$row['amount'], 2); ?></b>
+            <span>Waiter: <?php echo close_modal_waiter_name($row['user_id']); ?></span>
+            <span>Status: Pending return confirmation</span>
+          </div>
+          <?php } ?>
+        </div>
+        <?php } else { ?>
+        <div class="close-check-ok">There are no pending returns on this counter.</div>
+        <?php } ?>
+      </div>
+
+      <div class="close-check-panel" style="margin-bottom:0;">
+        <h5>Unreceived Stock</h5>
+        <p class="close-check-note">These stock requests must be received before counter closing.</p>
+        <?php if (!empty($unreceived_transfers)) { ?>
+        <div class="close-check-list">
+          <?php foreach ($unreceived_transfers as $row) { ?>
+          <div class="close-check-item">
+            <b>Transfer Req <?php echo (int)$row['req_id']; ?> | Qty <?php echo number_format((float)$row['qty'], 2); ?></b>
+            <span>Requested by: <?php echo close_modal_waiter_name($row['req_user']); ?></span>
+            <span>Issued by: <?php echo close_modal_waiter_name($row['issue_user']); ?></span>
+            <span>Items: <?php echo (int)$row['items']; ?></span>
+            <span>Status: Waiting to be received into stock</span>
+          </div>
+          <?php } ?>
+        </div>
+        <?php } else { ?>
+        <div class="close-check-ok">No stock transfer is waiting to be received for this counter.</div>
+        <?php } ?>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="close-counter-progress" id="close-counter-progress" role="status" aria-live="polite">
+        <span id="close-counter-progress-text">Closing counter and saving the summary...</span>
+        <div class="close-counter-progress-bar"><span></span></div>
+      </div>
+      <?php if (!empty($pending_returns)) { ?>
+      <a href="../ret/appr/returns.php" class="btn btn-warning close-check-btn">Handle Returns</a>
+      <?php } ?>
+      <?php if (!empty($unreceived_transfers)) { ?>
+      <a href="../rec/rec_pending.php" class="btn btn-warning close-check-btn">Receive Requests</a>
+      <?php } ?>
+      <button type="button" class="btn btn-default close-check-btn" data-dismiss="modal">Back</button>
+      <?php if ($can_close) { ?>
+      <button type="button" class="btn btn-danger close-check-btn" id="confirm-counter-close">Confirm Close</button>
+      <?php } ?>
+    </div>
   </div>
 </div>
-<script>
-(function () {
-  var shell = document.querySelector('.counter-close-modal');
-  if (!shell || shell.dataset.ready === '1') return;
-  shell.dataset.ready = '1';
-  var button = shell.querySelector('.counter-close-submit');
-  var result = shell.querySelector('.counter-close-result');
-  var pinInput = shell.querySelector('.counter-close-pin');
-  var expectedPin = shell.getAttribute('data-close-pin');
-  pinInput.addEventListener('input', function () { button.disabled = pinInput.value.replace(/\D/g, '') !== expectedPin; });
-  button.addEventListener('click', function () {
-    var counterId = Number(shell.getAttribute('data-counter-id') || 0);
-    button.disabled = true;
-    button.textContent = 'Closing…';
-    fetch('../counter/api/counter_api.php?action=close&counter_id=' + encodeURIComponent(counterId), { credentials: 'same-origin', headers: { Accept: 'application/json' } })
-      .then(function (response) { return response.json().then(function (payload) { if (!response.ok || !payload.ok) throw new Error(payload.message || 'Could not close counter.'); return payload; }); })
-      .then(function (payload) {
-        result.className = 'counter-close-result alert alert-success';
-        result.textContent = (payload.message || 'Counter closed successfully.') + ' CSP queue: ' + (payload.data && payload.data.counter_queue_id || 'queued') + ((payload.data && payload.data.is_last_counter) ? ' | SSP queued' : '');
-        Array.prototype.forEach.call(shell.querySelectorAll('[data-step]'), function (step) { step.style.color = '#15803d'; step.style.fontWeight = '700'; step.textContent = '✓ ' + step.textContent.replace(/^✓\s*/, ''); });
-        button.textContent = 'Closed';
-        setTimeout(function () { window.location.reload(); }, 900);
-      })
-      .catch(function (error) {
-        result.className = 'counter-close-result alert alert-danger';
-        result.textContent = error.message || 'Could not close counter.';
-        button.disabled = false;
-        button.textContent = 'Close Counter';
-      });
-  });
-}());
+<div class="close-pin-overlay" id="close-pin-overlay" role="dialog" aria-modal="true" aria-labelledby="close-pin-title">
+  <div class="close-pin-card">
+    <h4 id="close-pin-title" style="margin-top:0;color:#243b53;font-weight:800;">Confirm Counter Close</h4>
+    <p style="color:#718096;margin-bottom:6px;">Enter this PIN using the numpad exactly as shown.</p>
+    <div class="close-pin-code" id="close-pin-code"><?php echo $close_pin; ?></div>
+    <input type="text" inputmode="numeric" maxlength="4" class="form-control close-pin-input" id="close-pin-input" autocomplete="off" readonly>
+    <div class="close-pin-pad" id="close-pin-pad">
+      <?php for ($pin_digit = 1; $pin_digit <= 9; $pin_digit++) { ?><button type="button" data-pin-digit="<?php echo $pin_digit; ?>"><?php echo $pin_digit; ?></button><?php } ?>
+      <button type="button" data-pin-action="clear">Clear</button>
+      <button type="button" data-pin-digit="0">0</button>
+      <button type="button" data-pin-action="backspace">⌫</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button type="button" class="close-pin-action" id="close-pin-cancel" style="flex:1;">Close</button>
+      <button type="button" class="close-pin-action" id="close-pin-submit" style="flex:1;">Verify &amp; Close</button>
+    </div>
+  </div>
+</div>
+<div class="close-process-overlay" id="close-process-overlay" role="dialog" aria-modal="true" aria-labelledby="close-process-title">
+  <div class="close-process-card">
+    <h4 id="close-process-title" style="margin:0 0 6px;color:#243b53;font-weight:800;">Closing Counter</h4>
+    <p style="margin:0;color:#718096;font-size:13px;">Please wait while each closing stage is completed.</p>
+    <div class="close-steps" id="close-steps">
+      <div class="close-step" data-close-step="1"><span class="close-step-number">1</span><span>Check returns and unreceived stock</span></div>
+      <div class="close-step" data-close-step="2"><span class="close-step-number">2</span><span>Prepare the closing stock snapshot</span></div>
+      <div class="close-step" data-close-step="3"><span class="close-step-number">3</span><span>Update the stock-take closing quantities</span></div>
+      <div class="close-step" data-close-step="4"><span class="close-step-number">4</span><span>Close the counter and cashier records</span></div>
+      <div class="close-step" data-close-step="5"><span class="close-step-number">5</span><span>Save the counter summary</span></div>
+      <div class="close-step" data-close-step="6"><span class="close-step-number">6</span><span>Queue the counter and shift prints</span></div>
+      <div class="close-step" data-close-step="7"><span class="close-step-number">7</span><span>Back up the database tables</span></div>
+      <div class="close-step" data-close-step="8"><span class="close-step-number">8</span><span>Complete closing and redirect</span></div>
+    </div>
+    <div class="close-counter-progress" id="close-counter-progress" style="display:block;margin-top:16px;" role="status" aria-live="polite">
+      <span id="close-counter-progress-text">Starting counter close...</span><span class="close-counter-progress-count" id="close-counter-progress-count">0 / 8</span>
+      <div class="close-counter-progress-bar"><span></span></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+(function ($) {
+  var closePin = <?php echo json_encode($close_pin); ?>, $pinOverlay=$('#close-pin-overlay'), $pinInput=$('#close-pin-input'), $processOverlay=$('#close-process-overlay'), $closeButton=$('#confirm-counter-close');
+  function step(n,state){var $s=$('.close-step[data-close-step="'+n+'"]');$s.removeClass('active complete failed').addClass(state);if(state==='complete')$s.find('.close-step-number').text('✓');}
+  function finish(){var n=0,t=setInterval(function(){n++;step(n,'complete');$('#close-counter-progress-count').text(n+' / 8');if(n>=8){clearInterval(t);$('#close-counter-progress-text').text('All closing steps completed successfully.');if(window.Swal)Swal.fire({icon:'success',title:'Counter Closed',text:'Closing completed successfully.',timer:1600,showConfirmButton:false}).then(function(){location.href='../log_out.php'});else setTimeout(function(){location.href='../log_out.php'},1600)}},350)}
+  $('#close-pin-pad').on('click','button',function(){var a=$(this).data('pin-action'),d=$(this).data('pin-digit'),v=String($pinInput.val()||'');if(a==='clear')v='';else if(a==='backspace')v=v.slice(0,-1);else if(d!==undefined&&v.length<4)v+=String(d);$pinInput.val(v)});
+  $('#close-pin-cancel').on('click',function(){$pinOverlay.hide();$pinInput.val('')});
+  $('#close-pin-submit').on('click',function(){if(String($pinInput.val())!==closePin){if(window.Swal)Swal.fire({icon:'error',title:'Incorrect PIN',text:'Enter the displayed PIN exactly as shown.'});else alert('Incorrect PIN');$pinInput.val('');return}$pinOverlay.hide();$pinInput.val('');$processOverlay.css('display','flex');$closeButton.prop('disabled',true);$('#close-counter-progress-text').text('Closing counter and saving the summary...');$('.close-step').removeClass('active complete failed');step(1,'active');$.getJSON('../counter/api/counter_api.php',{action:'close',counter_id:<?php echo (int)$counter; ?>}).done(function(res){if(!res||!res.ok){step(1,'failed');throw new Error((res&&res.message)||'Could not close counter.')}finish()}).fail(function(xhr){var m=xhr.responseJSON&&xhr.responseJSON.message?xhr.responseJSON.message:'Could not close the counter right now.';step(1,'failed');$('#close-counter-progress-text').text(m);if(window.Swal)Swal.fire({icon:'error',title:'Counter not closed',text:m});else alert(m);$closeButton.prop('disabled',false);$processOverlay.hide()})});
+  $('#confirm-counter-close').on('click',function(){$pinOverlay.css('display','flex')});
+}(jQuery));
 </script>
+</body>
+</html>
