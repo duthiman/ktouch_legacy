@@ -22,6 +22,48 @@ function counter_repo_open_count(mysqli $connection): int
     return (int)($row['total'] ?? 0);
 }
 
+function counter_repo_close(mysqli $connection, int $counterId, int $userId): array
+{
+    $counterId = (int)$counterId; $userId = (int)$userId;
+    mysqli_begin_transaction($connection);
+    try {
+        $counter = counter_repo_get($connection, $counterId);
+        if (!$counter) throw new RuntimeException('Counter not found');
+        if ((int)($counter['counter_status'] ?? 2) !== 1) throw new LogicException('Counter is not open');
+        $shift = counter_repo_current_shift($connection);
+        if ($shift === '') throw new LogicException('No active shift found');
+
+        $sales = mysqli_query($connection, "SELECT COUNT(sale_id) bills, COALESCE(SUM(amount),0) total FROM kp_sales WHERE shift='" . mysqli_real_escape_string($connection, $shift) . "' AND counter={$counterId}");
+        $salesRow = $sales ? (mysqli_fetch_assoc($sales) ?: []) : [];
+        $summarySql = "INSERT INTO kp_counter_close_summary (shift_date,cntr_id,user_id,total_bills,total_sales) VALUES ('" . mysqli_real_escape_string($connection, $shift) . "',{$counterId},{$userId}," . (int)($salesRow['bills'] ?? 0) . "," . (float)($salesRow['total'] ?? 0) . ")";
+        if (!mysqli_query($connection, $summarySql)) throw new RuntimeException('Could not save counter summary');
+        $summaryId = (int)mysqli_insert_id($connection);
+        $escShift = mysqli_real_escape_string($connection, $shift);
+        $cspQuery = "summary_id={$summaryId}&cntr_id={$counterId}&shift=" . urlencode($shift);
+        $queueSql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,status,shift) VALUES (0,{$summaryId},'csp','COUNTER SUMMARY',{$counterId},'csp.php','" . mysqli_real_escape_string($connection, $cspQuery) . "',{$userId},0,'{$escShift}')";
+        if (!mysqli_query($connection, $queueSql)) throw new RuntimeException('Could not queue counter summary');
+        $counterQueueId = (int)mysqli_insert_id($connection);
+
+        $openBefore = counter_repo_open_count($connection);
+        if (!mysqli_query($connection, "UPDATE kp_counters SET user_id=0,take_status=2,counter_status=2,close_status=2 WHERE cntr_id={$counterId}")) throw new RuntimeException('Could not close counter');
+        if (!mysqli_query($connection, "UPDATE kp_users SET job=2,shift_status=2,counter=0,counter_status=2,cleared=1 WHERE user_id={$userId}")) throw new RuntimeException('Could not reset cashier');
+
+        $shiftQueueId = 0;
+        if ($openBefore <= 1) {
+            $sspPayload = json_encode(['payload_version'=>1,'document_type'=>'SSP','title'=>'SHIFT SUMMARY PRINT','header'=>['shift_date'=>$shift,'print_time'=>date('Y-m-d H:i:s')]], JSON_UNESCAPED_SLASHES);
+            $sspSql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,status,shift,payload_json) VALUES (0,0,'ssp','SHIFT SUMMARY',0,'ssp.php','shift=" . urlencode($shift) . "',{$userId},0,'{$escShift}','" . mysqli_real_escape_string($connection, $sspPayload) . "')";
+            if (!mysqli_query($connection, $sspSql)) throw new RuntimeException('Could not queue shift summary');
+            $shiftQueueId = (int)mysqli_insert_id($connection);
+            if (!mysqli_query($connection, "UPDATE kp_day_shift SET closing=NOW(),close_by={$userId},status=1 WHERE shift='{$escShift}' AND status=2")) {
+                throw new RuntimeException('Could not close the active shift');
+            }
+            mysqli_query($connection, 'DELETE FROM kp_shift');
+        }
+        mysqli_commit($connection);
+        return ['summary_id'=>$summaryId,'counter_queue_id'=>$counterQueueId,'shift_queue_id'=>$shiftQueueId,'is_last_counter'=>$openBefore<=1,'shift'=>$shift];
+    } catch (Throwable $e) { mysqli_rollback($connection); throw $e; }
+}
+
 function counter_repo_open(mysqli $connection, int $counterId, int $userId, int $takeStatus): bool
 {
     $counterId = (int)$counterId; $userId = (int)$userId; $takeStatus = (int)$takeStatus;

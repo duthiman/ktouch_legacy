@@ -35,6 +35,32 @@ function counter_schema_ensure(mysqli $connection): void
         KEY idx_counter_summary_shift (shift_date, cntr_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+    mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_print_queue (
+        queue_id INT NOT NULL AUTO_INCREMENT,
+        sale_id INT NOT NULL DEFAULT 0,
+        ref_id INT NOT NULL DEFAULT 0,
+        print_type VARCHAR(55) NOT NULL DEFAULT 'bill',
+        label VARCHAR(120) NOT NULL DEFAULT '',
+        cntr_id INT NOT NULL DEFAULT 0,
+        route_path VARCHAR(255) NOT NULL DEFAULT '',
+        route_query TEXT NULL,
+        requested_by INT NOT NULL DEFAULT 0,
+        reprint_of INT NOT NULL DEFAULT 0,
+        status TINYINT NOT NULL DEFAULT 0,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        shift VARCHAR(60) NOT NULL DEFAULT '',
+        payload_json LONGTEXT NULL,
+        items_json LONGTEXT NULL,
+        print_attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+        last_error VARCHAR(255) NOT NULL DEFAULT '',
+        printed_at DATETIME NULL,
+        claimed_at DATETIME NULL,
+        lease_until DATETIME NULL,
+        PRIMARY KEY (queue_id),
+        KEY idx_counter_status (cntr_id, status),
+        KEY idx_queue_status_created (status, created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
     $columns = [
         'claimed_at' => "ALTER TABLE kp_print_queue ADD COLUMN claimed_at DATETIME NULL",
         'lease_until' => "ALTER TABLE kp_print_queue ADD COLUMN lease_until DATETIME NULL",

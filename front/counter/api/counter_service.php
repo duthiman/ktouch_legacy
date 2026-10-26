@@ -28,3 +28,18 @@ function counter_service_open(mysqli $connection, int $counterId, int $userId, i
         return counter_api_response(false, 'server_error', $e->getMessage(), ['counter_id' => $counterId]);
     }
 }
+
+function counter_service_close(mysqli $connection, int $counterId, int $userId): array
+{
+    if ($counterId < 1 || $userId < 1) return counter_api_response(false, 'invalid_request', 'A valid counter and user are required', []);
+    try {
+        $result = counter_repo_close($connection, $counterId, $userId);
+        counter_log('counter_closed', $result + ['counter_id'=>$counterId, 'user_id'=>$userId]);
+        return counter_api_response(true, 'closed', 'Counter closed successfully', ['counter_id'=>$counterId] + $result);
+    } catch (LogicException $e) {
+        return counter_api_response(false, 'invalid_state', $e->getMessage(), ['counter_id'=>$counterId]);
+    } catch (Throwable $e) {
+        counter_log('counter_close_failed', ['counter_id'=>$counterId, 'error'=>$e->getMessage()]);
+        return counter_api_response(false, 'server_error', $e->getMessage(), ['counter_id'=>$counterId]);
+    }
+}

@@ -18,9 +18,17 @@ try {
     $response = match ($action) {
         'status', 'counter.status' => counter_service_status($connection, $counterId),
         'open', 'counter.open' => counter_service_open($connection, $counterId, $userId, counter_api_int($data, 'take_status', 3)),
+        'close', 'counter.close' => counter_service_close($connection, $counterId, $userId),
         default => counter_api_response(false, 'unsupported_action', 'Unsupported counter action', ['action' => $action]),
     };
-    if (!$response['ok']) http_response_code($response['status'] === 'not_found' ? 404 : ($response['status'] === 'already_open' ? 409 : 422));
+    if (!$response['ok']) {
+        http_response_code(match ($response['status']) {
+            'not_found' => 404,
+            'already_open', 'invalid_state' => 409,
+            'server_error' => 500,
+            default => 422,
+        });
+    }
     counter_api_json($response);
 } catch (Throwable $e) {
     http_response_code(500);
