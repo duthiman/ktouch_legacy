@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../inc/connection.php';
 require_once __DIR__ . '/funcs.php';
+require_once __DIR__ . '/../../front/Chaba/V1/Repositories/ChabaQueueRepository.php';
 header('Content-Type: application/json; charset=utf-8');
 
 $counter = (int)($_POST['counter'] ?? $_GET['counter'] ?? 0);
@@ -83,22 +84,14 @@ if ($payload === false) {
     exit;
 }
 
-$payloadSql = mysqli_real_escape_string($connection, $payload);
-$label = mysqli_real_escape_string($connection, 'SVP');
-$shiftSql = mysqli_real_escape_string($connection, $shift);
-$requestedBy = $userId;
-$itemsJsonColumn = mysqli_query($connection, "SHOW COLUMNS FROM kp_print_queue LIKE 'items_json'");
-if ($itemsJsonColumn && mysqli_num_rows($itemsJsonColumn) === 0) {
-    mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN items_json LONGTEXT NULL AFTER payload_json");
-}
-$itemsJsonSql = mysqli_real_escape_string($connection, json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-$routePath = mysqli_real_escape_string($connection, 'render_variance.php');
-$routeQuery = mysqli_real_escape_string($connection, 'cntr_id=' . $counter . '&shift=' . rawurlencode($shift));
-$ok = mysqli_query($connection, "INSERT INTO kp_print_queue
-    (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json)
-    VALUES (0,0,'SVP','{$label}','{$counter}','{$routePath}','{$routeQuery}','{$requestedBy}',0,0,0,'','{$shiftSql}','{$payloadSql}','{$itemsJsonSql}')");
-if (!$ok) {
+try {
+    $queueId = \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::enqueue($connection, [
+        'print_type'=>'SVP','label'=>'STOCK VARIANCE PRINT','cntr_id'=>$counter,
+        'route_path'=>'svp.php','route_query'=>'cntr_id='.$counter.'&shift='.rawurlencode($shift),
+        'requested_by'=>$userId,'shift'=>$shift,'payload'=>json_decode($payload, true),
+    ]);
+} catch (Throwable $e) {
     echo json_encode(['ok' => false, 'message' => 'Could not queue the variance report.']);
     exit;
 }
-echo json_encode(['ok' => true, 'message' => 'Variance report queued for printing.', 'queue_id' => (int)mysqli_insert_id($connection)]);
+echo json_encode(['ok' => true, 'message' => 'Variance report queued for printing.', 'queue_id' => $queueId]);

@@ -9,8 +9,37 @@ use RuntimeException;
 /** Queue writes shared by application modules that still use mysqli. */
 final class ChabaQueueRepository
 {
+    public static function ensureSchema(mysqli $connection): void
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS kp_print_queue (
+            queue_id INT NOT NULL AUTO_INCREMENT, sale_id INT NOT NULL DEFAULT 0,
+            ref_id INT NOT NULL DEFAULT 0, print_type VARCHAR(55) NOT NULL DEFAULT 'bill',
+            label VARCHAR(120) NOT NULL DEFAULT '', cntr_id INT NOT NULL DEFAULT 0,
+            route_path VARCHAR(255) NOT NULL DEFAULT '', route_query TEXT NULL,
+            requested_by INT NOT NULL DEFAULT 0, reprint_of INT NOT NULL DEFAULT 0,
+            status TINYINT NOT NULL DEFAULT 0, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            shift VARCHAR(60) NOT NULL DEFAULT '', payload_json LONGTEXT NULL, items_json LONGTEXT NULL,
+            print_attempts TINYINT UNSIGNED NOT NULL DEFAULT 0, last_error VARCHAR(255) NOT NULL DEFAULT '',
+            printed_at DATETIME NULL, claimed_at DATETIME NULL, lease_until DATETIME NULL,
+            PRIMARY KEY (queue_id), KEY idx_queue_status_created (status,created_at), KEY idx_counter_status (cntr_id,status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+        if (!mysqli_query($connection, $sql)) throw new RuntimeException('Could not prepare Chaba print queue');
+        foreach ([
+            'claimed_at' => 'DATETIME NULL', 'lease_until' => 'DATETIME NULL',
+            'print_attempts' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0', 'last_error' => "VARCHAR(255) NOT NULL DEFAULT ''",
+            'shift' => "VARCHAR(60) NOT NULL DEFAULT ''", 'payload_json' => 'LONGTEXT NULL', 'items_json' => 'LONGTEXT NULL',
+        ] as $column => $definition) {
+            $name = mysqli_real_escape_string($connection, $column);
+            $check = mysqli_query($connection, "SHOW COLUMNS FROM kp_print_queue LIKE '{$name}'");
+            if ($check && mysqli_num_rows($check) === 0 && !mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN `{$name}` {$definition}")) {
+                throw new RuntimeException('Could not heal Chaba queue column: ' . $column);
+            }
+        }
+    }
+
     public static function enqueue(mysqli $connection, array $job): int
     {
+        self::ensureSchema($connection);
         $payload = $job['payload'] ?? $job['payload_json'] ?? [];
         if (!is_array($payload)) $payload = json_decode((string)$payload, true);
         if (!is_array($payload) || empty($payload)) throw new RuntimeException('A complete print payload is required');
