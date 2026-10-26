@@ -2,6 +2,7 @@
 declare(strict_types=1);
 session_start();
 require_once '../../../inc/connection.php';
+require_once '../../shift/api/shift_repository.php';
 require_once __DIR__ . '/counter_helpers.php';
 require_once __DIR__ . '/counter_logger.php';
 require_once __DIR__ . '/counter_schema.php';

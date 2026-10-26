@@ -9,7 +9,7 @@ function counter_service_status(mysqli $connection, int $counterId): array
         'counter_id' => $counterId,
         'counter' => $counter,
         'open_counters' => counter_repo_open_count($connection),
-        'shift' => counter_repo_current_shift($connection),
+        'shift' => shift_repo_current_value($connection),
     ]);
 }
 
@@ -35,7 +35,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
     $transactionStarted = false;
     try {
         counter_repo_assert_open($connection, $counterId);
-        $shift = counter_repo_current_shift($connection);
+        $shift = shift_repo_current_value($connection);
         if ($shift === '') throw new LogicException('No active shift found');
         mysqli_begin_transaction($connection);
         $transactionStarted = true;
@@ -47,7 +47,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         counter_repo_release_cashier($connection, $userId);
         $isLastCounter = $openBefore <= 1;
         $shiftQueueId = $isLastCounter ? counter_repo_queue_ssp($connection, $shift, $userId) : 0;
-        if ($isLastCounter) counter_repo_close_shift($connection, $shift, $userId);
+        if ($isLastCounter) shift_repo_close_active($connection, $shift, $userId);
         mysqli_commit($connection);
         $transactionStarted = false;
         $result = ['summary_id'=>$summaryId, 'counter_queue_id'=>$counterQueueId, 'shift_queue_id'=>$shiftQueueId, 'is_last_counter'=>$isLastCounter, 'shift'=>$shift];

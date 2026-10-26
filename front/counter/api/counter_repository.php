@@ -1,13 +1,6 @@
 <?php
 declare(strict_types=1);
 
-function counter_repo_current_shift(mysqli $connection): string
-{
-    $result = mysqli_query($connection, "SELECT shift FROM kp_shift ORDER BY shift DESC LIMIT 1");
-    $row = $result ? mysqli_fetch_assoc($result) : null;
-    return (string)($row['shift'] ?? '');
-}
-
 function counter_repo_get(mysqli $connection, int $counterId): ?array
 {
     $counterId = (int)$counterId;
@@ -72,13 +65,6 @@ function counter_repo_queue_ssp(mysqli $connection, string $shift, int $userId):
     $sql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,status,shift,payload_json) VALUES (0,0,'ssp','SHIFT SUMMARY',0,'ssp.php','shift=" . urlencode($shift) . "'," . (int)$userId . ",0,'{$escShift}','{$payload}')";
     if (!mysqli_query($connection, $sql)) throw new RuntimeException('Could not queue shift summary');
     return (int)mysqli_insert_id($connection);
-}
-
-function counter_repo_close_shift(mysqli $connection, string $shift, int $userId): void
-{
-    $escShift = mysqli_real_escape_string($connection, $shift);
-    if (!mysqli_query($connection, "UPDATE kp_day_shift SET closing=NOW(),close_by=" . (int)$userId . ",status=1 WHERE shift='{$escShift}' AND status=2")) throw new RuntimeException('Could not close the active shift');
-    if (!mysqli_query($connection, 'DELETE FROM kp_shift')) throw new RuntimeException('Could not clear the active shift');
 }
 
 function counter_repo_open(mysqli $connection, int $counterId, int $userId, int $takeStatus): bool
