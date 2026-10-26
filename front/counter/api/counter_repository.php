@@ -23,15 +23,6 @@ function counter_repo_assert_open(mysqli $connection, int $counterId): array
     return $counter;
 }
 
-function counter_repo_queue_csp(mysqli $connection, int $summaryId, int $counterId, string $shift, int $userId): int
-{
-    $escShift = mysqli_real_escape_string($connection, $shift);
-    $query = mysqli_real_escape_string($connection, "summary_id={$summaryId}&cntr_id={$counterId}&shift=" . urlencode($shift));
-    $sql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,status,shift) VALUES (0,{$summaryId},'csp','COUNTER SUMMARY'," . (int)$counterId . ",'csp.php','{$query}'," . (int)$userId . ",0,'{$escShift}')";
-    if (!mysqli_query($connection, $sql)) throw new RuntimeException('Could not queue counter summary');
-    return (int)mysqli_insert_id($connection);
-}
-
 function counter_repo_close_status(mysqli $connection, int $counterId): void
 {
     if (!mysqli_query($connection, "UPDATE kp_counters SET user_id=0,take_status=2,counter_status=2,close_status=2 WHERE cntr_id=" . (int)$counterId)) throw new RuntimeException('Could not close counter');
@@ -40,15 +31,6 @@ function counter_repo_close_status(mysqli $connection, int $counterId): void
 function counter_repo_release_cashier(mysqli $connection, int $userId): void
 {
     if (!mysqli_query($connection, "UPDATE kp_users SET job=2,shift_status=2,counter=0,counter_status=2,cleared=1 WHERE user_id=" . (int)$userId)) throw new RuntimeException('Could not reset cashier');
-}
-
-function counter_repo_queue_ssp(mysqli $connection, string $shift, int $userId): int
-{
-    $escShift = mysqli_real_escape_string($connection, $shift);
-    $payload = mysqli_real_escape_string($connection, (string)json_encode(['payload_version'=>1,'document_type'=>'SSP','title'=>'SHIFT SUMMARY PRINT','header'=>['shift_date'=>$shift,'print_time'=>date('Y-m-d H:i:s')]], JSON_UNESCAPED_SLASHES));
-    $sql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,status,shift,payload_json) VALUES (0,0,'ssp','SHIFT SUMMARY',0,'ssp.php','shift=" . urlencode($shift) . "'," . (int)$userId . ",0,'{$escShift}','{$payload}')";
-    if (!mysqli_query($connection, $sql)) throw new RuntimeException('Could not queue shift summary');
-    return (int)mysqli_insert_id($connection);
 }
 
 function counter_repo_open(mysqli $connection, int $counterId, int $userId, int $takeStatus): bool

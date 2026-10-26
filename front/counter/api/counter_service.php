@@ -41,12 +41,12 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         $transactionStarted = true;
         $sales = sales_repo_counter_totals($connection, $counterId, $shift);
         $summaryId = counter_summary_repo_create($connection, $counterId, $userId, $shift, $sales);
-        $counterQueueId = counter_repo_queue_csp($connection, $summaryId, $counterId, $shift, $userId);
+        $counterQueueId = \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueCsp($connection, $summaryId, $counterId, $shift, $userId);
         $openBefore = counter_repo_open_count($connection);
         counter_repo_close_status($connection, $counterId);
         counter_repo_release_cashier($connection, $userId);
         $isLastCounter = $openBefore <= 1;
-        $shiftQueueId = $isLastCounter ? counter_repo_queue_ssp($connection, $shift, $userId) : 0;
+        $shiftQueueId = $isLastCounter ? \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueSsp($connection, $shift, $userId) : 0;
         if ($isLastCounter) shift_repo_close_active($connection, $shift, $userId);
         mysqli_commit($connection);
         $transactionStarted = false;

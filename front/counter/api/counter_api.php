@@ -5,6 +5,7 @@ require_once '../../../inc/connection.php';
 require_once '../../shift/api/shift_repository.php';
 require_once '../../sales/api/sales_repository.php';
 require_once '../../reports/api/counter_summary_repository.php';
+require_once '../../Chaba/V1/Repositories/ChabaQueueRepository.php';
 require_once __DIR__ . '/counter_helpers.php';
 require_once __DIR__ . '/counter_logger.php';
 require_once __DIR__ . '/counter_schema.php';
