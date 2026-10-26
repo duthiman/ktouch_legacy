@@ -517,7 +517,7 @@ if (function_exists('kp_return_ensure_schema')) {
     }, 15000);
     $(document).on('click','#cash-card-clear-today', function(e){
       e.preventDefault();
-      $('#clearb').trigger('click');
+      loadDeskPanel('clrbill/clearb.php', {}, 'Could not load current bills.');
     });
     $(document).on('click','#cash-card-returns', function(e){
       e.preventDefault();

@@ -475,7 +475,7 @@ $cash_waiter_totals_side = mysqli_query($connection, "SELECT s.user_id, u.userna
     }, 15000);
     $(document).on('click','#cash-card-clear-today', function(e){
       e.preventDefault();
-      $('#clearb').trigger('click');
+      loadDeskPanel('clrbill/clearb.php', {}, 'Could not load current bills.');
     });
     $(document).on('click','#cash-card-returns', function(e){
       e.preventDefault();
