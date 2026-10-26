@@ -37,6 +37,10 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         $counter = counter_repo_assert_open($connection, $counterId);
         $shift = shift_repo_current_value($connection);
         if ($shift === '') throw new LogicException('No active shift found');
+        $blockers = counter_repo_close_blockers($connection, $counterId, $shift);
+        if ($blockers['pending_returns'] > 0) throw new LogicException('There are pending returns on this counter. Finish or reject them before closing.');
+        if ($blockers['pending_transfers'] > 0) throw new LogicException('There are unreceived transfers on this counter. Receive them before closing.');
+        if ($blockers['uncleared_bills'] > 0) throw new LogicException('There are uncleared bills on this counter. Clear them before closing.');
         mysqli_begin_transaction($connection);
         $transactionStarted = true;
         $sales = sales_repo_counter_totals($connection, $counterId, $shift);

@@ -23,6 +23,24 @@ function counter_repo_assert_open(mysqli $connection, int $counterId): array
     return $counter;
 }
 
+function counter_repo_close_blockers(mysqli $connection, int $counterId, string $shift): array
+{
+    $escShift = mysqli_real_escape_string($connection, $shift);
+    $counterId = (int)$counterId;
+    $count = static function (string $table, string $where) use ($connection): int {
+        $tableCheck = mysqli_query($connection, "SHOW TABLES LIKE '" . mysqli_real_escape_string($connection, $table) . "'");
+        if (!$tableCheck || mysqli_num_rows($tableCheck) < 1) return 0;
+        $query = mysqli_query($connection, "SELECT COUNT(*) AS total FROM `{$table}` WHERE {$where}");
+        $row = $query ? mysqli_fetch_assoc($query) : null;
+        return (int)($row['total'] ?? 0);
+    };
+    return [
+        'pending_returns' => $count('kp_ret_items', "shift='{$escShift}' AND stock_counter={$counterId} AND ret_status=3"),
+        'pending_transfers' => $count('kp_counter_req', "counter={$counterId} AND issue_status=1 AND rec_status=2"),
+        'uncleared_bills' => $count('kp_sales', "shift='{$escShift}' AND counter={$counterId} AND pay_status=2"),
+    ];
+}
+
 function counter_repo_close_status(mysqli $connection, int $counterId): void
 {
     if (!mysqli_query($connection, "UPDATE kp_counters SET user_id=0,take_status=2,counter_status=2,close_status=2 WHERE cntr_id=" . (int)$counterId)) throw new RuntimeException('Could not close counter');
