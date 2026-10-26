@@ -350,7 +350,9 @@ $cash_waiter_totals_side = mysqli_query($connection, "SELECT s.user_id, u.userna
     return $('#cleardiv');
   }
   function loadDeskPanel(url, data, emptyMessage) {
-    var $target = ensureCashWorkShell();
+    var $target = url === 'clrbill/clearb.php' && $('#cash-main-area').length
+      ? $('#cash-main-area')
+      : ensureCashWorkShell();
     $.ajax({
       url: url,
       type: 'GET',

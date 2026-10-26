@@ -355,7 +355,9 @@ if (function_exists('kp_return_ensure_schema')) {
     return $('#cleardiv');
   }
   function loadDeskPanel(url, data, emptyMessage) {
-    var $target = ensureCashWorkShell();
+    var $target = url === 'clrbill/clearb.php' && $('#cash-main-area').length
+      ? $('#cash-main-area')
+      : ensureCashWorkShell();
     var panelMap = {
       'cash_mode_clear_bill': 'clear_bill_mode',
       'cash_mode_clear_waiter': 'clear_waiter_mode',
