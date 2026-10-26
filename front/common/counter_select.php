@@ -8,7 +8,7 @@ if (!isset($connection)) {
     require_once dirname(__DIR__, 2) . '/inc/connection.php';
 }
 
-$counter_select_api = (string)($counter_select_api ?? 'api/bill_api.php');
+$counter_select_api = (string)($counter_select_api ?? '../kwedia/api/bill_api.php');
 $counter_select_action = (string)($counter_select_action ?? 'initialise');
 $counter_select_status = (int)($counter_select_status ?? 1);
 $counter_select_sale_id = (int)($counter_select_sale_id ?? ($_REQUEST['sale_id'] ?? 0));
