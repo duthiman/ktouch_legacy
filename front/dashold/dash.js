@@ -574,7 +574,7 @@ $(function() {
     e.preventDefault();
     dashOpenModal('Loading counter selection...');
     $.ajax({
-      url: '../counter/counter_select.php',
+      url: '../common/counter_select.php',
       type: 'POST',
       dataType: 'html'
     })

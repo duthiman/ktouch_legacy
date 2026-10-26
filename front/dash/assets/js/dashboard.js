@@ -227,7 +227,7 @@
     if (target.closest('.sales-summary-trigger')) { event.preventDefault(); openSalesSummary(); return; }
     if (target.closest('.logout')) { event.preventDefault(); go('../log_out.php'); return; }
     if (target.closest('.home')) { event.preventDefault(); go('index.php'); return; }
-    if (target.closest('.place')) { event.preventDefault(); loadModal('../counter/counter_select.php'); return; }
+    if (target.closest('.place')) { event.preventDefault(); loadModal('../common/counter_select.php'); return; }
     if (target.closest('.lock, .password')) { event.preventDefault(); loadModal('../staff/cpass.php'); return; }
     if (target.closest('.open-shift')) { event.preventDefault(); go('../shift/index.php?action=shift.open'); return; }
     if (target.closest('.open')) { event.preventDefault(); loadModal('../counter/open.php'); return; }
