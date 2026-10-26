@@ -35,13 +35,4 @@ final class ChabaQueueRepository
         return (int)mysqli_insert_id($connection);
     }
 
-    public static function queueCsp(mysqli $connection, int $summaryId, int $counterId, string $shift, int $userId, array $document = []): int
-    {
-        return self::enqueue($connection, ['ref_id'=>$summaryId,'print_type'=>'CSP','label'=>'COUNTER SUMMARY','cntr_id'=>$counterId,'route_path'=>'csp.php','route_query'=>"summary_id={$summaryId}&cntr_id={$counterId}&shift=".urlencode($shift),'requested_by'=>$userId,'shift'=>$shift,'payload'=>$document]);
-    }
-
-    public static function queueSsp(mysqli $connection, string $shift, int $userId, array $document = []): int
-    {
-        return self::enqueue($connection, ['print_type'=>'SSP','label'=>'SHIFT SUMMARY','route_path'=>'ssp.php','route_query'=>'shift='.urlencode($shift),'requested_by'=>$userId,'shift'=>$shift,'payload'=>$document]);
-    }
 }

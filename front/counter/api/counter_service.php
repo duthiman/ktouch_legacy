@@ -59,12 +59,13 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
             ],
             'csp' => $cspData,
         ];
-        $counterQueueId = \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueCsp($connection, $summaryId, $counterId, $shift, $userId, $cspDocument);
+        $counterQueueId = \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::enqueue($connection, ['ref_id'=>$summaryId,'print_type'=>'CSP','label'=>'COUNTER SUMMARY','cntr_id'=>$counterId,'route_path'=>'csp.php','route_query'=>"summary_id={$summaryId}&cntr_id={$counterId}&shift=".urlencode($shift),'requested_by'=>$userId,'shift'=>$shift,'payload'=>$cspDocument]);
         $openBefore = counter_repo_open_count($connection);
         counter_repo_close_status($connection, $counterId);
         counter_repo_release_cashier($connection, $userId);
         $isLastCounter = $openBefore <= 1;
-        $sspQueueId = $isLastCounter ? \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueSsp($connection, $shift, $userId, shift_summary_repo_document($connection, $shift, $userId)) : 0;
+        $sspDocument = $isLastCounter ? shift_summary_repo_document($connection, $shift, $userId) : [];
+        $sspQueueId = $isLastCounter ? \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::enqueue($connection, ['print_type'=>'SSP','label'=>'SHIFT SUMMARY','route_path'=>'ssp.php','route_query'=>'shift='.urlencode($shift),'requested_by'=>$userId,'shift'=>$shift,'payload'=>$sspDocument]) : 0;
         $shiftQueueId = $sspQueueId;
         if ($isLastCounter) shift_repo_close_active($connection, $shift, $userId);
         mysqli_commit($connection);
