@@ -14,12 +14,12 @@ $voids = (int)column_count('kp_del_orders', 'sale_id', "user_id='$user_id' AND s
 $void_total = (float)column_total('kp_del_orders', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
 $cancel_total = (float)column_total('kp_cancelled', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
 $open_orders = (int)column_count('kp_sales_open', 'sale_id', "user_id='$user_id' AND status=1");
-$live_orders = (int)column_count('kp_sales', 'sale_id', "user_id='$user_id' AND shift='$safe_shift' AND status=1");
+$live_orders = (int)column_count('kp_sales', 'sale_id', "user_id='$user_id' AND shift='$safe_shift' AND sale_id IN (SELECT sale_id FROM kp_sale_status WHERE status=1)");
 $open_rows = [];
 $open_query = mysqli_query($connection, "SELECT o.sale_id,COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=o.sale_id),0) AS amount,o.created_at AS datime,o.counter_id AS counter FROM kp_sales_open o WHERE o.user_id='$user_id' AND o.status=1 ORDER BY o.sale_id DESC LIMIT 100");
 while ($open_query && ($row = mysqli_fetch_assoc($open_query))) $open_rows[] = $row;
 $live_rows = [];
-$live_query = mysqli_query($connection, "SELECT s.sale_id,COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=s.sale_id),0) AS amount,s.datime,s.counter FROM kp_sales s WHERE s.user_id='$user_id' AND s.shift='$safe_shift' AND s.status=1 ORDER BY s.sale_id DESC LIMIT 100");
+$live_query = mysqli_query($connection, "SELECT s.sale_id,COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=s.sale_id),0) AS amount,s.datime,s.counter FROM kp_sales s WHERE s.user_id='$user_id' AND s.shift='$safe_shift' AND s.sale_id IN (SELECT sale_id FROM kp_sale_status WHERE status=1) ORDER BY s.sale_id DESC LIMIT 100");
 while ($live_query && ($row = mysqli_fetch_assoc($live_query))) $live_rows[] = $row;
 $sale_rows = [];
 $sale_query = mysqli_query($connection, "SELECT s.sale_id, COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=s.sale_id),0) AS amount, s.datime, s.counter,
