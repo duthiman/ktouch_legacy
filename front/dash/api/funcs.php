@@ -274,7 +274,7 @@ if (!function_exists('dash_build_payload')) {
             $safe_shift = mysqli_real_escape_string($connection, (string)$shift);
             $recent_query = mysqli_query(
                 $connection,
-                "SELECT * FROM kp_sales WHERE shift='$safe_shift' AND user_id='$user_id' ORDER BY sale_id DESC LIMIT 5"
+                "SELECT * FROM kp_sales WHERE shift='$safe_shift' AND user_id='$user_id' AND pay_status=2 ORDER BY sale_id DESC LIMIT 5"
             );
             while ($recent_query && $recent_row = mysqli_fetch_assoc($recent_query)) {
                 $pay_status = (int)($recent_row['pay_status'] ?? 0);
