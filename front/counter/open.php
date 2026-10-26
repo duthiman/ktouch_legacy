@@ -2,65 +2,45 @@
 session_start();
 require_once '../../inc/connection.php';
 require_once '../../inc/gen_funcs.php';
-
-$currentUser = (int)($_SESSION['user_id'] ?? 0);
-$counters = [];
-$counterQuery = mysqli_query($connection, "SELECT cntr_id,name FROM kp_counters WHERE del_status=2 AND counter_status=2 ORDER BY cntr_id");
-while ($counterQuery && ($row = mysqli_fetch_assoc($counterQuery))) $counters[] = $row;
-$users = [];
-$userQuery = mysqli_query($connection, "SELECT user_id,username FROM kp_users WHERE user_id=" . $currentUser . " OR (counter=0 AND job IN (1,2)) ORDER BY username");
-while ($userQuery && ($row = mysqli_fetch_assoc($userQuery))) $users[(int)$row['user_id']] = $row;
+$userId=(int)($_SESSION['user_id']??0);
+$counters=[];$q=mysqli_query($connection,"SELECT cntr_id,name FROM kp_counters WHERE del_status=2 AND counter_status<>1 ORDER BY cntr_id");
+while($q&&($r=mysqli_fetch_assoc($q)))$counters[]=$r;
+$users=[];$q=mysqli_query($connection,"SELECT user_id,username FROM kp_users WHERE counter=0 OR user_id={$userId} ORDER BY username");
+while($q&&($r=mysqli_fetch_assoc($q)))$users[]=$r;
+$open=[];$q=mysqli_query($connection,"SELECT cntr_id,name,user_id,take_status FROM kp_counters WHERE del_status=2 AND counter_status=1 ORDER BY cntr_id");
+while($q&&($r=mysqli_fetch_assoc($q)))$open[]=$r;
 ?>
 <style>
-.counter-open-modal{width:100%;max-width:1040px;margin:0 auto;background:linear-gradient(180deg,#fff9ea,#f7edd2);color:#243b53;border-radius:7px;overflow:hidden;box-shadow:0 20px 40px rgba(33,19,6,.24)}
-.counter-open-modal .modal-header{padding:14px 16px!important;background:linear-gradient(135deg,#7e2014,#b94828 52%,#e7a33a)!important;color:#fff8ea!important;border:0}
-.counter-open-modal .modal-title{text-transform:uppercase;font-weight:900;letter-spacing:.04em}
-.counter-open-modal .modal-body{background:linear-gradient(180deg,#fff9ea,#f7edd2);padding:14px!important}
-.counter-open-modal .form-group{background:rgba(255,255,255,.92);border:1px solid rgba(146,110,52,.18);border-radius:7px;padding:12px;box-shadow:0 10px 20px rgba(86,61,24,.08)}
-.counter-open-modal label{display:block;color:#7e3a20;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
-.counter-open-modal select{border-radius:7px;height:42px;font-weight:700}
-.counter-open-steps{background:#fff;border:1px solid #eadcc0;border-radius:7px!important;color:#7e3a20;font-size:12px;font-weight:800;line-height:2;padding:12px!important}
-.counter-open-modal .modal-footer{background:#fffdf8;border:0;padding:12px 14px 14px}
-.counter-open-submit{border:0;border-radius:7px;font-weight:900;text-transform:uppercase;min-height:44px;padding:0 20px}
-.counter-open-result{border-radius:7px;margin-top:12px}
-@media(max-width:520px){.counter-open-modal .modal-body{padding:10px!important}.counter-open-modal .modal-footer{display:flex;gap:8px}.counter-open-modal .modal-footer button{flex:1}.counter-open-submit{padding:0 10px}}
+.open-counter-shell .modal-content{width:100%;max-width:1040px;margin:0 auto;border-radius:18px;overflow:hidden;border:0;box-shadow:0 20px 40px rgba(33,19,6,.24)}
+.open-counter-shell .modal-header{border:0;padding:14px 16px;background:linear-gradient(135deg,#7e2014 0%,#b94828 52%,#e7a33a 100%);color:#fff8ea}
+.open-counter-shell .modal-title{margin:0;font-size:20px;font-weight:900;text-transform:uppercase}.open-counter-shell .close{color:#fff;opacity:1}
+.open-counter-shell .modal-body{background:linear-gradient(180deg,#fff9ea,#f7edd2);padding:14px}.open-counter-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.open-counter-panel{border-radius:14px;background:rgba(255,255,255,.92);border:1px solid rgba(146,110,52,.12);box-shadow:0 10px 20px rgba(86,61,24,.08);padding:12px;min-height:260px}
+.open-counter-title{margin:0 0 10px;font-size:13px;font-weight:900;letter-spacing:.08em;color:#7e3a20;text-transform:uppercase}
+.open-counter-empty,.open-counter-warning{border-radius:12px;padding:12px;font-size:12px;font-weight:800;line-height:1.45}.open-counter-empty{background:#f7f1df;color:#8a6a3a;text-align:center}
+.open-counter-list,.cashier-list{display:grid;grid-template-columns:1fr;gap:8px}.open-counter-btn,.cashier-btn{width:100%;min-height:58px;border:0;border-radius:12px;background:linear-gradient(135deg,#fffdfa,#f0e2b7);color:#02550e!important;font-size:13px;font-weight:900;text-transform:uppercase;text-align:left;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:inset 0 0 0 2px rgba(97,184,70,.3);white-space:normal}
+.open-counter-btn.selected,.cashier-btn.selected{background:linear-gradient(135deg,#d9f99d,#86efac);box-shadow:inset 0 0 0 3px #15803d}.open-counter-btn .badge,.cashier-btn .badge{width:34px;height:34px;border-radius:10px;background:#02550e;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex:0 0 auto}.open-counter-btn .copy,.cashier-btn .copy{display:block;min-width:0;line-height:1.2}
+.open-counter-table{width:100%;margin:0}.open-counter-table th,.open-counter-table td{font-size:12px;vertical-align:middle!important}.open-counter-shell .modal-footer{border:0;background:#fffdf8;padding:12px 14px 14px}.open-counter-close{min-height:44px;border:0;border-radius:12px;background:#ead6d6;color:#7e2014;font-size:13px;font-weight:900;text-transform:uppercase;padding:0 18px}.open-counter-submit{min-height:44px;border:0;border-radius:12px;background:#15803d;color:#fff;font-size:13px;font-weight:900;text-transform:uppercase;padding:0 18px}.open-counter-progress{display:none;border-radius:12px;background:#fff4ce;color:#7a5b14;padding:10px;margin-top:10px;font-weight:800}
+@media(max-width:991px){.open-counter-shell .modal-content{max-width:100%}.open-counter-grid{grid-template-columns:1fr}.open-counter-panel{min-height:0}}@media(max-width:520px){.open-counter-shell .modal-body{padding:10px}.open-counter-btn,.cashier-btn{min-height:54px;font-size:12px;padding:9px 10px}.open-counter-table th,.open-counter-table td{font-size:11px}}
 </style>
-<div class="counter-open-modal" style="background:#fff;color:#243b53;border-radius:7px;overflow:hidden;">
-  <div class="modal-header" style="background:#166534;color:#fff;border-radius:7px 7px 0 0;">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">Open Counter</h4>
-  </div>
-  <div class="modal-body" style="padding:18px;">
-    <div class="counter-open-steps" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;padding:12px;margin-bottom:14px;">
-      <div data-open-step="1">1. Checking the active shift</div>
-      <div data-open-step="2">2. Assigning the cashier</div>
-      <div data-open-step="3">3. Opening the counter</div>
-      <div data-open-step="4">4. Updating stock-take status</div>
-    </div>
-    <div class="form-group"><label for="counter-open-id">Counter</label><select id="counter-open-id" class="form-control">
-      <?php foreach ($counters as $counter): ?><option value="<?php echo (int)$counter['cntr_id']; ?>"><?php echo htmlspecialchars((string)$counter['name'], ENT_QUOTES, 'UTF-8'); ?></option><?php endforeach; ?>
-    </select></div>
-    <div class="form-group"><label for="counter-open-user">Cashier</label><select id="counter-open-user" class="form-control">
-      <?php foreach ($users as $user): ?><option value="<?php echo (int)$user['user_id']; ?>"<?php echo (int)$user['user_id'] === $currentUser ? ' selected' : ''; ?>><?php echo htmlspecialchars((string)$user['username'], ENT_QUOTES, 'UTF-8'); ?></option><?php endforeach; ?>
-    </select></div>
-    <div class="counter-open-result" aria-live="polite"></div>
-  </div>
-  <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button><button type="button" class="btn btn-success counter-open-submit">Open Counter</button></div>
-</div>
+<div class="open-counter-shell"><div class="modal-content">
+<div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title">Open Counter</h4></div>
+<div class="modal-body"><div class="open-counter-grid">
+<div class="open-counter-panel"><p class="open-counter-title">Available Counters</p><div class="open-counter-list">
+<?php if(!$counters): ?><div class="open-counter-empty">No pending counters are ready to open.</div><?php endif; ?>
+<?php foreach($counters as $r): ?><button type="button" class="open-counter-btn js-open-counter-select" data-id="<?php echo (int)$r['cntr_id']; ?>"><span class="badge"><?php echo (int)$r['cntr_id']; ?></span><span class="copy"><?php echo htmlspecialchars($r['name'],ENT_QUOTES,'UTF-8'); ?></span></button><?php endforeach; ?>
+</div></div>
+<div class="open-counter-panel"><p class="open-counter-title">Select Cashier</p><div class="cashier-list">
+<?php if(!$users): ?><div class="open-counter-empty">No available cashiers.</div><?php endif; ?>
+<?php foreach($users as $r): ?><button type="button" class="cashier-btn js-cashier-select" data-id="<?php echo (int)$r['user_id']; ?>"><span class="badge"><?php echo (int)$r['user_id']; ?></span><span class="copy"><?php echo htmlspecialchars($r['username'],ENT_QUOTES,'UTF-8'); ?></span></button><?php endforeach; ?>
+</div><div class="open-counter-progress" id="open-counter-progress">Opening counter and updating records...</div></div>
+<div class="open-counter-panel"><p class="open-counter-title">Open Counters</p><div class="table-responsive"><table class="table open-counter-table"><thead><tr><th>Counter</th><th>Cashier</th><th>Status</th></tr></thead><tbody>
+<?php if(!$open): ?><tr><td colspan="3" class="text-center">No open counters.</td></tr><?php endif; ?>
+<?php foreach($open as $r): ?><tr><td><?php echo htmlspecialchars($r['name'],ENT_QUOTES,'UTF-8'); ?></td><td><?php echo htmlspecialchars(function_exists('get_user')?get_user((int)$r['user_id']):('User '.$r['user_id']),ENT_QUOTES,'UTF-8'); ?></td><td><?php echo (int)$r['take_status']===2?'NOT STARTED':((int)$r['take_status']===3?'CONTINUING':'TAKE FINISHED'); ?></td></tr><?php endforeach; ?>
+</tbody></table></div></div>
+</div></div>
+<div class="modal-footer"><button type="button" class="open-counter-close" data-dismiss="modal">Close</button><button type="button" class="open-counter-submit" id="confirm-counter-open" disabled>Open Counter</button></div>
+</div></div>
 <script>
-(function () {
-  var shell = document.querySelector('.counter-open-modal');
-  if (!shell || shell.dataset.ready === '1') return;
-  shell.dataset.ready = '1';
-  shell.querySelector('.counter-open-submit').addEventListener('click', function () {
-    var button = this, result = shell.querySelector('.counter-open-result');
-    var counter = Number(shell.querySelector('#counter-open-id').value || 0);
-    var user = Number(shell.querySelector('#counter-open-user').value || 0);
-    button.disabled = true; button.textContent = 'Opening…';
-    fetch('../counter/api/counter_api.php?action=open&counter_id=' + counter + '&user_id=' + user + '&take_status=3', {credentials:'same-origin', headers:{Accept:'application/json'}})
-      .then(function (response) { return response.json().then(function (payload) { if (!response.ok || !payload.ok) throw new Error(payload.message || 'Could not open counter.'); return payload; }); })
-      .then(function (payload) { result.className='counter-open-result alert alert-success'; result.textContent=payload.message || 'Counter opened successfully.'; Array.prototype.forEach.call(shell.querySelectorAll('[data-open-step]'), function(step){ step.style.color='#15803d'; step.style.fontWeight='700'; step.textContent='✓ ' + step.textContent.replace(/^✓\s*/, ''); }); button.textContent='Opened'; setTimeout(function(){window.location.reload();},900); })
-      .catch(function (error) { result.className='counter-open-result alert alert-danger'; result.textContent=error.message || 'Could not open counter.'; button.disabled=false; button.textContent='Open Counter'; });
-  });
-}());
+(function($){var counter=0,user=0;$('.js-open-counter-select').on('click',function(){counter=Number($(this).data('id'));$('.js-open-counter-select').removeClass('selected');$(this).addClass('selected');$('#confirm-counter-open').prop('disabled',!user)});$('.js-cashier-select').on('click',function(){user=Number($(this).data('id'));$('.js-cashier-select').removeClass('selected');$(this).addClass('selected');$('#confirm-counter-open').prop('disabled',!counter)});$('#confirm-counter-open').on('click',function(){var b=$(this);b.prop('disabled',true).text('Opening...');$('#open-counter-progress').show();$.getJSON('../counter/api/counter_api.php',{action:'open',counter_id:counter,user_id:user,take_status:3}).done(function(r){if(!r||!r.ok)throw new Error((r&&r.message)||'Could not open counter.');$('#open-counter-progress').text('Counter opened successfully.');if(window.Swal)Swal.fire({icon:'success',title:'Counter Opened',timer:1300,showConfirmButton:false}).then(function(){location.reload()});else setTimeout(function(){location.reload()},1300)}).fail(function(x){var m=x.responseJSON&&x.responseJSON.message?x.responseJSON.message:'Could not open counter.';$('#open-counter-progress').text(m);if(window.Swal)Swal.fire({icon:'error',title:'Counter not opened',text:m});else alert(m);b.prop('disabled',false).text('Open Counter')})})})(jQuery);
 </script>
