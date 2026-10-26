@@ -11,7 +11,21 @@ $users = [];
 $userQuery = mysqli_query($connection, "SELECT user_id,username FROM kp_users WHERE user_id=" . $currentUser . " OR (counter=0 AND job IN (1,2)) ORDER BY username");
 while ($userQuery && ($row = mysqli_fetch_assoc($userQuery))) $users[(int)$row['user_id']] = $row;
 ?>
-<div class="counter-open-modal" style="background:#fff;color:#243b53;border-radius:7px;">
+<style>
+.counter-open-modal{width:100%;max-width:1040px;margin:0 auto;background:linear-gradient(180deg,#fff9ea,#f7edd2);color:#243b53;border-radius:7px;overflow:hidden;box-shadow:0 20px 40px rgba(33,19,6,.24)}
+.counter-open-modal .modal-header{padding:14px 16px!important;background:linear-gradient(135deg,#7e2014,#b94828 52%,#e7a33a)!important;color:#fff8ea!important;border:0}
+.counter-open-modal .modal-title{text-transform:uppercase;font-weight:900;letter-spacing:.04em}
+.counter-open-modal .modal-body{background:linear-gradient(180deg,#fff9ea,#f7edd2);padding:14px!important}
+.counter-open-modal .form-group{background:rgba(255,255,255,.92);border:1px solid rgba(146,110,52,.18);border-radius:7px;padding:12px;box-shadow:0 10px 20px rgba(86,61,24,.08)}
+.counter-open-modal label{display:block;color:#7e3a20;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.counter-open-modal select{border-radius:7px;height:42px;font-weight:700}
+.counter-open-steps{background:#fff;border:1px solid #eadcc0;border-radius:7px!important;color:#7e3a20;font-size:12px;font-weight:800;line-height:2;padding:12px!important}
+.counter-open-modal .modal-footer{background:#fffdf8;border:0;padding:12px 14px 14px}
+.counter-open-submit{border:0;border-radius:7px;font-weight:900;text-transform:uppercase;min-height:44px;padding:0 20px}
+.counter-open-result{border-radius:7px;margin-top:12px}
+@media(max-width:520px){.counter-open-modal .modal-body{padding:10px!important}.counter-open-modal .modal-footer{display:flex;gap:8px}.counter-open-modal .modal-footer button{flex:1}.counter-open-submit{padding:0 10px}}
+</style>
+<div class="counter-open-modal" style="background:#fff;color:#243b53;border-radius:7px;overflow:hidden;">
   <div class="modal-header" style="background:#166534;color:#fff;border-radius:7px 7px 0 0;">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Open Counter</h4>
