@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 function shift_repo_current(mysqli $connection): ?array
 {
-    $result = mysqli_query($connection, 'SELECT shift_id,shift FROM kp_shift ORDER BY shift DESC LIMIT 1');
+    $result = mysqli_query($connection, 'SELECT shift FROM kp_shift ORDER BY shift DESC LIMIT 1');
     return $result ? (mysqli_fetch_assoc($result) ?: null) : null;
 }
 
