@@ -17,6 +17,12 @@ while ($userQuery && ($row = mysqli_fetch_assoc($userQuery))) $users[(int)$row['
     <h4 class="modal-title">Open Counter</h4>
   </div>
   <div class="modal-body" style="padding:18px;">
+    <div class="counter-open-steps" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:7px;padding:12px;margin-bottom:14px;">
+      <div data-open-step="1">1. Checking the active shift</div>
+      <div data-open-step="2">2. Assigning the cashier</div>
+      <div data-open-step="3">3. Opening the counter</div>
+      <div data-open-step="4">4. Updating stock-take status</div>
+    </div>
     <div class="form-group"><label for="counter-open-id">Counter</label><select id="counter-open-id" class="form-control">
       <?php foreach ($counters as $counter): ?><option value="<?php echo (int)$counter['cntr_id']; ?>"><?php echo htmlspecialchars((string)$counter['name'], ENT_QUOTES, 'UTF-8'); ?></option><?php endforeach; ?>
     </select></div>
@@ -39,7 +45,7 @@ while ($userQuery && ($row = mysqli_fetch_assoc($userQuery))) $users[(int)$row['
     button.disabled = true; button.textContent = 'Opening…';
     fetch('../counter/api/counter_api.php?action=open&counter_id=' + counter + '&user_id=' + user + '&take_status=3', {credentials:'same-origin', headers:{Accept:'application/json'}})
       .then(function (response) { return response.json().then(function (payload) { if (!response.ok || !payload.ok) throw new Error(payload.message || 'Could not open counter.'); return payload; }); })
-      .then(function (payload) { result.className='counter-open-result alert alert-success'; result.textContent=payload.message || 'Counter opened successfully.'; button.textContent='Opened'; setTimeout(function(){window.location.reload();},900); })
+      .then(function (payload) { result.className='counter-open-result alert alert-success'; result.textContent=payload.message || 'Counter opened successfully.'; Array.prototype.forEach.call(shell.querySelectorAll('[data-open-step]'), function(step){ step.style.color='#15803d'; step.style.fontWeight='700'; step.textContent='✓ ' + step.textContent.replace(/^✓\s*/, ''); }); button.textContent='Opened'; setTimeout(function(){window.location.reload();},900); })
       .catch(function (error) { result.className='counter-open-result alert alert-danger'; result.textContent=error.message || 'Could not open counter.'; button.disabled=false; button.textContent='Open Counter'; });
   });
 }());
