@@ -153,7 +153,7 @@ $(function() {
   function renderDesktopTopLeft(shift, counters) {
     if (shift.can_open_shift) {
       return fillTemplate(templateCache.desktopTopAction, {
-        action_href: '../shift/open_shift.php',
+        action_href: '../shift/index.php?action=shift.open',
         action_attrs: '',
         action_style: " font-family: 'comic sans ms'; font-size: 12PX; font-weight: bold; color: #02550E !important; padding-top:30%; border-radius: 5px; height: 80px; width:80px; background-color: #FFF;border: 5px solid #02550E;",
         action_class: 'btn btn-sm btn-success m-b-10',
@@ -269,7 +269,7 @@ $(function() {
   function renderMobileTopActions(shift, counters) {
     var actions = [];
     if (shift.can_open_shift) {
-      actions.push({ href: '../shift/open_shift.php', attrs: '', label: 'Open Shift' });
+      actions.push({ href: '../shift/index.php?action=shift.open', attrs: '', label: 'Open Shift' });
     }
     if (!shift.can_open_shift && (shift.can_open_counter || Number(counters.total || 0) !== Number(counters.open || 0))) {
       actions.push({ href: '#', attrs: 'id="open"', label: 'Open Counter' });

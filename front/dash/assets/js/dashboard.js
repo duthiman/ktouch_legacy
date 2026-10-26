@@ -229,7 +229,7 @@
     if (target.closest('.home')) { event.preventDefault(); go('index.php'); return; }
     if (target.closest('.place')) { event.preventDefault(); loadModal('../counter/counter_select.php'); return; }
     if (target.closest('.lock, .password')) { event.preventDefault(); loadModal('../staff/cpass.php'); return; }
-    if (target.closest('.open-shift')) { event.preventDefault(); go('../shift/open_shift.php'); return; }
+    if (target.closest('.open-shift')) { event.preventDefault(); go('../shift/index.php?action=shift.open'); return; }
     if (target.closest('.open')) { event.preventDefault(); loadModal('../counter/open.php'); return; }
     if (target.closest('.open-counter')) { event.preventDefault(); loadModal('../counter/open.php'); return; }
     if (target.closest('.continue')) { event.preventDefault(); go('../open/index.php'); return; }

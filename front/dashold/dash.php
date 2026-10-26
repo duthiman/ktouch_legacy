@@ -20,7 +20,7 @@
       <header>
         <nav class="navbar navbar-fixed-top scrolling-navbar" style="padding: 1px;">
           <ul class="nav navbar-nav navbar-left">
-            <li class="nav-item dash-open-shift" style="display:none;margin-left:10px;margin-top:10px;"><a href="../shift/open_shift.php" class="btn btn-sm btn-success">OPEN SHIFT</a></li>
+            <li class="nav-item dash-open-shift" style="display:none;margin-left:10px;margin-top:10px;"><a href="../shift/index.php?action=shift.open" class="btn btn-sm btn-success">OPEN SHIFT</a></li>
             <li class="nav-item dash-open-counter" style="display:none;margin-left:10px;margin-top:10px;"><button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal" id="open">OPEN COUNTER</button></li>
           </ul>
           <ul class="nav navbar-nav navbar-right" style="margin-right:10px;margin-top:10px;">
@@ -71,7 +71,7 @@
     <div class="mobile-shell">
       <div class="app-shell">
         <div class="app-topbar"><div class="brand-row"><div><h1>K-Touch</h1><p id="dash-mobile-user-line"></p></div><div class="brand-row-actions"><div class="app-badge"><strong>Open</strong><span id="dash-mobile-open-counters">0/0</span></div></div></div>
-          <div class="top-actions"><a href="../shift/open_shift.php" class="dash-mobile-open-shift">Open Shift</a><button type="button" data-toggle="modal" data-target="#modal" id="open-mobile" class="dash-mobile-open-counter">Open Counter</button><a href="../log_out.php">Log Out</a></div>
+          <div class="top-actions"><a href="../shift/index.php?action=shift.open" class="dash-mobile-open-shift">Open Shift</a><button type="button" data-toggle="modal" data-target="#modal" id="open-mobile" class="dash-mobile-open-counter">Open Counter</button><a href="../log_out.php">Log Out</a></div>
         </div>
         <div id="dash-mobile-alerts"></div><div id="dash-mobile-sale-cap"></div>
         <div class="menu-card"><p class="section-title">Quick Actions</p><div class="action-grid dash-mobile-actions" style="display:none;">
