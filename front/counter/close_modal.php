@@ -7,7 +7,7 @@ $userId = (int)($_SESSION['user_id'] ?? 0);
 $counterId = function_exists('user_counter') ? (int)user_counter($userId) : 0;
 $counterName = $counterId > 0 && function_exists('get_counter') ? (string)get_counter($counterId) : ('Counter ' . $counterId);
 ?>
-<div class="counter-close-modal" data-counter-id="<?php echo $counterId; ?>">
+<div class="counter-close-modal" data-counter-id="<?php echo $counterId; ?>" style="background:#fff;color:#243b53;border-radius:7px;">
   <div class="modal-header" style="background:#8f1722;color:#fff;border-radius:7px 7px 0 0;">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title">Close Counter</h4>
