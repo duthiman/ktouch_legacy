@@ -51,8 +51,10 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
                 'counter_name' => (string)($counter['name'] ?? ''),
                 'shift' => $shift,
                 'shift_date' => $shift,
-                'closing_staff_id' => $userId,
-                'closing_at' => date('Y-m-d H:i:s'),
+                'opening_staff_id' => $cspData['opening_staff_id'] ?? 0,
+                'opening_at' => $cspData['opening_at'] ?? '',
+                'closing_staff_id' => $cspData['closing_staff_id'] ?? $userId,
+                'closing_at' => $cspData['closing_at'] ?? date('Y-m-d H:i:s'),
                 'total_sales' => (float)($sales['total'] ?? 0),
             ],
             'csp' => $cspData,
@@ -62,13 +64,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         counter_repo_close_status($connection, $counterId);
         counter_repo_release_cashier($connection, $userId);
         $isLastCounter = $openBefore <= 1;
-        $sspQueueId = $isLastCounter ? \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueSsp($connection, $shift, $userId, [
-            'payload_version' => 1, 'document_type' => 'SSP', 'title' => 'SHIFT SUMMARY PRINT',
-            'header' => ['shift' => $shift, 'shift_date' => $shift, 'print_time' => date('Y-m-d H:i:s')],
-            'total_sales' => ['bills' => (int)($sales['bills'] ?? 0), 'total' => (float)($sales['total'] ?? 0)],
-            'counter_sales' => [], 'cashier_collections' => [], 'customer_credit_bills' => [],
-            'customer_credit_payments' => [], 'waiter_totals' => [],
-        ]) : 0;
+        $sspQueueId = $isLastCounter ? \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueSsp($connection, $shift, $userId, shift_summary_repo_document($connection, $shift, $userId)) : 0;
         $shiftQueueId = $sspQueueId;
         if ($isLastCounter) shift_repo_close_active($connection, $shift, $userId);
         mysqli_commit($connection);
