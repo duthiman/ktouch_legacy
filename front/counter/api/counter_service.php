@@ -32,13 +32,32 @@ function counter_service_open(mysqli $connection, int $counterId, int $userId, i
 function counter_service_close(mysqli $connection, int $counterId, int $userId): array
 {
     if ($counterId < 1 || $userId < 1) return counter_api_response(false, 'invalid_request', 'A valid counter and user are required', []);
+    $transactionStarted = false;
     try {
-        $result = counter_repo_close($connection, $counterId, $userId);
+        counter_repo_assert_open($connection, $counterId);
+        $shift = counter_repo_current_shift($connection);
+        if ($shift === '') throw new LogicException('No active shift found');
+        mysqli_begin_transaction($connection);
+        $transactionStarted = true;
+        $sales = counter_repo_sales_totals($connection, $counterId, $shift);
+        $summaryId = counter_repo_create_summary($connection, $counterId, $userId, $shift, $sales);
+        $counterQueueId = counter_repo_queue_csp($connection, $summaryId, $counterId, $shift, $userId);
+        $openBefore = counter_repo_open_count($connection);
+        counter_repo_close_status($connection, $counterId);
+        counter_repo_release_cashier($connection, $userId);
+        $isLastCounter = $openBefore <= 1;
+        $shiftQueueId = $isLastCounter ? counter_repo_queue_ssp($connection, $shift, $userId) : 0;
+        if ($isLastCounter) counter_repo_close_shift($connection, $shift, $userId);
+        mysqli_commit($connection);
+        $transactionStarted = false;
+        $result = ['summary_id'=>$summaryId, 'counter_queue_id'=>$counterQueueId, 'shift_queue_id'=>$shiftQueueId, 'is_last_counter'=>$isLastCounter, 'shift'=>$shift];
         counter_log('counter_closed', $result + ['counter_id'=>$counterId, 'user_id'=>$userId]);
         return counter_api_response(true, 'closed', 'Counter closed successfully', ['counter_id'=>$counterId] + $result);
     } catch (LogicException $e) {
+        if ($transactionStarted) mysqli_rollback($connection);
         return counter_api_response(false, 'invalid_state', $e->getMessage(), ['counter_id'=>$counterId]);
     } catch (Throwable $e) {
+        if ($transactionStarted) mysqli_rollback($connection);
         counter_log('counter_close_failed', ['counter_id'=>$counterId, 'error'=>$e->getMessage()]);
         return counter_api_response(false, 'server_error', $e->getMessage(), ['counter_id'=>$counterId]);
     }
