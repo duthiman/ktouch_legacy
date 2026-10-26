@@ -8,7 +8,7 @@ $shift = (string)get_column('kp_shift', 'shift', '1');
 $safe_shift = mysqli_real_escape_string($connection, $shift);
 $user = mysqli_fetch_assoc(mysqli_query($connection, "SELECT username FROM kp_users WHERE user_id='$user_id' LIMIT 1"));
 
-$sales = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(*) AS total_count, COALESCE(SUM(amount),0) AS total_amount FROM kp_sales WHERE user_id='$user_id' AND shift='$safe_shift'")) ?: [];
+$sales = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(DISTINCT s.sale_id) AS total_count, COALESCE(SUM(si.total),0) AS total_amount FROM kp_sales s LEFT JOIN kp_sale_items si ON si.sale_id=s.sale_id WHERE s.user_id='$user_id' AND s.shift='$safe_shift'")) ?: [];
 $returns = (float)column_total('kp_ret_items', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
 $voids = (int)column_count('kp_del_orders', 'sale_id', "user_id='$user_id' AND shift='$safe_shift'");
 $void_total = (float)column_total('kp_del_orders', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
@@ -16,13 +16,13 @@ $cancel_total = (float)column_total('kp_cancelled', 'amount', "user_id='$user_id
 $open_orders = (int)column_count('kp_sales_open', 'sale_id', "user_id='$user_id' AND status=1");
 $live_orders = (int)column_count('kp_sales', 'sale_id', "user_id='$user_id' AND shift='$safe_shift' AND status=1");
 $open_rows = [];
-$open_query = mysqli_query($connection, "SELECT sale_id,amount,created_at AS datime,counter FROM kp_sales_open WHERE user_id='$user_id' AND status=1 ORDER BY sale_id DESC LIMIT 100");
+$open_query = mysqli_query($connection, "SELECT o.sale_id,COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=o.sale_id),0) AS amount,o.created_at AS datime,o.counter FROM kp_sales_open o WHERE o.user_id='$user_id' AND o.status=1 ORDER BY o.sale_id DESC LIMIT 100");
 while ($open_query && ($row = mysqli_fetch_assoc($open_query))) $open_rows[] = $row;
 $live_rows = [];
-$live_query = mysqli_query($connection, "SELECT sale_id,amount,datime,counter FROM kp_sales WHERE user_id='$user_id' AND shift='$safe_shift' AND status=1 ORDER BY sale_id DESC LIMIT 100");
+$live_query = mysqli_query($connection, "SELECT s.sale_id,COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=s.sale_id),0) AS amount,s.datime,s.counter FROM kp_sales s WHERE s.user_id='$user_id' AND s.shift='$safe_shift' AND s.status=1 ORDER BY s.sale_id DESC LIMIT 100");
 while ($live_query && ($row = mysqli_fetch_assoc($live_query))) $live_rows[] = $row;
 $sale_rows = [];
-$sale_query = mysqli_query($connection, "SELECT s.sale_id, s.amount, s.datime, s.counter,
+$sale_query = mysqli_query($connection, "SELECT s.sale_id, COALESCE((SELECT SUM(si.total) FROM kp_sale_items si WHERE si.sale_id=s.sale_id),0) AS amount, s.datime, s.counter,
     COALESCE(c.name, CONCAT('Counter ', s.counter)) AS counter_name
     FROM kp_sales s LEFT JOIN kp_counters c ON c.cntr_id=s.counter
     WHERE s.user_id='$user_id' AND s.shift='$safe_shift'
@@ -61,9 +61,10 @@ $counter_query = mysqli_query(
     $connection,
     "SELECT s.counter AS counter_id,
             COALESCE(c.name, CONCAT('Counter ', s.counter)) AS counter_name,
-            COALESCE(SUM(s.amount), 0) AS total
+            COALESCE(SUM(si.total), 0) AS total
      FROM kp_sales s
      LEFT JOIN kp_counters c ON c.cntr_id=s.counter
+     LEFT JOIN kp_sale_items si ON si.sale_id=s.sale_id
      WHERE s.user_id='$user_id' AND s.shift='$safe_shift'
      GROUP BY s.counter, c.name
      ORDER BY total DESC"
