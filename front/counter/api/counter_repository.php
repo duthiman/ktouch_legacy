@@ -23,14 +23,6 @@ function counter_repo_assert_open(mysqli $connection, int $counterId): array
     return $counter;
 }
 
-function counter_repo_create_summary(mysqli $connection, int $counterId, int $userId, string $shift, array $sales): int
-{
-    $shift = mysqli_real_escape_string($connection, $shift);
-    $sql = "INSERT INTO kp_counter_close_summary (shift_date,cntr_id,user_id,total_bills,total_sales) VALUES ('{$shift}'," . (int)$counterId . "," . (int)$userId . "," . (int)($sales['bills'] ?? 0) . "," . (float)($sales['total'] ?? 0) . ")";
-    if (!mysqli_query($connection, $sql)) throw new RuntimeException('Could not save counter summary');
-    return (int)mysqli_insert_id($connection);
-}
-
 function counter_repo_queue_csp(mysqli $connection, int $summaryId, int $counterId, string $shift, int $userId): int
 {
     $escShift = mysqli_real_escape_string($connection, $shift);

@@ -40,7 +40,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         mysqli_begin_transaction($connection);
         $transactionStarted = true;
         $sales = sales_repo_counter_totals($connection, $counterId, $shift);
-        $summaryId = counter_repo_create_summary($connection, $counterId, $userId, $shift, $sales);
+        $summaryId = counter_summary_repo_create($connection, $counterId, $userId, $shift, $sales);
         $counterQueueId = counter_repo_queue_csp($connection, $summaryId, $counterId, $shift, $userId);
         $openBefore = counter_repo_open_count($connection);
         counter_repo_close_status($connection, $counterId);
