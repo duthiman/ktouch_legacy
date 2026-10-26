@@ -10,6 +10,9 @@ if (empty($_SESSION['user_id'])) {
 
 require_once '../../inc/connection.php';
 require_once '../../inc/gen_funcs.php';
+require_once __DIR__ . '/barp_schema.php';
+
+barp_ensure_change_schema($connection);
 
 if (!function_exists('kp_print_enqueue')) {
     function kp_print_enqueue($connection, array $data) {
