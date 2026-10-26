@@ -39,7 +39,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         if ($shift === '') throw new LogicException('No active shift found');
         mysqli_begin_transaction($connection);
         $transactionStarted = true;
-        $sales = counter_repo_sales_totals($connection, $counterId, $shift);
+        $sales = sales_repo_counter_totals($connection, $counterId, $shift);
         $summaryId = counter_repo_create_summary($connection, $counterId, $userId, $shift, $sales);
         $counterQueueId = counter_repo_queue_csp($connection, $summaryId, $counterId, $shift, $userId);
         $openBefore = counter_repo_open_count($connection);

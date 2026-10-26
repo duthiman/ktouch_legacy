@@ -23,14 +23,6 @@ function counter_repo_assert_open(mysqli $connection, int $counterId): array
     return $counter;
 }
 
-function counter_repo_sales_totals(mysqli $connection, int $counterId, string $shift): array
-{
-    $shift = mysqli_real_escape_string($connection, $shift);
-    $result = mysqli_query($connection, "SELECT COUNT(sale_id) bills, COALESCE(SUM(amount),0) total FROM kp_sales WHERE shift='{$shift}' AND counter=" . (int)$counterId);
-    if (!$result) throw new RuntimeException('Could not read counter sales');
-    return mysqli_fetch_assoc($result) ?: ['bills' => 0, 'total' => 0];
-}
-
 function counter_repo_create_summary(mysqli $connection, int $counterId, int $userId, string $shift, array $sales): int
 {
     $shift = mysqli_real_escape_string($connection, $shift);
