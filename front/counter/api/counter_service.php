@@ -41,6 +41,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         $transactionStarted = true;
         $sales = sales_repo_counter_totals($connection, $counterId, $shift);
         $summaryId = counter_summary_repo_create($connection, $counterId, $userId, $shift, $sales);
+        $cspData = counter_summary_repo_document($connection, $summaryId, $counterId, $userId, $shift, $counter, $sales);
         $cspDocument = [
             'payload_version' => 1,
             'document_type' => 'CSP',
@@ -54,17 +55,7 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
                 'closing_at' => date('Y-m-d H:i:s'),
                 'total_sales' => (float)($sales['total'] ?? 0),
             ],
-            'csp' => [
-                'summary_id' => $summaryId,
-                'counter_id' => $counterId,
-                'counter_name' => (string)($counter['name'] ?? ''),
-                'shift' => $shift,
-                'summary' => $sales,
-                'bill_count' => (int)($sales['bills'] ?? 0),
-                'sales' => [], 'staff_sales' => [], 'transfers' => [],
-                'units_generated' => [], 'deleted_bills' => [], 'returns' => [],
-                'requisitions' => [], 'user_sales' => [],
-            ],
+            'csp' => $cspData,
         ];
         $counterQueueId = \KTouch\Modules\Chaba\V1\Repositories\ChabaQueueRepository::queueCsp($connection, $summaryId, $counterId, $shift, $userId, $cspDocument);
         $openBefore = counter_repo_open_count($connection);
