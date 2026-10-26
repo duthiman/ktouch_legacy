@@ -1,0 +1,3 @@
+<?php
+declare(strict_types=1);
+?><!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Counter</title><style>body{font:15px Arial;margin:24px;color:#243b53}.counter-card{max-width:520px;margin:auto;padding:20px;border:1px solid #d9e2ec;border-radius:7px;background:#fff}button{padding:10px 14px;border:0;border-radius:7px;background:#d97706;color:#fff}</style></head><body><main class="counter-card"><h1>Counter</h1><p>This is the new Counter API module.</p><p>Use <code>api/counter_api.php?action=status&counter_id=1</code> to load a counter.</p></main></body></html>
