@@ -221,6 +221,30 @@
     window.location.href = path;
   }
 
+  function openShiftConfirm() {
+    var existing = document.getElementById('dashboard-shift-confirm');
+    if (existing) { existing.style.display = 'flex'; return; }
+    var style = document.createElement('style');
+    style.id = 'dashboard-shift-confirm-style';
+    style.textContent = '.dashboard-shift-overlay{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(5,35,23,.68)}.dashboard-shift-card{width:min(430px,100%);overflow:hidden;border-radius:7px;background:#fff;box-shadow:0 22px 70px rgba(0,0,0,.3);font-family:Inter,"Segoe UI",Arial,sans-serif}.dashboard-shift-head{padding:20px 22px;color:#fff;background:linear-gradient(135deg,#087b32,#006523)}.dashboard-shift-head small{display:block;font-size:10px;font-weight:800;letter-spacing:1.2px;opacity:.85}.dashboard-shift-head h3{margin:5px 0 0;font-size:23px}.dashboard-shift-body{padding:20px 22px;color:#344054}.dashboard-shift-body p{margin:0;line-height:1.55;font-size:14px}.dashboard-shift-note{display:flex;gap:10px;margin-top:14px;padding:11px 12px;border-radius:7px;background:#effaf2;color:#176b3a;font-size:12px;font-weight:700}.dashboard-shift-actions{display:flex;gap:9px;padding:0 22px 20px}.dashboard-shift-actions button{flex:1;min-height:44px;border-radius:7px;font-weight:800;border:1px solid #d8e1dc;background:#fff;color:#51605a}.dashboard-shift-actions .dashboard-shift-open{border-color:#087b32;background:#087b32;color:#fff}.dashboard-shift-actions button:disabled{opacity:.6;cursor:wait}.dashboard-shift-status{display:none;margin:0 22px 14px;padding:10px 12px;border-radius:7px;font-size:12px;font-weight:700}.dashboard-shift-status.error{display:block;background:#fff0f0;color:#a61c21}.dashboard-shift-status.loading{display:block;background:#fff8e8;color:#8a5a00}@media(max-width:520px){.dashboard-shift-card{width:calc(100vw - 24px)}.dashboard-shift-head{padding:17px 18px}.dashboard-shift-body{padding:17px 18px}.dashboard-shift-actions{padding:0 18px 17px}}';
+    document.head.appendChild(style);
+    var overlay = document.createElement('div');
+    overlay.id = 'dashboard-shift-confirm';
+    overlay.className = 'dashboard-shift-overlay';
+    overlay.innerHTML = '<div class="dashboard-shift-card" role="dialog" aria-modal="true" aria-labelledby="dashboard-shift-title"><div class="dashboard-shift-head"><small>SHIFT CONTROL</small><h3 id="dashboard-shift-title">Open New Shift</h3></div><div class="dashboard-shift-body"><p>Are you sure you want to open today’s shift? This will make the shift available for counter opening and sales.</p><div class="dashboard-shift-note"><span>✓</span><span>The system will prevent duplicate active shifts and record who opened this shift.</span></div></div><div class="dashboard-shift-status" id="dashboard-shift-status"></div><div class="dashboard-shift-actions"><button type="button" class="dashboard-shift-cancel">Cancel</button><button type="button" class="dashboard-shift-open">Open Shift</button></div></div>';
+    document.body.appendChild(overlay);
+    function close() { overlay.style.display = 'none'; }
+    overlay.addEventListener('click', function (event) { if (event.target === overlay || event.target.closest('.dashboard-shift-cancel')) close(); });
+    overlay.querySelector('.dashboard-shift-open').addEventListener('click', function () {
+      var button = this, status = document.getElementById('dashboard-shift-status');
+      button.disabled = true; status.className = 'dashboard-shift-status loading'; status.textContent = 'Opening shift, please wait…';
+      fetch('../shift/index.php?action=shift.open', { method: 'GET', credentials: 'same-origin', headers: { Accept: 'application/json' } })
+        .then(function (response) { return response.json().then(function (payload) { if (!response.ok || !payload.ok) throw new Error(payload.message || 'Could not open the shift.'); return payload; }); })
+        .then(function (payload) { status.className = 'dashboard-shift-status'; status.style.display = 'block'; status.style.background = '#effaf2'; status.style.color = '#176b3a'; status.textContent = payload.message || 'Shift opened successfully.'; setTimeout(function () { window.location.reload(); }, 700); })
+        .catch(function (error) { button.disabled = false; status.className = 'dashboard-shift-status error'; status.textContent = error.message || 'Could not open the shift.'; });
+    });
+  }
+
   document.addEventListener('click', function (event) {
     var target = event.target.closest('button, a, .sales-summary-trigger, .review-returns, .review-mpesa, .review-voids');
     if (!target) return;
@@ -229,7 +253,7 @@
     if (target.closest('.home')) { event.preventDefault(); go('index.php'); return; }
     if (target.closest('.place')) { event.preventDefault(); loadModal('../common/counter_select.php'); return; }
     if (target.closest('.lock, .password')) { event.preventDefault(); loadModal('../staff/cpass.php'); return; }
-    if (target.closest('.open-shift')) { event.preventDefault(); go('../shift/index.php?action=shift.open'); return; }
+    if (target.closest('.open-shift')) { event.preventDefault(); openShiftConfirm(); return; }
     if (target.closest('.open')) { event.preventDefault(); loadModal('../counter/open.php'); return; }
     if (target.closest('.open-counter')) { event.preventDefault(); loadModal('../counter/open.php'); return; }
     if (target.closest('.continue')) { event.preventDefault(); go('../open/index.php'); return; }
