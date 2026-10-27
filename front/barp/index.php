@@ -65,40 +65,12 @@ if (empty($_SESSION['user_id'])) {
         <div class="legend" id="sales-legend"></div>
           </div>
         </section>
-        <section class="snapshot">
-            <div class="card snapshot-box">
-                <h2>Counter Snapshot <button type="button" class="privacy-eye" data-privacy-group="snapshot" aria-label="Hold to view counter snapshot">&#128065;</button></h2>
-                <div class="snapshot-grid">
-                <div class="snap">
-                    <span>&#9675; &nbsp; Opening Time</span>
-                    <b id="opening-info">&mdash;</b>
-                </div>
-                <button type="button" class="counter-stock-card" id="counter-stock-card">
-                  <span><strong>Counter stock issued</strong><small>View issued stock and current balance</small></span>
-                  <span class="counter-stock-stats privacy-snapshot"><span><b id="counter-request-count" class="privacy-value privacy-snapshot">0</b><small>Requests</small></span><span><b id="counter-issued-count" class="privacy-value privacy-snapshot">0</b><small>Issued</small></span></span>
-                </button>
-                <div class="snap">
-                    <span>&#9635; &nbsp; Orders</span>
-                    <b id="snap-orders" class="privacy-value privacy-snapshot">0</b>
-                </div>
-                <div class="snap">
-                    <span>&#9673; &nbsp; Shift Status</span>
-                    <b class="green">&mdash;</b>
-                </div>
-                <div class="snap">
-                    <span>&#9635; &nbsp; Items Sold</span>
-                    <b id="items" class="privacy-value privacy-snapshot">0</b>
-                </div>
-                <div class="snap">
-                    <span>&#8635; &nbsp; Returns</span>
-                    <b id="snap-returns" class="privacy-value privacy-snapshot">0</b>
-                </div>
-                <div class="snap">
-                    <span>&#10003; &nbsp; Reconciliation</span>
-                    <b class="bad">&mdash;</b>
-                </div>
-                </div>
-            </div>
+        <section class="counter-kpis">
+            <div class="card counter-kpi-card"><span>&#8635;</span><small>Total Returns</small><strong id="kpi-returns">0</strong></div>
+            <div class="card counter-kpi-card"><span>&times;</span><small>Total Voids</small><strong id="kpi-voids">0</strong></div>
+            <div class="card counter-kpi-card"><span>&#9635;</span><small>Total Orders</small><strong id="kpi-orders">0</strong></div>
+            <div class="card counter-kpi-card"><span>&#9635;</span><small>Items Out</small><strong id="kpi-items">0</strong></div>
+        </section>
           <section class="card receipts">
             <h2>Last 10 Receipts</h2>
             <div class="receipt-scroll">

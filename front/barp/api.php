@@ -573,6 +573,7 @@ $dashboard = [
     'returns_approved' => 0,
     'returns_approved_total' => 0,
     'items_total' => 0,
+    'voids_total' => 0,
     'active_sales' => [],
     'sale_balances' => [],
     'counter_transactions' => [],
@@ -609,6 +610,7 @@ if ($safe_shift !== '') {
     $dashboard['returns_count'] = (int)($returns['returns_count'] ?? 0);
     $dashboard['returns_total'] = (float)($returns['returns_total'] ?? 0);
     $dashboard['items_total'] = (float)column_total('kp_sale_items', 'qty', "shift='$safe_shift' AND stock_counter='$bar_counter'");
+    $dashboard['voids_total'] = (int)column_count('kp_del_orders', 'sale_id', "shift='$safe_shift' AND counter='$bar_counter'");
 
     $pending_query = mysqli_query($connection, "SELECT COUNT(*) AS total_count, COALESCE(SUM(amount), 0) AS total_amount FROM kp_ret_items WHERE shift='$safe_shift' AND stock_counter='$bar_counter' AND ret_status=3");
     $pending = $pending_query ? mysqli_fetch_assoc($pending_query) : [];

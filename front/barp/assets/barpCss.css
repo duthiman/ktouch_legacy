@@ -282,6 +282,9 @@
     grid-template-columns:repeat(3,minmax(0,1fr));
     gap:10px
   }
+  .counter-kpis{grid-column:2;grid-row:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch}
+  .counter-kpi-card{min-height:112px;padding:14px 12px;display:flex;flex-direction:column;justify-content:center;gap:5px;border-radius:7px;background:#fff;border:1px solid #dfe5e2;box-shadow:0 5px 16px rgba(31,52,47,.08)}
+  .counter-kpi-card span{font-size:21px;color:var(--green);font-weight:900}.counter-kpi-card small{font-size:11px;text-transform:uppercase;color:#60706b;font-weight:800}.counter-kpi-card strong{font-size:25px;color:#172a25}
   .snap {
     display:flex;
     align-items:center;
@@ -472,7 +475,7 @@
     display:grid;
     grid-template-columns:1fr 1fr
   }
-  .snapshot {
+  .snapshot,.counter-kpis {
     display:grid
   }
   .performance,.alerts {
@@ -498,7 +501,7 @@
     padding:0 10px;
     font-size:11px
   }
-  .overview,.snapshot {
+  .overview,.snapshot,.counter-kpis {
     display:block
   }
   .overview>* {
@@ -510,7 +513,7 @@
   .hero strong {
     font-size:40px
   }
-  .snapshot-box,.receipts,.totals {
+  .snapshot-box,.counter-kpis,.receipts,.totals {
     margin-bottom:10px
   }
   .snapshot-box {
