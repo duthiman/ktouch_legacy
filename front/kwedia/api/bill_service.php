@@ -1597,6 +1597,26 @@ if (!function_exists('bill_service_queue_open_prints')) {
 }
 
 if (!function_exists('bill_service_queue_close_prints')) {
+    function bill_service_queue_sot($sale_id, $user_id, $counter_id) {
+        global $connection;
+        $sale_id=(int)$sale_id; $user_id=(int)$user_id; $counter_id=(int)$counter_id;
+        $batch_q=mysqli_query($connection,"SELECT original_sale_id,change_batch_id FROM kp_sale_changes WHERE change_sale_id='$sale_id' ORDER BY change_batch_id DESC LIMIT 1");
+        $batch=$batch_q?mysqli_fetch_assoc($batch_q):null;
+        if(!$batch) return [];
+        $original=(int)($batch['original_sale_id']??0); $batch_id=(int)($batch['change_batch_id']??0);
+        $old=[]; $q=mysqli_query($connection,"SELECT c.old_item_id,SUM(c.qty) qty,COALESCE(i.name,CONCAT('Item ',c.old_item_id)) name FROM kp_sale_items_changes c LEFT JOIN kp_items i ON i.item_id=c.old_item_id WHERE c.change_batch_id='$batch_id' GROUP BY c.old_item_id,i.name ORDER BY c.change_id ASC");
+        while($q&&($r=mysqli_fetch_assoc($q)))$old[]=['name'=>(string)$r['name'],'qty'=>(float)$r['qty']];
+        $new=[]; $q=mysqli_query($connection,"SELECT si.item_id,SUM(si.qty) qty,COALESCE(i.name,CONCAT('Item ',si.item_id)) name FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id=si.item_id WHERE si.sale_id='$sale_id' GROUP BY si.item_id,i.name ORDER BY MIN(si.id) ASC");
+        while($q&&($r=mysqli_fetch_assoc($q)))$new[]=['name'=>(string)$r['name'],'qty'=>(float)$r['qty']];
+        if(!$old&&!$new)return [];
+        $sale=repo_get_sales_header($sale_id)?:[]; $waiter=(int)($sale['user_id']??$user_id); $shift=(string)($sale['shift']??repo_get_shift());
+        $header=['sale_id'=>$sale_id,'original_sale_id'=>$original,'counter_id'=>$counter_id,'counter_name'=>function_exists('get_counter')?(string)get_counter($counter_id):'','waiter_id'=>$waiter,'waiter_name'=>function_exists('get_user')?(string)get_user($waiter):'','served_by'=>function_exists('get_user')?(string)get_user($waiter):'','shift'=>$shift,'print_time'=>date('Y-m-d H:i:s')];
+        $payload=mysqli_real_escape_string($connection,json_encode(['payload_version'=>1,'document_type'=>'SOT','title'=>'SWAP ORDER TICKET','header'=>$header,'old_items'=>$old,'new_items'=>$new],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+        $safe_shift=mysqli_real_escape_string($connection,$shift);
+        $sql="INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error,shift,payload_json,items_json) VALUES ('$sale_id','$sale_id','sot','SOT','$counter_id','','','$user_id',0,0,0,'','$safe_shift','$payload','')";
+        if(!mysqli_query($connection,$sql))return [];
+        return [['queue_id'=>(int)mysqli_insert_id($connection),'type'=>'sot','counter_id'=>$counter_id]];
+    }
     function bill_service_queue_close_prints($context, $params = [], $scenario = '') {
         $params = is_array($params) ? $params : [];
         $sale_id = (int)($context['sale_id'] ?? 0);
@@ -1618,6 +1638,7 @@ if (!function_exists('bill_service_queue_close_prints')) {
             return $queued_jobs;
         }
 
+        $queued_jobs = array_merge($queued_jobs, bill_service_queue_sot($sale_id, $user_id, $counter_id));
         return array_merge($queued_jobs, bill_service_queue_full_bill($sale_id, $user_id, $counter_id, [
             'delta_only' => false,
             'payload_header' => bill_service_open_each_bill_header($context),
