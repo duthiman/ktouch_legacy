@@ -7,6 +7,7 @@ $user_id = (int)($_REQUEST['user_id'] ?? 0);
 $shift = (string)get_column('kp_shift', 'shift', '1');
 $safe_shift = mysqli_real_escape_string($connection, $shift);
 $user = mysqli_fetch_assoc(mysqli_query($connection, "SELECT username FROM kp_users WHERE user_id='$user_id' LIMIT 1"));
+$bar_counter = (int)get_column('kp_users', 'counter', "user_id='$user_id'");
 
 $sales = mysqli_fetch_assoc(mysqli_query($connection, "SELECT COUNT(DISTINCT s.sale_id) AS total_count, COALESCE(SUM(si.total),0) AS total_amount FROM kp_sales s LEFT JOIN kp_sale_items si ON si.sale_id=s.sale_id WHERE s.user_id='$user_id' AND s.shift='$safe_shift'")) ?: [];
 $returns = (float)column_total('kp_ret_items', 'amount', "user_id='$user_id' AND shift='$safe_shift'");
