@@ -993,7 +993,7 @@ if (!function_exists('repo_fetch_sale_print_grouped')) {
             $base_name = bill_repo_get_item_name($item_id);
             $item_name = $base_name;
             $row_qty = (float)($row['qty'] ?? 0);
-            $attributeMap = [];
+            $attributes = [];
             $attribute_totals = [];
             $attribute_json_rows = explode('|||', (string)($row['accompaniment_json'] ?? ''));
             foreach ($attribute_json_rows as $attribute_json) {
@@ -1735,6 +1735,7 @@ if (!function_exists('bill_repo_print_queue')) {
             WHERE si.sale_id='{$sale_id}' ORDER BY si.item_id");
         while ($result && ($row = mysqli_fetch_assoc($result))) {
             $attributes = [];
+            $attributeMap = [];
             $raw = json_decode((string)($row['accompaniment_json'] ?? ''), true);
             if (is_array($raw)) {
                 foreach (['attributes','accompaniments','selections','items'] as $key) if (isset($raw[$key]) && is_array($raw[$key])) { $raw = $raw[$key]; break; }
