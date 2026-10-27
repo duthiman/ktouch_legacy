@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 session_start();
-require_once '../../../inc/connection.php';
+$projectRoot = dirname(__DIR__, 3);
+require_once $projectRoot . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'connection.php';
 require_once __DIR__ . '/shift_helpers.php';
 require_once __DIR__ . '/shift_schema.php';
 require_once __DIR__ . '/shift_repository.php';
