@@ -37,15 +37,16 @@ if (!function_exists('take_repo_fetch_categories')) {
 }
 
 if (!function_exists('take_repo_fetch_remaining_items')) {
-    function take_repo_fetch_remaining_items($closing_table, $take_column, $dpt) {
+    function take_repo_fetch_remaining_items($closing_table, $take_column, $dpt, $counter = 0) {
         global $connection;
         $dpt = mysqli_real_escape_string($connection, (string)$dpt);
         $rows = [];
-        $sql = "SELECT kp_items.item_id, kp_items.name, kp_items.cat_id, kp_items.stock_take_type, kp_items.empty_bottle_weight, kp_items.full_bottle_weight, kp_items.bottle_mls, kp_items.tot_num, COALESCE(close_stock.qty,0) AS opening_qty, COALESCE(kp_cat.name,'') AS category_name
-                FROM kp_items
-                LEFT JOIN {$closing_table} AS close_stock ON close_stock.item_id=kp_items.item_id
+        $counter = (int)$counter;
+        $sql = "SELECT kp_items.item_id, kp_items.name, kp_items.cat_id, kp_items.stock_take_type, kp_items.empty_bottle_weight, kp_items.full_bottle_weight, kp_items.bottle_mls, kp_items.tot_num, ci.qty AS opening_qty, COALESCE(kp_cat.name,'') AS category_name
+                FROM kp_counter_items ci
+                INNER JOIN kp_items ON kp_items.item_id=ci.item_id
                 LEFT JOIN kp_cat ON kp_cat.cat_id=kp_items.cat_id
-                WHERE kp_items.del_status=2 AND kp_items.{$take_column}=2 AND kp_items.stock=1 AND kp_items.dpt='{$dpt}'
+                WHERE ci.counter_id={$counter} AND ci.is_active=1 AND ci.take_status=2 AND kp_items.del_status=2 AND kp_items.stock=1 AND kp_items.dpt='{$dpt}'
                 ORDER BY
                     CASE WHEN kp_items.cat_id=0 THEN 1 ELSE 0 END ASC,
                     kp_cat.name ASC,
@@ -62,12 +63,13 @@ if (!function_exists('take_repo_fetch_remaining_items')) {
 }
 
 if (!function_exists('take_repo_fetch_group_items')) {
-    function take_repo_fetch_group_items($closing_table, $take_column, $dpt, $cat_id) {
+    function take_repo_fetch_group_items($closing_table, $take_column, $dpt, $cat_id, $counter = 0) {
         global $connection;
         $dpt = mysqli_real_escape_string($connection, (string)$dpt);
         $cat_id = (int)$cat_id;
         $rows = [];
-        $sql = "SELECT kp_items.*, COALESCE((SELECT qty FROM {$closing_table} WHERE {$closing_table}.item_id=kp_items.item_id),0) AS opening_qty FROM kp_items WHERE {$take_column}=2 AND stock=1 AND dpt='{$dpt}' AND cat_id='{$cat_id}' ORDER BY name ASC";
+        $counter = (int)$counter;
+        $sql = "SELECT kp_items.*, ci.qty AS opening_qty FROM kp_counter_items ci INNER JOIN kp_items ON kp_items.item_id=ci.item_id WHERE ci.counter_id={$counter} AND ci.is_active=1 AND ci.take_status=2 AND kp_items.stock=1 AND kp_items.dpt='{$dpt}' AND kp_items.cat_id='{$cat_id}' ORDER BY kp_items.name ASC";
         $result = mysqli_query($connection, $sql);
         if (!$result) {
             return $rows;
@@ -89,10 +91,11 @@ if (!function_exists('take_repo_fetch_item_meta')) {
 }
 
 if (!function_exists('take_repo_fetch_opening_qty')) {
-    function take_repo_fetch_opening_qty($closing_table, $item_id) {
+    function take_repo_fetch_opening_qty($closing_table, $item_id, $counter = 0) {
         global $connection;
         $item_id = (int)$item_id;
-        $result = mysqli_query($connection, "SELECT qty FROM {$closing_table} WHERE item_id='{$item_id}' LIMIT 1");
+        $counter = (int)$counter;
+        $result = mysqli_query($connection, "SELECT qty FROM kp_counter_items WHERE counter_id={$counter} AND item_id='{$item_id}' AND is_active=1 LIMIT 1");
         $row = $result ? mysqli_fetch_assoc($result) : null;
         return $row ? (float)$row['qty'] : 0.0;
     }
@@ -111,11 +114,12 @@ if (!function_exists('take_repo_insert_take_row')) {
 }
 
 if (!function_exists('take_repo_update_item_count')) {
-    function take_repo_update_item_count($take_column, $qty_column, $item_id, $counted) {
+    function take_repo_update_item_count($take_column, $qty_column, $item_id, $counted, $counter = 0) {
         global $connection;
         $item_id = (int)$item_id;
         $counted = (float)$counted;
-        return mysqli_query($connection, "UPDATE kp_items SET {$take_column}=1, {$qty_column}='{$counted}' WHERE item_id='{$item_id}'");
+        $counter = (int)$counter;
+        return mysqli_query($connection, "UPDATE kp_counter_items SET qty='{$counted}', take_status=1 WHERE counter_id={$counter} AND item_id='{$item_id}' AND is_active=1");
     }
 }
 
@@ -155,11 +159,12 @@ if (!function_exists('take_repo_fetch_take_row_by_item')) {
 }
 
 if (!function_exists('take_repo_reset_item_after_delete')) {
-    function take_repo_reset_item_after_delete($qty_column, $take_column, $item_id, $opening) {
+    function take_repo_reset_item_after_delete($qty_column, $take_column, $item_id, $opening, $counter = 0) {
         global $connection;
         $item_id = (int)$item_id;
         $opening = (float)$opening;
-        return mysqli_query($connection, "UPDATE kp_items SET {$qty_column}='{$opening}', {$take_column}=2 WHERE item_id='{$item_id}'");
+        $counter = (int)$counter;
+        return mysqli_query($connection, "UPDATE kp_counter_items SET qty='{$opening}' WHERE counter_id={$counter} AND item_id='{$item_id}' AND is_active=1");
     }
 }
 

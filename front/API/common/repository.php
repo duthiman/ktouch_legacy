@@ -338,9 +338,14 @@ if (!function_exists('common_catalog_item_counter')) {
 
 if (!function_exists('common_catalog_item_qty')) {
     function common_catalog_item_qty($row, $base_counter_id, $kit_counter_id) {
+        global $connection;
         $stock = (int)($row['stock'] ?? 0);
         $counter_id = common_catalog_item_counter($row, $base_counter_id, $kit_counter_id);
         if ($stock === 1 && $counter_id > 0) {
+            $mapped = mysqli_query($connection, "SELECT qty FROM kp_counter_items WHERE counter_id='" . (int)$counter_id . "' AND item_id='" . (int)($row['item_id'] ?? 0) . "' AND is_active=1 LIMIT 1");
+            if ($mapped && ($mappedRow = mysqli_fetch_assoc($mapped))) {
+                return (float)$mappedRow['qty'];
+            }
             return (float)($row['cntr' . $counter_id . '_qty'] ?? 0);
         }
         return $stock === 2 ? 100 : 0;
@@ -349,9 +354,14 @@ if (!function_exists('common_catalog_item_qty')) {
 
 if (!function_exists('common_catalog_item_reorder')) {
     function common_catalog_item_reorder($row, $base_counter_id, $kit_counter_id) {
+        global $connection;
         $stock = (int)($row['stock'] ?? 0);
         $counter_id = common_catalog_item_counter($row, $base_counter_id, $kit_counter_id);
         if ($stock === 1 && $counter_id > 0) {
+            $mapped = mysqli_query($connection, "SELECT reorder_level FROM kp_counter_items WHERE counter_id='" . (int)$counter_id . "' AND item_id='" . (int)($row['item_id'] ?? 0) . "' AND is_active=1 LIMIT 1");
+            if ($mapped && ($mappedRow = mysqli_fetch_assoc($mapped))) {
+                return (float)$mappedRow['reorder_level'];
+            }
             return (float)($row['cntr' . $counter_id . '_reorder'] ?? 0);
         }
         return $stock === 2 ? 50 : 0;

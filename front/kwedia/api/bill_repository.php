@@ -172,31 +172,22 @@ if (!function_exists('repo_deduct_counter_stock')) {
             ];
         }
 
-        $qty_column = 'cntr' . $counter_id . '_qty';
-        if (function_exists('kw_schema_column_exists') && !kw_schema_column_exists($connection, 'kp_items', $qty_column)) {
-            return [
-                'ok' => false,
-                'message' => 'Counter stock column ' . $qty_column . ' was not found.',
-            ];
-        }
-
-        $current_qty = isset($item[$qty_column]) ? (float)$item[$qty_column] : 0;
+        $stock_query = mysqli_query($connection, "SELECT qty FROM kp_counter_items WHERE counter_id='{$counter_id}' AND item_id='{$item_id}' AND is_active=1 LIMIT 1 FOR UPDATE");
+        $stock_row = $stock_query ? mysqli_fetch_assoc($stock_query) : null;
+        $current_qty = (float)($stock_row['qty'] ?? 0);
         if ($current_qty < $qty) {
             return [
                 'ok' => false,
                 'message' => 'Not enough stock on this counter.',
                 'available_qty' => $current_qty,
                 'requested_qty' => $qty,
-                'column' => $qty_column,
+                'counter_id' => $counter_id,
             ];
         }
 
-        $safe_column = '`' . str_replace('`', '``', $qty_column) . '`';
         $updated = mysqli_query(
             $connection,
-            "UPDATE kp_items
-             SET $safe_column = $safe_column - '$qty'
-             WHERE item_id='$item_id'"
+            "UPDATE kp_counter_items SET qty=qty-'$qty' WHERE counter_id='{$counter_id}' AND item_id='{$item_id}' AND is_active=1 AND qty >= '$qty'"
         );
 
         if (!$updated) {
@@ -211,7 +202,7 @@ if (!function_exists('repo_deduct_counter_stock')) {
             'message' => 'Counter stock deducted.',
             'deducted' => true,
             'remaining_qty' => $current_qty - $qty,
-            'column' => $qty_column,
+            'counter_id' => $counter_id,
         ];
     }
 }
@@ -263,14 +254,6 @@ if (!function_exists('repo_deduct_recipe_counter_stock')) {
             ];
         }
 
-        $qty_column = 'cntr' . $counter_id . '_qty';
-        if (function_exists('kw_schema_column_exists') && !kw_schema_column_exists($connection, 'kp_items', $qty_column)) {
-            return [
-                'ok' => false,
-                'message' => 'Counter stock column ' . $qty_column . ' was not found.',
-            ];
-        }
-
         $recipe_rows = repo_fetch_recipe_rows($item_id);
         if (count($recipe_rows) === 0) {
             return [
@@ -294,9 +277,9 @@ if (!function_exists('repo_deduct_recipe_counter_stock')) {
                 continue;
             }
 
-            $raw_query = mysqli_query($connection, "SELECT * FROM kp_items WHERE item_id='{$raw_id}' LIMIT 1 FOR UPDATE");
+            $raw_query = mysqli_query($connection, "SELECT i.dpt,ci.qty FROM kp_items i INNER JOIN kp_counter_items ci ON ci.item_id=i.item_id AND ci.counter_id='{$counter_id}' AND ci.is_active=1 WHERE i.item_id='{$raw_id}' LIMIT 1 FOR UPDATE");
             $raw_item = $raw_query ? mysqli_fetch_assoc($raw_query) : null;
-            $available_qty = $raw_item && isset($raw_item[$qty_column]) ? (float)$raw_item[$qty_column] : 0;
+            $available_qty = (float)($raw_item['qty'] ?? 0);
             if ($available_qty < $required_qty) {
                 mysqli_rollback($connection);
                 return [
@@ -305,7 +288,7 @@ if (!function_exists('repo_deduct_recipe_counter_stock')) {
                     'raw_item_id' => $raw_id,
                     'available_qty' => $available_qty,
                     'requested_qty' => $required_qty,
-                    'column' => $qty_column,
+                    'counter_id' => $counter_id,
                 ];
             }
 
@@ -324,15 +307,12 @@ if (!function_exists('repo_deduct_recipe_counter_stock')) {
             ];
         }
 
-        $safe_column = '`' . str_replace('`', '``', $qty_column) . '`';
         foreach ($checks as $check) {
             $raw_id = (int)$check['raw_id'];
             $required_qty = (float)$check['required_qty'];
             $updated = mysqli_query(
                 $connection,
-                "UPDATE kp_items
-                 SET $safe_column = $safe_column - '$required_qty'
-                 WHERE item_id='$raw_id' AND $safe_column >= '$required_qty'"
+                "UPDATE kp_counter_items SET qty=qty-'$required_qty' WHERE counter_id='{$counter_id}' AND item_id='{$raw_id}' AND is_active=1 AND qty >= '$required_qty'"
             );
 
             if (!$updated || mysqli_affected_rows($connection) !== 1) {
@@ -382,7 +362,7 @@ if (!function_exists('repo_deduct_recipe_counter_stock')) {
             'ok' => true,
             'message' => 'Recipe counter stock deducted.',
             'deducted' => true,
-            'column' => $qty_column,
+            'counter_id' => $counter_id,
             'components' => $checks,
         ];
     }
@@ -443,20 +423,9 @@ if (!function_exists('repo_return_counter_stock')) {
             ];
         }
 
-        $qty_column = 'cntr' . $counter_id . '_qty';
-        if (function_exists('kw_schema_column_exists') && !kw_schema_column_exists($connection, 'kp_items', $qty_column)) {
-            return [
-                'ok' => false,
-                'message' => 'Counter stock column ' . $qty_column . ' was not found.',
-            ];
-        }
-
-        $safe_column = '`' . str_replace('`', '``', $qty_column) . '`';
         $updated = mysqli_query(
             $connection,
-            "UPDATE kp_items
-             SET $safe_column = $safe_column + '$qty'
-             WHERE item_id='$item_id'"
+            "UPDATE kp_counter_items SET qty=qty+'$qty' WHERE counter_id='{$counter_id}' AND item_id='{$item_id}' AND is_active=1"
         );
 
         if (!$updated) {
@@ -470,7 +439,7 @@ if (!function_exists('repo_return_counter_stock')) {
             'ok' => true,
             'message' => 'Counter stock returned.',
             'returned' => true,
-            'column' => $qty_column,
+            'counter_id' => $counter_id,
         ];
     }
 }
@@ -1024,13 +993,7 @@ if (!function_exists('repo_fetch_sale_print_grouped')) {
             $base_name = bill_repo_get_item_name($item_id);
             $item_name = $base_name;
             $row_qty = (float)($row['qty'] ?? 0);
-            $attributes = [];
-            if ($attr_id > 0) {
-                $attr_name = bill_repo_get_attribute_name($attr_id);
-                if ($attr_name !== '') {
-                    $attributes[] = ['id' => $attr_id, 'name' => $attr_name, 'qty' => $row_qty];
-                }
-            }
+            $attributeMap = [];
             $attribute_totals = [];
             $attribute_json_rows = explode('|||', (string)($row['accompaniment_json'] ?? ''));
             foreach ($attribute_json_rows as $attribute_json) {
@@ -1047,6 +1010,15 @@ if (!function_exists('repo_fetch_sale_print_grouped')) {
                         $attribute_totals[$attribute_key] = ['id' => $attribute_id ?: null, 'name' => $attribute_name, 'qty' => 0];
                     }
                     $attribute_totals[$attribute_key]['qty'] += (float)($attribute['qty'] ?? 0);
+                }
+            }
+            // accompaniment_json is the authoritative attribute payload. The
+            // legacy attr_id column often points to the same attribute and
+            // adding both caused duplicate attribute rows in Kwedia.
+            if (count($attribute_totals) === 0 && $attr_id > 0) {
+                $attr_name = bill_repo_get_attribute_name($attr_id);
+                if ($attr_name !== '') {
+                    $attribute_totals['id:' . $attr_id] = ['id' => $attr_id, 'name' => $attr_name, 'qty' => $row_qty];
                 }
             }
             foreach ($attribute_totals as $attribute_total) $attributes[] = $attribute_total;
@@ -1769,11 +1741,17 @@ if (!function_exists('bill_repo_print_queue')) {
                 if (isset($raw['name']) || isset($raw['label']) || isset($raw['title'])) $raw = [$raw];
                 foreach ($raw as $attribute) {
                     $name = is_string($attribute) ? trim($attribute) : (is_array($attribute) ? trim((string)($attribute['name'] ?? $attribute['label'] ?? $attribute['title'] ?? '')) : '');
-                    if ($name !== '') $attributes[] = ['name' => $name, 'qty' => is_array($attribute) && (float)($attribute['qty'] ?? 1) > 0 ? (float)$attribute['qty'] : 1];
+                    if ($name !== '') {
+                        $attributeQty = is_array($attribute) && (float)($attribute['qty'] ?? 1) > 0 ? (float)$attribute['qty'] : 1;
+                        $attributeKey = strtolower($name);
+                        if (!isset($attributeMap[$attributeKey])) $attributeMap[$attributeKey] = ['name' => $name, 'qty' => 0];
+                        $attributeMap[$attributeKey]['qty'] += $attributeQty;
+                    }
                 }
             }
             $attrId = (int)($row['attr_id'] ?? 0);
-            if ($attrId > 0) { $attrQ = mysqli_query($connection, "SELECT name FROM kp_items_attributes WHERE id='{$attrId}' LIMIT 1"); $attrRow = $attrQ ? mysqli_fetch_assoc($attrQ) : null; if ($attrRow && trim((string)$attrRow['name']) !== '') array_unshift($attributes, ['name' => trim((string)$attrRow['name']), 'qty' => 1]); }
+            if (count($attributeMap) === 0 && $attrId > 0) { $attrQ = mysqli_query($connection, "SELECT name FROM kp_items_attributes WHERE id='{$attrId}' LIMIT 1"); $attrRow = $attrQ ? mysqli_fetch_assoc($attrQ) : null; if ($attrRow && trim((string)$attrRow['name']) !== '') { $attrName = trim((string)$attrRow['name']); $attributeMap[strtolower($attrName)] = ['name' => $attrName, 'qty' => 1]; } }
+            $attributes = array_values($attributeMap);
             $displayName = '__CHABA_ITEM__' . json_encode(['name' => (string)$row['item_name'], 'attributes' => $attributes], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             $items[] = [
                 'name' => $displayName,

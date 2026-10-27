@@ -367,10 +367,11 @@ if (!function_exists('tots_repo_update_counter_qty')) {
 
         $item_id = (int)$item_id;
         $amount = (float)$amount;
-        $qty_column = preg_replace('/[^a-zA-Z0-9_]/', '', (string)$qty_column);
         $operator = $operator === '+' ? '+' : '-';
-
-        return mysqli_query($connection, "UPDATE kp_items SET `{$qty_column}`=`{$qty_column}`{$operator}'{$amount}' WHERE item_id='{$item_id}'");
+        $counter = (int)preg_replace('/[^0-9]/', '', (string)$qty_column);
+        if ($counter < 1) return false;
+        $sign = $operator === '+' ? '+' : '-';
+        return mysqli_query($connection, "UPDATE kp_counter_items SET qty=qty{$sign}'{$amount}' WHERE counter_id='{$counter}' AND item_id='{$item_id}' AND is_active=1");
     }
 }
 

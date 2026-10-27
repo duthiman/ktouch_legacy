@@ -1,5 +1,12 @@
 <?php
 
+if (function_exists('counter_inventory_ensure_schema')) {
+    counter_inventory_ensure_schema($connection);
+} elseif (is_file(__DIR__ . '/../../front/counter/api/counter_inventory_schema.php')) {
+    require_once __DIR__ . '/../../front/counter/api/counter_inventory_schema.php';
+    counter_inventory_ensure_schema($connection);
+}
+
 if (!function_exists('dash_stock_alerts')) {
     function dash_stock_alerts()
     {
@@ -17,27 +24,13 @@ if (!function_exists('dash_stock_alerts')) {
             return $result;
         }
 
-        $columns = array();
-        $column_q = mysqli_query($connection, "SHOW COLUMNS FROM kp_items");
-        if ($column_q) {
-            while ($column = mysqli_fetch_assoc($column_q)) {
-                $columns[$column['Field']] = true;
-            }
-        }
-
         while ($counter = mysqli_fetch_assoc($counter_q)) {
             $counter_id = (int)$counter['cntr_id'];
-            $qty_column = 'cntr' . $counter_id . '_qty';
-            $reorder_column = 'cntr' . $counter_id . '_reorder';
-            $has_qty = isset($columns[$qty_column]);
-            $has_reorder = isset($columns[$reorder_column]);
             $counter_items = array();
             $counter_out = 0;
             $counter_reorder = 0;
 
-            $qty_select = $has_qty ? "`$qty_column`" : '0';
-            $reorder_select = $has_reorder ? "`$reorder_column`" : '0';
-            $item_q = mysqli_query($connection, "SELECT item_id, name, stock, $qty_select AS counter_qty, $reorder_select AS reorder_qty FROM kp_items WHERE del_status=2 ORDER BY name ASC");
+            $item_q = mysqli_query($connection, "SELECT i.item_id, i.name, i.stock, COALESCE(ci.qty,0) AS counter_qty, COALESCE(ci.reorder_level,0) AS reorder_qty FROM kp_items i LEFT JOIN kp_counter_items ci ON ci.item_id=i.item_id AND ci.counter_id='$counter_id' AND ci.is_active=1 WHERE i.del_status=2 ORDER BY i.name ASC");
             if (!$item_q) {
                 continue;
             }

@@ -10,10 +10,12 @@ require_once __DIR__ . '/../funcs.php';
 require_once __DIR__ . '/trans_schema.php';
 require_once __DIR__ . '/trans_helper.php';
 require_once __DIR__ . '/trans_logger.php';
+require_once __DIR__ . '/../../counter/api/counter_inventory_schema.php';
 require_once __DIR__ . '/trans_repository.php';
 require_once __DIR__ . '/trans_service.php';
 
 trans_schema_boot($connection);
+counter_inventory_ensure_schema($connection);
 
 $action = trans_clean_text($_REQUEST['action'] ?? 'bootstrap');
 $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;

@@ -59,37 +59,16 @@ if (!function_exists('inventory_service_counter_stock_bootstrap')) {
         // here makes the client reuse one counter's quantity for every view.
         $stockCounters = $counters;
         $rows = inventory_repo_fetch_counter_stock_rows($stockCounters, $selectedCounterId, $categoryId, $subCategoryId, $stockType, $departmentId);
-        $itemColumns = [];
-        $columnsResult = mysqli_query($connection, "SHOW COLUMNS FROM kp_items");
-        if ($columnsResult) {
-            while ($columnRow = mysqli_fetch_assoc($columnsResult)) {
-                $itemColumns[(string)$columnRow['Field']] = true;
-            }
-        }
         foreach ($rows as &$stockRow) {
             $itemId = (int)$stockRow['item_id'];
             $stockRow['counter_reorder'] = [];
             $stockRow['counter_stock'] = [];
             foreach ($stockCounters as $counter) {
                 $counterId = (int)$counter['id'];
-                $qtyColumn = 'cntr' . $counterId . '_qty';
-                $reorderColumn = 'cntr' . $counterId . '_reorder';
-                $qtyValue = 0;
-                $reorderValue = 0;
-                $selectParts = [];
-                if (isset($itemColumns[$qtyColumn])) {
-                    $selectParts[] = "`$qtyColumn` AS counter_qty_value";
-                }
-                if (isset($itemColumns[$reorderColumn])) {
-                    $selectParts[] = "`$reorderColumn` AS reorder_qty";
-                }
-                if ($selectParts) {
-                    $counterStockQuery = mysqli_query($connection, "SELECT " . implode(',', $selectParts) . " FROM kp_items WHERE item_id='{$itemId}' LIMIT 1");
-                    if ($counterStockQuery && ($counterStockRow = mysqli_fetch_assoc($counterStockQuery))) {
-                        $qtyValue = (float)($counterStockRow['counter_qty_value'] ?? 0);
-                        $reorderValue = (float)($counterStockRow['reorder_qty'] ?? 0);
-                    }
-                }
+                $counterStockQuery = mysqli_query($connection, "SELECT qty, reorder_level FROM kp_counter_items WHERE counter_id='{$counterId}' AND item_id='{$itemId}' AND is_active=1 LIMIT 1");
+                $counterStockRow = $counterStockQuery ? (mysqli_fetch_assoc($counterStockQuery) ?: []) : [];
+                $qtyValue = (float)($counterStockRow['qty'] ?? 0);
+                $reorderValue = (float)($counterStockRow['reorder_level'] ?? 0);
                 $stockRow['counter_reorder'][(string)$counterId] = $reorderValue;
                 $stockRow['counter_stock'][(string)$counterId] = [
                     'counter_id' => $counterId,
@@ -286,13 +265,7 @@ if (!function_exists('inventory_service_adjust_counter_reorder_qty')) {
             return ['ok' => false, 'message' => 'Invalid item, counter or reorder level.'];
         }
 
-        $reorderColumn = 'cntr' . $counter_id . '_reorder';
-        $columnCheck = mysqli_query($connection, "SHOW COLUMNS FROM kp_items LIKE '{$reorderColumn}'");
-        if (!$columnCheck || mysqli_num_rows($columnCheck) < 1) {
-            return ['ok' => false, 'message' => 'This counter does not have a reorder-level field.'];
-        }
-
-        $updated = mysqli_query($connection, "UPDATE kp_items SET `$reorderColumn`='" . mysqli_real_escape_string($connection, (string)$qty) . "' WHERE item_id='{$item_id}' LIMIT 1");
+        $updated = mysqli_query($connection, "INSERT INTO kp_counter_items(counter_id,item_id,reorder_level,is_active,created_at,updated_at) VALUES('{$counter_id}','{$item_id}','{$qty}',1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE reorder_level=VALUES(reorder_level), is_active=1, updated_at=CURRENT_TIMESTAMP");
         if (!$updated) {
             return ['ok' => false, 'message' => 'Could not save counter reorder level.'];
         }
@@ -349,10 +322,8 @@ if (!function_exists('inventory_service_issue_request_item')) {
         $user_id = (int)$user_id;
 
         $counter = (int)get_column('kp_counter_req', 'counter', "req_id='{$req_id}'");
-        $counterColumn = 'cntr' . $counter . '_qty';
-        $counterColumnCheck = mysqli_query($connection, "SHOW COLUMNS FROM kp_items LIKE '{$counterColumn}'");
-        if ($counter < 1 || !$counterColumnCheck || mysqli_num_rows($counterColumnCheck) < 1) {
-            return ['ok' => false, 'message' => 'The destination counter stock field is not available.'];
+        if ($counter < 1) {
+            return ['ok' => false, 'message' => 'The destination counter is not available.'];
         }
 
         $stockResult = mysqli_query($connection, "SELECT store_qty FROM kp_items WHERE item_id='{$item_id}'");
@@ -378,9 +349,12 @@ if (!function_exists('inventory_service_issue_request_item')) {
             return ['ok' => false, 'message' => 'Could not track stock received by the counter.'];
         }
 
-        $adjusted = mysqli_query($connection, "UPDATE kp_items SET store_qty = store_qty-'{$qty}', `{$counterColumn}` = COALESCE(`{$counterColumn}`,0)+'{$qty}' WHERE item_id='{$item_id}' AND store_qty >= '{$qty}'");
+        $adjusted = mysqli_query($connection, "UPDATE kp_items SET store_qty = store_qty-'{$qty}' WHERE item_id='{$item_id}' AND store_qty >= '{$qty}'");
         if (!$adjusted) {
             return ['ok' => false, 'message' => 'Could not update store quantity.'];
+        }
+        if (!mysqli_query($connection, "INSERT INTO kp_counter_items (counter_id,item_id,qty,is_active) VALUES ('{$counter}','{$item_id}','{$qty}',1) ON DUPLICATE KEY UPDATE qty=qty+VALUES(qty),is_active=1")) {
+            return ['ok' => false, 'message' => 'Could not update destination counter inventory.'];
         }
 
         $updated = mysqli_query($connection, "UPDATE kp_counter_req_items SET issue_qty='{$issue_qty}',rec_qty='{$issue_qty}',issue_shift=CURRENT_DATE,issue_user='{$user_id}',issue_status=1,rec_status=1 WHERE req_id='{$req_id}' AND item_id='{$item_id}'");

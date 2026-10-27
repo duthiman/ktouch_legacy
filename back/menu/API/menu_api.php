@@ -5,10 +5,13 @@ header('Content-Type: application/json');
 
 require_once '../../../inc/connection.php';
 require_once '../../../inc/gen_funcs.php';
+require_once '../../../front/counter/api/counter_inventory_schema.php';
 require_once __DIR__ . '/menu_schema.php';
 require_once __DIR__ . '/menu_helpers.php';
 require_once __DIR__ . '/menu_repository.php';
 require_once __DIR__ . '/menu_service.php';
+
+counter_inventory_ensure_schema();
 
 $action = menu_clean_text($_REQUEST['action'] ?? '');
 

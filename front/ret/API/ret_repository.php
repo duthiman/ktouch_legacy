@@ -329,7 +329,14 @@ if (!function_exists('ret_repo_add_item_stock')) {
         $item_id = (int)$item_id;
         $qty = (float)$qty;
         $qty_column = preg_replace('/[^a-zA-Z0-9_]/', '', $qty_column);
-        return mysqli_query($connection, "UPDATE kp_items SET `$qty_column`=`$qty_column`+'$qty' WHERE item_id='$item_id'");
+        $counter_id = 0;
+        if (preg_match('/^cntr([0-9]+)_qty$/', $qty_column, $match)) {
+            $counter_id = (int)$match[1];
+        }
+        if ($counter_id > 0) {
+            return mysqli_query($connection, "INSERT INTO kp_counter_items(counter_id,item_id,qty,is_active,created_at,updated_at) VALUES('$counter_id','$item_id','$qty',1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE qty=qty+'$qty', is_active=1, updated_at=CURRENT_TIMESTAMP");
+        }
+        return false;
     }
 }
 

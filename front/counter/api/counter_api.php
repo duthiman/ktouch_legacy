@@ -2,6 +2,10 @@
 declare(strict_types=1);
 session_start();
 require_once '../../../inc/connection.php';
+// The close-rule setting and its schema helper live in gen_funcs.php.
+// Without this include the service falls back to strict mode and blocks every
+// counter that has unpaid bills, even when Settings allows closing them.
+require_once '../../../inc/gen_funcs.php';
 require_once '../../shift/api/shift_repository.php';
 require_once '../../sales/api/sales_repository.php';
 require_once '../../reports/api/counter_summary_repository.php';
@@ -9,10 +13,12 @@ require_once '../../Chaba/V1/Repositories/ChabaQueueRepository.php';
 require_once __DIR__ . '/counter_helpers.php';
 require_once __DIR__ . '/counter_logger.php';
 require_once __DIR__ . '/counter_schema.php';
+require_once __DIR__ . '/counter_inventory_schema.php';
 require_once __DIR__ . '/counter_repository.php';
 require_once __DIR__ . '/counter_service.php';
 
 counter_schema_ensure($connection);
+counter_inventory_ensure_schema();
 $data = array_replace($_GET, $_POST);
 $action = trim((string)($data['action'] ?? 'status'));
 $counterId = counter_api_int($data, 'counter_id', counter_api_int($data, 'counter', 0));

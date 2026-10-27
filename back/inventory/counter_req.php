@@ -11,6 +11,7 @@ $total_requests = counter_req_count($connection);
 $pending_requests = counter_req_count($connection, 'issue_status=2');
 $issued_requests = counter_req_count($connection, 'issue_status=3');
 $received_requests = counter_req_count($connection, 'issue_status=4');
+$rejected_requests = counter_req_count($connection, 'issue_status=5');
 $pending_receive_requests = counter_req_count($connection, 'issue_status=3 AND (rec_status IS NULL OR rec_status<>4)');
 $pending_po = mysqli_query($connection, "SELECT * FROM kp_counter_req WHERE issue_status=2 OR (issue_status=3 AND (rec_status IS NULL OR rec_status<>4)) ORDER BY req_id DESC");
 $open_counters = [];
@@ -20,13 +21,17 @@ $open_counter_ids = array_map('intval', array_column($open_counters, 'cntr_id'))
 $open_shifts = [];
 $open_shift_result = mysqli_query($connection, "SELECT shift FROM kp_shift ORDER BY shift ASC");
 while ($open_shift_result && ($open_shift = mysqli_fetch_assoc($open_shift_result))) $open_shifts[] = (string)$open_shift['shift'];
+$current_shift = $open_shifts[0] ?? date('Y-m-d');
 $can_create_issue = count($open_counters) > 0 && count($open_shifts) > 0;
 $activity = [];
 $activity_result = mysqli_query($connection, "SELECT c.cntr_id,c.name,COUNT(r.req_id) AS requested,SUM(CASE WHEN r.issue_status=3 THEN 1 ELSE 0 END) AS issued FROM kp_counters c LEFT JOIN kp_counter_req r ON r.counter=c.cntr_id GROUP BY c.cntr_id,c.name ORDER BY c.name ASC");
 while ($activity_result && ($activity_row = mysqli_fetch_assoc($activity_result))) $activity[] = $activity_row;
 $recent_pending = [];
-$recent_pending_result = mysqli_query($connection, "SELECT req_id,counter,req_shift,issue_status,rec_status FROM kp_counter_req WHERE issue_status=2 OR (issue_status=3 AND (rec_status IS NULL OR rec_status<>4)) ORDER BY req_id DESC LIMIT 5");
+$recent_pending_result = mysqli_query($connection, "SELECT req_id,counter,req_shift,req_user,issue_status,rec_status FROM kp_counter_req WHERE issue_status=2 OR (issue_status=3 AND (rec_status IS NULL OR rec_status<>4)) ORDER BY req_id DESC LIMIT 5");
 while ($recent_pending_result && ($recent_row = mysqli_fetch_assoc($recent_pending_result))) $recent_pending[] = $recent_row;
+$completed_requests = [];
+$completed_result = mysqli_query($connection, "SELECT req_id,counter,req_shift,req_user,issue_status,rec_status FROM kp_counter_req WHERE issue_status=4 OR rec_status=4 OR issue_status=5 ORDER BY req_id DESC LIMIT 5");
+while ($completed_result && ($completed_row = mysqli_fetch_assoc($completed_result))) $completed_requests[] = $completed_row;
 ?>
 
 <div id="page-container" class="fade page-without-sidebar page-header-fixed page-with-top-menu counter-issues-page">
@@ -37,8 +42,8 @@ while ($recent_pending_result && ($recent_row = mysqli_fetch_assoc($recent_pendi
     <header class="ci-page-head">
       <div class="ci-head-icon"><i class="fa fa-building"></i></div>
       <div>
-        <h1>Counter Issues</h1>
-        <p>Create, issue and track stock requests across every counter.</p>
+        <h1>Stock Issuing</h1>
+        <p>Issue stock to counters, shops or departments. Create, track and manage all stock issues.</p>
       </div>
       <div class="ci-head-actions">
         <button type="button" class="btn ci-btn-primary" data-toggle="modal" data-target="#new-counter-issue" <?php echo $can_create_issue ? '' : 'disabled title="No open counter or shift"'; ?>><i class="fa fa-plus"></i> New Counter Issue</button>
@@ -49,17 +54,18 @@ while ($recent_pending_result && ($recent_row = mysqli_fetch_assoc($recent_pendi
     <section class="ci-kpis">
       <article class="ci-kpi kpi-blue"><div class="ci-kpi-icon"><i class="fa fa-file-text-o"></i></div><div><span>Total Requests</span><strong><?php echo $total_requests; ?></strong><small>This month</small></div></article>
       <article class="ci-kpi kpi-amber"><div class="ci-kpi-icon"><i class="fa fa-hourglass-half"></i></div><div><span>Pending</span><strong><?php echo $pending_requests; ?></strong><small>Needs issuing</small></div></article>
-      <article class="ci-kpi kpi-purple"><div class="ci-kpi-icon"><i class="fa fa-cube"></i></div><div><span>Issued</span><strong><?php echo $issued_requests; ?></strong><small>Awaiting receipt</small></div></article>
-      <article class="ci-kpi kpi-green"><div class="ci-kpi-icon"><i class="fa fa-check-circle-o"></i></div><div><span>Received</span><strong><?php echo $received_requests; ?></strong><small>Completed successfully</small></div></article>
-      <article class="ci-kpi kpi-teal"><div class="ci-kpi-icon"><i class="fa fa-clock-o"></i></div><div><span>Average Issue Time</span><strong>18 min</strong><small class="ci-good"><i class="fa fa-arrow-down"></i> 6 min vs last month</small></div></article>
+      <article class="ci-kpi kpi-purple"><div class="ci-kpi-icon"><i class="fa fa-cube"></i></div><div><span>Pending Receiving</span><strong><?php echo $pending_receive_requests; ?></strong><small>Awaiting receipt</small></div></article>
+      <article class="ci-kpi kpi-green"><div class="ci-kpi-icon"><i class="fa fa-check-square-o"></i></div><div><span>Completed</span><strong><?php echo $received_requests; ?></strong><small>Received successfully</small></div></article>
+      <article class="ci-kpi kpi-red"><div class="ci-kpi-icon"><i class="fa fa-times-circle-o"></i></div><div><span>Rejected</span><strong><?php echo $rejected_requests; ?></strong><small>Not issued</small></div></article>
+      <article class="ci-kpi kpi-teal"><div class="ci-kpi-icon"><i class="fa fa-clock-o"></i></div><div><span>Average Processing Time</span><strong>18 min</strong><small class="ci-good"><i class="fa fa-arrow-down"></i> 30% from last month</small></div></article>
     </section>
 
     <section class="ci-overview-grid">
       <article class="ci-card ci-chart-card">
         <div class="ci-card-title"><h2>Issue Activity by Counter</h2><div class="ci-legend"><span><i class="dot blue"></i>Requested</span><span><i class="dot purple"></i>Issued</span></div></div>
-        <div class="ci-chart ci-counter-chart">
+        <div class="ci-chart ci-counter-horizontal">
           <?php $chart_max=1; foreach($activity as $a) $chart_max=max($chart_max,(int)$a['requested'],(int)$a['issued']); if(!$activity) echo '<div class="ci-chart-empty">No request activity yet.</div>'; foreach($activity as $a){$requested=(int)$a['requested'];$issued=(int)$a['issued']; ?>
-            <div class="ci-column-group"><div class="ci-column-bars"><i class="ci-request-bar" style="height:<?php echo round(($requested/$chart_max)*100); ?>%" title="Requested: <?php echo $requested; ?>"></i><i class="ci-issued-bar" style="height:<?php echo round(($issued/$chart_max)*100); ?>%" title="Issued: <?php echo $issued; ?>"></i></div><b class="ci-column-name"><?php echo htmlspecialchars($a['name']); ?></b><span class="ci-column-values"><?php echo $requested; ?> / <?php echo $issued; ?></span></div>
+            <div class="ci-counter-row"><b class="ci-counter-row-name"><?php echo htmlspecialchars($a['name']); ?></b><div class="ci-counter-row-bars"><div class="ci-horizontal-track"><i class="ci-request-bar" style="width:<?php echo round(($requested/$chart_max)*100); ?>%"></i><span>Requested <?php echo $requested; ?></span></div><div class="ci-horizontal-track"><i class="ci-issued-bar" style="width:<?php echo round(($issued/$chart_max)*100); ?>%"></i><span>Issued <?php echo $issued; ?></span></div></div></div>
           <?php } ?>
         </div>
       </article>
@@ -67,10 +73,17 @@ while ($recent_pending_result && ($recent_row = mysqli_fetch_assoc($recent_pendi
       <article class="ci-card ci-pending-card">
         <div class="ci-pending-head"><div><h2>Pending Counter Issues</h2><p>Requests requiring action</p></div><i class="fa fa-exchange"></i></div>
         <div class="ci-pending-stats"><div><strong><?php echo $pending_requests; ?></strong><span>Pending issue</span></div><div><strong><?php echo $pending_receive_requests; ?></strong><span>Awaiting receipt</span></div></div>
-        <div class="ci-pending-list">
-          <?php if (!$recent_pending) { ?><div class="ci-pending-empty">No pending counter issues.</div><?php } else { foreach ($recent_pending as $recent) { $recent_req_id=(int)$recent['req_id']; $recent_counter=(int)$recent['counter']; $recent_status = (int)$recent['issue_status'] === 2 ? 'Pending issue' : 'Awaiting receipt'; ?><div class="ci-pending-item"><b>#<?php echo $recent_req_id; ?></b><span><?php echo htmlspecialchars(get_counter($recent_counter)); ?></span><em><?php echo $recent_status; ?></em><?php if ((int)$recent['issue_status'] === 2) { ?><button type="button" class="ci-pending-action" onclick="window.location.href='req_view.php?req_id=<?php echo $recent_req_id; ?>&cntr=<?php echo $recent_counter; ?>'">Issue</button><?php } else { ?><button type="button" class="ci-pending-action" onclick="window.location.href='../reports/req_items.php?req_id=<?php echo $recent_req_id; ?>'">View items</button><?php } ?></div><?php } } ?>
+        <div class="ci-pending-tabs"><button type="button" class="active" data-pending-tab="issue">Pending Issues</button><button type="button" data-pending-tab="receive">Pending Receiving</button><button type="button" data-pending-tab="complete">Completed</button></div>
+        <div class="ci-pending-list ci-pending-table-wrap">
+          <?php if (!$recent_pending) { ?><div class="ci-pending-empty">No pending stock issues.</div><?php } else { ?>
+          <table class="ci-pending-table"><thead><tr><th>Issue No.</th><th>Requested By</th><th>Destination</th><th>Items</th><th>Requested On</th><th>Action</th></tr></thead><tbody>
+          <?php foreach ($recent_pending as $recent) { $recent_req_id=(int)$recent['req_id']; $recent_counter=(int)$recent['counter']; $item_count_q=mysqli_query($connection,"SELECT COUNT(*) total FROM kp_counter_req_items WHERE req_id='$recent_req_id'"); $item_count_row=$item_count_q?mysqli_fetch_assoc($item_count_q):[]; $tab_state=(int)$recent['issue_status']===2?'issue':'receive'; ?>
+          <tr data-pending-state="<?php echo $tab_state; ?>"><td><b>ISS-<?php echo $recent_req_id; ?></b></td><td><?php echo htmlspecialchars(get_user((int)($recent['req_user']??0))); ?></td><td><?php echo htmlspecialchars(get_counter($recent_counter)); ?></td><td><?php echo (int)($item_count_row['total']??0); ?></td><td><?php echo htmlspecialchars((string)$recent['req_shift']); ?></td><td><?php if ((int)$recent['issue_status']===2) { ?><button type="button" class="ci-pending-action counter-issue-trigger" data-req-id="<?php echo $recent_req_id; ?>" data-counter="<?php echo $recent_counter; ?>">Approve</button><?php } else { ?><button type="button" class="ci-pending-action" onclick="ciOpenRequest(<?php echo $recent_req_id; ?>)">View</button><?php } ?></td></tr>
+          <?php } foreach ($completed_requests as $recent) { $recent_req_id=(int)$recent['req_id']; $recent_counter=(int)$recent['counter']; $item_count_q=mysqli_query($connection,"SELECT COUNT(*) total FROM kp_counter_req_items WHERE req_id='$recent_req_id'"); $item_count_row=$item_count_q?mysqli_fetch_assoc($item_count_q):[]; ?>
+          <tr data-pending-state="complete"><td><b>ISS-<?php echo $recent_req_id; ?></b></td><td><?php echo htmlspecialchars(get_user((int)($recent['req_user']??0))); ?></td><td><?php echo htmlspecialchars(get_counter($recent_counter)); ?></td><td><?php echo (int)($item_count_row['total']??0); ?></td><td><?php echo htmlspecialchars((string)$recent['req_shift']); ?></td><td><button type="button" class="ci-pending-action" onclick="ciOpenRequest(<?php echo $recent_req_id; ?>)">View</button></td></tr>
+          <?php } ?></tbody></table><?php } ?>
         </div>
-        <button type="button" class="ci-view-all-btn" onclick="document.getElementById('dataTables-example').scrollIntoView({behavior:'smooth'});">View recent issues <i class="fa fa-arrow-down"></i></button>
+        <a href="../reports/counter_req.php" class="ci-view-all-btn">View all issues <i class="fa fa-arrow-right"></i></a>
       </article>
     </section>
 
@@ -124,16 +137,21 @@ while ($recent_pending_result && ($recent_row = mysqli_fetch_assoc($recent_pendi
     </section>
   </div>
 
+  <div id="ci-request-view-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"><div class="modal-content ci-view-modal">
+      <div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title"><i class="fa fa-cube"></i> Stock Issue Details</h4></div>
+      <div class="modal-body"><iframe id="ci-request-view-frame" title="Stock issue details" src="about:blank"></iframe></div>
+    </div></div>
+  </div>
+
   <div id="new-counter-issue" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document"><div class="modal-content ci-modal"><div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title">New Counter Issue</h4></div><div class="modal-body" id="new-issue-modal-body">
+    <div class="modal-dialog modal-md ci-new-issue-dialog" role="document"><div class="modal-content ci-modal"><div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title">New Counter Issue</h4></div><div class="modal-body" id="new-issue-modal-body">
       <article class="ci-card ci-create-card" id="new-issue-card">
         <h2>Create New Counter Issue</h2>
         <form action="create_request.php" method="get" id="create-counter-issue-form">
           <div class="ci-form-grid">
-            <label>Counter<select name="counter" id="create-counter-select" required><option value="">Select open counter</option><?php foreach ($open_counters as $c) echo '<option value="'.(int)$c['cntr_id'].'">'.htmlspecialchars($c['name']).'</option>'; ?></select></label>
-            <label>Shift<select name="shift" required><option value="">Select open shift</option><?php foreach ($open_shifts as $open_shift) echo '<option value="'.htmlspecialchars($open_shift).'">'.htmlspecialchars($open_shift).'</option>'; ?></select></label>
-            <label>Requested By<input value="<?php echo htmlspecialchars($_SESSION['username'] ?? 'KTOUCH_ADMIN'); ?>" readonly></label>
-            <label>Priority<div class="ci-priority"><input type="radio" id="normal" name="priority" value="normal" checked><label for="normal">Normal</label><input type="radio" id="urgent" name="priority" value="urgent"><label for="urgent">Urgent</label></div></label>
+            <label>Open Counter<select name="counter" id="create-counter-select" required><option value="">Select an open counter</option><?php foreach ($open_counters as $c) echo '<option value="'.(int)$c['cntr_id'].'">'.htmlspecialchars($c['name']).'</option>'; ?></select></label>
+            <label>Active Shift<input name="shift" value="<?php echo htmlspecialchars($current_shift); ?>" readonly></label>
           </div>
           <button class="ci-start-btn" type="submit">Start New Issue</button>
           <p class="ci-form-note"><i class="fa fa-info-circle"></i> A requisition number will be generated automatically.</p>
@@ -142,7 +160,7 @@ while ($recent_pending_result && ($recent_row = mysqli_fetch_assoc($recent_pendi
     </div></div></div>
   </div>
   <div id="counter-issue-confirm" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document"><div class="modal-content ci-modal"><div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title">Issue Counter</h4></div><div class="modal-body"><div class="ci-modal-icon"><i class="fa fa-cubes"></i></div><h4>Open this requisition?</h4><p>The requisition details will open so you can verify quantities and issue the stock.</p></div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Cancel</button><button class="btn ci-btn-primary" id="confirm-counter-issue">Yes, Continue</button></div></div></div>
+    <div class="modal-dialog modal-sm" role="document"><div class="modal-content ci-modal"><div class="modal-header"><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button><h4 class="modal-title">Confirm Stock Issue</h4></div><div class="modal-body"><div class="ci-modal-icon"><i class="fa fa-cubes"></i></div><h4>Issue this requisition?</h4><p>Do you want to open this requisition and continue issuing its stock?</p></div><div class="modal-footer"><button class="btn btn-default" data-dismiss="modal">Cancel</button><button class="btn ci-btn-primary" id="confirm-counter-issue">Yes, Issue Stock</button></div></div></div>
   </div>
 </div>
 
@@ -185,6 +203,107 @@ body{background:var(--ci-bg)}#content.ci-content{margin-left:0!important;padding
 .ci-table th{font-size:10px}
 .ci-table td{font-size:10px}
 </style>
+<style>
+/* Counter requisition layout: compact, action-first and responsive. */
+.counter-issues-page #content.ci-content{padding:8px 16px 14px!important}
+.counter-issues-page .ci-page-head{height:54px;margin:-8px -16px 8px;padding:7px 16px}
+.counter-issues-page .ci-head-icon{width:36px;height:36px;border-radius:7px;font-size:19px}
+.counter-issues-page .ci-page-head h1{font-size:17px}
+.counter-issues-page .ci-page-head p{font-size:10px}
+.counter-issues-page .ci-head-actions{gap:6px}
+.counter-issues-page .ci-head-actions .btn{height:31px;padding:0 11px;font-size:10px;border-radius:7px}
+.counter-issues-page .ci-kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-bottom:8px}
+.counter-issues-page .ci-kpi{height:72px;border-radius:7px;padding:9px 10px;gap:9px}
+.counter-issues-page .ci-kpi-icon{width:34px;height:34px;border-radius:7px;font-size:17px}
+.counter-issues-page .ci-kpi span{font-size:9px;white-space:nowrap}
+.counter-issues-page .ci-kpi strong{font-size:18px;margin:1px 0}
+.counter-issues-page .ci-kpi small{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.counter-issues-page .ci-overview-grid{grid-template-columns:1.15fr 1fr;gap:8px;margin-bottom:8px}
+.counter-issues-page .ci-pending-card{order:1;height:360px;padding:11px 13px;border-radius:7px}
+.counter-issues-page .ci-chart-card{order:2;height:360px;padding:10px 13px;border-radius:7px}
+.counter-issues-page .ci-card-title,.counter-issues-page .ci-pending-head{height:25px}
+.counter-issues-page .ci-card h2,.counter-issues-page .ci-pending-head h2{font-size:12px}
+.counter-issues-page .ci-pending-head p{font-size:9px;margin-top:2px}
+.counter-issues-page .ci-pending-stats{gap:5px;margin:8px 0 5px}
+.counter-issues-page .ci-pending-stats>div{padding:5px 7px;border-radius:7px}
+.counter-issues-page .ci-pending-stats strong{font-size:17px}
+.counter-issues-page .ci-pending-stats span{font-size:8px;margin-top:2px}
+.counter-issues-page .ci-pending-item{padding:4px 0;font-size:9px;grid-template-columns:38px minmax(60px,1fr) auto auto;gap:5px}
+.counter-issues-page .ci-pending-action{font-size:8px;padding:3px 6px;border-radius:7px}
+.counter-issues-page .ci-counter-chart{min-height:132px;height:145px;gap:9px;padding:5px 2px}
+.counter-issues-page .ci-column-group{height:128px;min-width:38px}
+.counter-issues-page .ci-column-bars{height:91px}
+.counter-issues-page .ci-column-bars i{width:12px}
+.counter-issues-page .ci-column-name{max-width:60px;font-size:8px}
+.counter-issues-page .ci-column-values{font-size:7px}
+.counter-issues-page .ci-table-card{padding:8px 9px;border-radius:7px}
+.counter-issues-page .ci-table-top{margin-bottom:6px}
+.counter-issues-page .ci-table-top h2{font-size:13px}
+.counter-issues-page .ci-tabs button{height:26px;min-width:92px;font-size:8px;border-radius:0}
+.counter-issues-page .ci-table-tools{gap:5px}
+.counter-issues-page .ci-table-tools select,.counter-issues-page .ci-table-tools input,.counter-issues-page .ci-table-tools button,.counter-issues-page .ci-table-report-link{height:26px;font-size:8px;border-radius:7px}
+.counter-issues-page .ci-table th,.counter-issues-page .ci-table td{padding:4px 8px!important;font-size:9px}
+.counter-issues-page .ci-modal{border-radius:7px}
+.counter-issues-page .ci-kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+.counter-issues-page .ci-pending-tabs{display:flex;gap:4px;margin:6px 0;border-bottom:1px solid #e7deef}
+.counter-issues-page .ci-pending-tabs button{border:0;border-bottom:2px solid transparent;background:transparent;color:#6d5b79;padding:5px 7px;font-size:8px;font-weight:800;white-space:nowrap}
+.counter-issues-page .ci-pending-tabs button.active{color:var(--ci-purple);border-bottom-color:var(--ci-purple)}
+.counter-issues-page .ci-pending-table tbody tr[data-pending-state]{display:none}
+.counter-issues-page .ci-pending-table tbody tr[data-pending-state="issue"]{display:table-row}
+.counter-issues-page .ci-view-modal{border:0;border-radius:10px;overflow:hidden}
+.counter-issues-page .ci-view-modal .modal-header{background:linear-gradient(135deg,#68269b,#9143bd);color:#fff;border:0;padding:13px 16px}
+.counter-issues-page .ci-view-modal .modal-title{font-weight:800}
+.counter-issues-page .ci-view-modal .close{color:#fff;opacity:1}
+.counter-issues-page .ci-view-modal .modal-body{padding:0;background:#f7f8fb}
+.counter-issues-page .ci-counter-horizontal{height:300px;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:12px 4px;overflow:auto}
+.counter-issues-page .ci-counter-row{display:grid;grid-template-columns:130px minmax(0,1fr);gap:12px;align-items:center;width:100%}
+.counter-issues-page .ci-counter-row-name{font-size:10px;color:#263450;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.counter-issues-page .ci-counter-row-bars{display:grid;gap:5px;min-width:0}
+.counter-issues-page .ci-horizontal-track{height:22px;position:relative;border-radius:6px;background:#f0f3f8;overflow:hidden}
+.counter-issues-page .ci-horizontal-track i{display:block;height:100%;min-width:3px;border-radius:6px;opacity:.92}
+.counter-issues-page .ci-horizontal-track span{position:absolute;left:8px;top:4px;color:#fff;font-size:8px;font-weight:800;text-shadow:0 1px 2px #0008;white-space:nowrap}
+.counter-issues-page .ci-request-bar{background:#2775ef}.counter-issues-page .ci-issued-bar{background:#7c2db5}
+.counter-issues-page .ci-new-issue-dialog{max-width:520px;width:calc(100% - 24px)}
+.counter-issues-page #ci-request-view-frame{display:block;width:100%;height:68vh;border:0;background:#fff}
+.counter-issues-page .ci-table-card{display:none}
+.counter-issues-page .kpi-red{background:#fffafa}
+.counter-issues-page .kpi-red .ci-kpi-icon{background:#ffe4e4;color:#e34b4b}
+.counter-issues-page .ci-pending-table-wrap{overflow:auto}
+.counter-issues-page .ci-pending-table{width:100%;min-width:610px;border-collapse:collapse;font-size:8px}
+.counter-issues-page .ci-pending-table th{height:24px;padding:4px 6px;text-align:left;background:#faf8ff;color:#263450;border-bottom:1px solid #e3d9ef;white-space:nowrap}
+.counter-issues-page .ci-pending-table td{height:27px;padding:4px 6px;border-bottom:1px solid #edf0f5;color:#34445f;white-space:nowrap}
+.counter-issues-page .ci-pending-table tr:last-child td{border-bottom:0}
+.counter-issues-page a.ci-view-all-btn{display:block;text-decoration:none!important}
+@media(max-width:1100px){
+  .counter-issues-page .ci-kpis{grid-template-columns:repeat(3,1fr)}
+  .counter-issues-page .ci-overview-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:767px){
+  .counter-issues-page #content.ci-content{padding:6px!important}
+  .counter-issues-page .ci-page-head{margin:-6px -6px 7px;padding:6px 8px;height:48px}
+  .counter-issues-page .ci-page-head p{display:none}
+  .counter-issues-page .ci-head-actions .ci-btn-light{display:none}
+  .counter-issues-page .ci-head-actions .btn{padding:0 8px;font-size:9px}
+  .counter-issues-page .ci-kpis{grid-template-columns:repeat(2,1fr);gap:5px}
+  .counter-issues-page .ci-kpi{height:62px;padding:7px 8px}
+  .counter-issues-page .ci-kpi-icon{width:28px;height:28px;font-size:14px}
+  .counter-issues-page .ci-kpi strong{font-size:16px}
+  .counter-issues-page .ci-overview-grid{display:flex;flex-direction:column;gap:7px}
+  .counter-issues-page .ci-pending-card{order:1;height:360px}
+  .counter-issues-page .ci-chart-card{order:2;height:175px}
+  .counter-issues-page .ci-counter-horizontal{height:130px;gap:8px;padding:4px 0}
+  .counter-issues-page .ci-counter-row{grid-template-columns:70px minmax(0,1fr);gap:6px}
+  .counter-issues-page .ci-counter-row-name{font-size:8px}
+  .counter-issues-page .ci-horizontal-track{height:16px}
+  .counter-issues-page .ci-horizontal-track span{top:2px;font-size:7px}
+  .counter-issues-page .ci-table-top{display:block}
+  .counter-issues-page .ci-table-tools{margin-top:6px;display:grid;grid-template-columns:1fr 1fr}
+  .counter-issues-page .ci-table-tools>*{width:100%!important}
+  .counter-issues-page .ci-search,.counter-issues-page .ci-search input{grid-column:1/-1;width:100%!important}
+  .counter-issues-page .ci-table-wrap{overflow-x:auto}
+  .counter-issues-page .ci-table{min-width:720px}
+}
+</style>
 <script src="../../assets/plugins/jquery/jquery-3.2.1.min.js"></script>
 <script src="../../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
 <script src="../../assets/plugins/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
@@ -202,20 +321,31 @@ $(function(){
     var form = this;
     var counter = $('#create-counter-select option:selected').text();
     var shift = $(form).find('[name="shift"]').val() || '';
-    var priority = $(form).find('[name="priority"]:checked').val() || 'normal';
     if (!$('#create-counter-select').val()) {
       Swal.fire({icon:'warning', title:'Select a counter', text:'Please select the counter for this issue first.'});
       return;
     }
     Swal.fire({
       icon: 'question', title: 'Confirm counter selection',
-      html: '<div style="text-align:left"><b>Counter:</b> ' + $('<div>').text(counter).html() + '<br><b>Shift:</b> ' + $('<div>').text(shift).html() + '<br><b>Priority:</b> ' + $('<div>').text(priority).html() + '</div><br>Continue to the stock issue page?',
+      html: '<div style="text-align:left"><b>Counter:</b> ' + $('<div>').text(counter).html() + '<br><b>Shift:</b> ' + $('<div>').text(shift).html() + '</div><br>Continue to the stock issue page?',
       showCancelButton: true, confirmButtonText: 'Yes, continue', cancelButtonText: 'Go back', confirmButtonColor: '#752d9b'
     }).then(function(result){
       if (result.isConfirmed) {
-        var target = 'create_request.php?counter=' + encodeURIComponent($('#create-counter-select').val()) + '&shift=' + encodeURIComponent(shift) + '&priority=' + encodeURIComponent(priority);
+        var target = 'create_request.php?counter=' + encodeURIComponent($('#create-counter-select').val()) + '&shift=' + encodeURIComponent(shift);
         window.location.href = target;
       }
+    });
+  });
+  window.ciOpenRequest = function(id){
+    $('#ci-request-view-frame').attr('src','../reports/req_items.php?req_id='+encodeURIComponent(id));
+    $('#ci-request-view-modal').modal('show');
+  };
+  $('.ci-pending-tabs button').on('click', function(){
+    $('.ci-pending-tabs button').removeClass('active');
+    $(this).addClass('active');
+    var state=$(this).data('pending-tab');
+    $('.ci-pending-table tbody tr[data-pending-state]').each(function(){
+      $(this).toggle($(this).data('pending-state')===state);
     });
   });
   var selectedRequest=null;

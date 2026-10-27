@@ -438,6 +438,7 @@ if (!function_exists('kw_api_item_counter_id')) {
 
 if (!function_exists('kw_api_item_stock_meta')) {
     function kw_api_item_stock_meta($item_row, $counter_id) {
+		global $connection;
         $counter_id = (int)$counter_id;
         $stock = isset($item_row['stock']) ? (int)$item_row['stock'] : 0;
         $recipe = isset($item_row['recipe']) ? (int)$item_row['recipe'] : 0;
@@ -449,8 +450,14 @@ if (!function_exists('kw_api_item_stock_meta')) {
             $qty_column = 'cntr' . $counter_id . '_qty';
             $reorder_column = 'cntr' . $counter_id . '_reorder';
             if ($stock === 1) {
-                $qty = isset($item_row[$qty_column]) ? (float)$item_row[$qty_column] : 0;
-                $reorder = isset($item_row[$reorder_column]) ? (float)$item_row[$reorder_column] : 0;
+				$mapped = mysqli_query($connection, "SELECT qty, reorder_level FROM kp_counter_items WHERE counter_id='" . (int)$counter_id . "' AND item_id='" . (int)$item_id . "' AND is_active=1 LIMIT 1");
+				if ($mapped && ($mappedRow = mysqli_fetch_assoc($mapped))) {
+					$qty = (float)($mappedRow['qty'] ?? 0);
+					$reorder = (float)($mappedRow['reorder_level'] ?? 0);
+				} else {
+					$qty = isset($item_row[$qty_column]) ? (float)$item_row[$qty_column] : 0;
+					$reorder = isset($item_row[$reorder_column]) ? (float)$item_row[$reorder_column] : 0;
+				}
             } elseif ($stock === 2) {
                 if ($recipe === 1) {
                     $qty = recipe_qty($item_id, $qty_column);

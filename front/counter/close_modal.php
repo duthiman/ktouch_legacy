@@ -24,7 +24,14 @@ while ($row = mysqli_fetch_assoc($unreceived_transfers_q)) {
   $unreceived_transfers[] = $row;
 }
 
-$can_close = empty($pending_returns) && empty($unreceived_transfers);
+$uncleared_bills = array();
+$uncleared_bills_q = mysqli_query($connection, "SELECT * FROM kp_sales WHERE shift='$shift' AND counter='$counter' AND pay_status=2 ORDER BY sale_id DESC") or die(mysqli_error($connection));
+while ($row = mysqli_fetch_assoc($uncleared_bills_q)) {
+  $uncleared_bills[] = $row;
+}
+
+$requires_cleared_bills = function_exists('counter_close_requires_all_bills_cleared') ? counter_close_requires_all_bills_cleared() : true;
+$can_close = empty($pending_returns) && empty($unreceived_transfers) && (!$requires_cleared_bills || empty($uncleared_bills));
 $close_pin = str_pad((string)random_int(0, 9999), 4, '0', STR_PAD_LEFT);
 
 if (!function_exists('close_modal_waiter_name')) {
@@ -167,6 +174,27 @@ if (!function_exists('close_modal_waiter_name')) {
     color: #1f6a3c;
     font-weight: 700;
   }
+  .close-bills-alert {
+    background: linear-gradient(135deg, #fff5f5 0%, #fffafa 100%);
+    border: 1px solid #efb5b5;
+    border-left: 5px solid #c62828;
+    border-radius: 7px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .close-bills-alert.is-relaxed { border-color:#f0c36d; border-left-color:#e08a00; background:#fffaf0; }
+  .close-bills-alert h5 { margin:0 0 5px; color:#9e2525; font-weight:800; }
+  .close-bills-alert.is-relaxed h5 { color:#9a5b00; }
+  .close-bills-alert p { margin:0 0 10px; color:#765454; font-size:13px; }
+  .close-bills-list { display:grid; gap:7px; max-height:210px; overflow:auto; }
+  .close-bill-row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; padding:9px 10px; border:1px solid #f0d9d9; border-radius:7px; background:#fff; }
+  .close-bill-row strong { display:block; color:#321616; font-size:13px; }
+  .close-bill-row small { color:#846666; font-size:11px; }
+  .close-bill-amount { color:#a61c21; font-size:14px; font-weight:800; white-space:nowrap; }
+  .close-bills-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .close-bills-action { display:inline-flex; align-items:center; justify-content:center; min-height:34px; padding:7px 12px; border-radius:7px; font-size:12px; font-weight:800; text-decoration:none!important; }
+  .close-bills-action-clear { background:#a61c21; color:#fff!important; }
+  .close-bills-action-return { background:#f39c12; color:#fff!important; }
   .close-check-btn {
     min-width: 140px;
     border-radius: 7px;
@@ -340,6 +368,27 @@ if (!function_exists('close_modal_waiter_name')) {
         </div>
       </div>
 
+      <?php if (!empty($uncleared_bills)) { ?>
+      <div class="close-bills-alert <?php echo $requires_cleared_bills ? '' : 'is-relaxed'; ?>">
+        <h5>Uncleared bills on this counter</h5>
+        <p><?php echo $requires_cleared_bills ? 'These bills must be cleared before this counter can close.' : 'These bills are still unpaid. The current setting allows the counter to close without clearing them.'; ?></p>
+        <?php if (!empty($uncleared_bills)) { ?>
+        <div class="close-bills-list">
+          <?php foreach ($uncleared_bills as $row) { ?>
+          <div class="close-bill-row">
+            <div><strong>Bill #<?php echo (int)$row['sale_id']; ?></strong><small>Waiter: <?php echo close_modal_waiter_name($row['user_id']); ?><?php if (!empty($row['datime'])) { ?> · <?php echo htmlspecialchars((string)$row['datime']); ?><?php } ?></small></div>
+            <span class="close-bill-amount"><?php echo number_format((float)($row['amount'] ?? $row['total'] ?? 0), 2); ?></span>
+          </div>
+          <?php } ?>
+        </div>
+        <?php } ?>
+        <div class="close-bills-actions">
+          <a href="../cash/clrbill/clearb.php" class="close-bills-action close-bills-action-clear">Go to Clearance</a>
+        </div>
+      </div>
+      <?php } ?>
+
+      <?php if (!empty($pending_returns)) { ?>
       <div class="close-check-panel">
         <h5>Pending Returns</h5>
         <p class="close-check-note">These returns are still waiting to be confirmed or rejected before counter close.</p>
@@ -356,8 +405,13 @@ if (!function_exists('close_modal_waiter_name')) {
         <?php } else { ?>
         <div class="close-check-ok">There are no pending returns on this counter.</div>
         <?php } ?>
+        <div class="close-bills-actions">
+          <a href="../ret/appr/returns.php" class="close-bills-action close-bills-action-return">Handle Returns</a>
+        </div>
       </div>
+      <?php } ?>
 
+      <?php if (!empty($unreceived_transfers)) { ?>
       <div class="close-check-panel" style="margin-bottom:0;">
         <h5>Unreceived Stock</h5>
         <p class="close-check-note">These stock requests must be received before counter closing.</p>
@@ -377,15 +431,13 @@ if (!function_exists('close_modal_waiter_name')) {
         <div class="close-check-ok">No stock transfer is waiting to be received for this counter.</div>
         <?php } ?>
       </div>
+      <?php } ?>
     </div>
     <div class="modal-footer">
       <div class="close-counter-progress" id="close-counter-progress" role="status" aria-live="polite">
         <span id="close-counter-progress-text">Closing counter and saving the summary...</span>
         <div class="close-counter-progress-bar"><span></span></div>
       </div>
-      <?php if (!empty($pending_returns)) { ?>
-      <a href="../ret/appr/returns.php" class="btn btn-warning close-check-btn">Handle Returns</a>
-      <?php } ?>
       <?php if (!empty($unreceived_transfers)) { ?>
       <a href="../rec/rec_pending.php" class="btn btn-warning close-check-btn">Receive Requests</a>
       <?php } ?>

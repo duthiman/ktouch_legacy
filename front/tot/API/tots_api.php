@@ -5,11 +5,14 @@ header('Content-Type: application/json');
 
 include('../../../inc/connection.php');
 include_once('../../../inc/gen_funcs.php');
+require_once __DIR__ . '/../../counter/api/counter_inventory_schema.php';
 require_once __DIR__ . '/tots_schema.php';
 require_once __DIR__ . '/tots_helpers.php';
 require_once __DIR__ . '/tots_repository.php';
 require_once __DIR__ . '/tots_service.php';
 require_once __DIR__ . '/tots_logger.php';
+
+counter_inventory_ensure_schema();
 
 $action = tots_clean_text($_REQUEST['action'] ?? '');
 $session = tots_check_session();

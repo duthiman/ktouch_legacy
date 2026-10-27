@@ -40,7 +40,8 @@ function counter_service_close(mysqli $connection, int $counterId, int $userId):
         $blockers = counter_repo_close_blockers($connection, $counterId, $shift);
         if ($blockers['pending_returns'] > 0) throw new LogicException('There are pending returns on this counter. Finish or reject them before closing.');
         if ($blockers['pending_transfers'] > 0) throw new LogicException('There are unreceived transfers on this counter. Receive them before closing.');
-        if ($blockers['uncleared_bills'] > 0) throw new LogicException('There are uncleared bills on this counter. Clear them before closing.');
+        $strictBillClose = !function_exists('counter_close_requires_all_bills_cleared') || counter_close_requires_all_bills_cleared();
+        if ($blockers['uncleared_bills'] > 0 && $strictBillClose) throw new LogicException('There are uncleared bills on this counter. Clear them before closing.');
         mysqli_begin_transaction($connection);
         $transactionStarted = true;
         $sales = sales_repo_counter_totals($connection, $counterId, $shift);

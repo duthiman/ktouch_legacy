@@ -190,8 +190,7 @@ if (!function_exists('trans_service_item_modal')) {
     function trans_service_item_modal($connection, $user_id, $item_id)
     {
         $counter = (int)get_column('kp_users', 'counter', "user_id='$user_id'");
-        $qty_column = 'cntr' . $counter . '_qty';
-        $stock_row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT $qty_column AS stock FROM kp_items WHERE item_id='" . (int)$item_id . "'")) ?: [];
+        $stock_row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT qty AS stock FROM kp_counter_items WHERE counter_id='" . $counter . "' AND item_id='" . (int)$item_id . "' AND is_active=1 LIMIT 1")) ?: [];
         $stock = (float)($stock_row['stock'] ?? 0);
 
         ob_start();
@@ -385,7 +384,6 @@ if (!function_exists('trans_service_add_item')) {
         $trans_id = isset($_SESSION['trans']) ? (int)$_SESSION['trans'] : 0;
         $shift = (string)get_column('kp_shift', 'shift', '1');
         $counter = (int)get_column('kp_users', 'counter', "user_id='$user_id'");
-        $qty_column = 'cntr' . $counter . '_qty';
 
         if ($trans_id < 1) {
             return ['ok' => false, 'message' => 'Start a transfer first.', 'status' => 400, 'html' => '<div class="alert alert-danger"><h5><b>Start a transfer first.</b></h5></div>'];
@@ -394,7 +392,7 @@ if (!function_exists('trans_service_add_item')) {
             return ['ok' => false, 'message' => 'Please fill all the required fields.', 'status' => 400, 'html' => '<div class="alert alert-danger"><h5><b>Please fill all the required fields.!!!</b></h5></div>'];
         }
 
-        $stock_res = mysqli_query($connection, "SELECT $qty_column AS stock, dpt FROM kp_items WHERE item_id='$item_id'");
+        $stock_res = mysqli_query($connection, "SELECT i.dpt, COALESCE(ci.qty,0) AS stock FROM kp_items i LEFT JOIN kp_counter_items ci ON ci.item_id=i.item_id AND ci.counter_id='$counter' AND ci.is_active=1 WHERE i.item_id='$item_id' LIMIT 1");
         $stock_row = mysqli_fetch_assoc($stock_res) ?: [];
         $stock = (float)($stock_row['stock'] ?? 0);
         $shop = (int)($stock_row['dpt'] ?? 0);
@@ -409,7 +407,7 @@ if (!function_exists('trans_service_add_item')) {
 
         mysqli_query($connection, "INSERT INTO kp_counter_trans_items(trans_id,item_id,qty,counter) VALUES('$trans_id','$item_id','$qty','$counter')");
         mysqli_query($connection, "INSERT INTO kp_stock_track(item_id,qty,user_id,trans_id,status,stock_counter,shift,dpt) VALUES('$item_id','$qty','$user_id','$trans_id','OUT','$counter','$shift','$shop')");
-        mysqli_query($connection, "UPDATE kp_items SET $qty_column=$qty_column-'$qty' WHERE item_id='$item_id'");
+        mysqli_query($connection, "UPDATE kp_counter_items SET qty=qty-'$qty', updated_at=CURRENT_TIMESTAMP WHERE counter_id='$counter' AND item_id='$item_id' AND is_active=1 AND qty >= '$qty'");
         trans_log_action('ADDED|' . $qty . '|' . get_item($item_id) . '|TO COUNTER TRANSFER NO|' . $trans_id, '../logs');
 
         return ['ok' => true, 'message' => 'Item added.', 'status' => 200, 'html' => ''];
@@ -421,12 +419,11 @@ if (!function_exists('trans_service_delete_item')) {
     {
         $trans_id = isset($_SESSION['trans']) ? (int)$_SESSION['trans'] : 0;
         $counter = (int)user_counter($user_id);
-        $qty_column = 'cntr' . $counter . '_qty';
         $qty_row = mysqli_fetch_assoc(mysqli_query($connection, "SELECT qty FROM kp_counter_trans_items WHERE item_id='$item_id' AND trans_id='$trans_id'")) ?: [];
         $number = (float)($qty_row['qty'] ?? 0);
 
         if ($number > 0) {
-            mysqli_query($connection, "UPDATE kp_items SET $qty_column=$qty_column+'$number' WHERE item_id='$item_id'");
+            mysqli_query($connection, "UPDATE kp_counter_items SET qty=qty+'$number', updated_at=CURRENT_TIMESTAMP WHERE counter_id='$counter' AND item_id='$item_id' AND is_active=1");
         }
         mysqli_query($connection, "DELETE FROM kp_counter_trans_items WHERE item_id='$item_id' AND trans_id='$trans_id'");
         mysqli_query($connection, "DELETE FROM kp_stock_track WHERE item_id='$item_id' AND trans_id='$trans_id'");
@@ -648,14 +645,13 @@ if (!function_exists('trans_service_receive_item')) {
         $qty = (float)$qty;
         $shift = (string)get_column('kp_shift', 'shift', '1');
         $counter = (int)user_counter($user_id);
-        $qty_column = 'cntr' . $counter . '_qty';
 
         $check_stock = mysqli_query($connection, "SELECT dpt FROM kp_items WHERE item_id='$item_id'");
         $s = mysqli_fetch_assoc($check_stock) ?: [];
         $shop = (int)($s['dpt'] ?? 0);
 
         mysqli_query($connection, "UPDATE kp_counter_trans_items SET status=1 WHERE trans_id='$trans_id' AND item_id='$item_id'");
-        mysqli_query($connection, "UPDATE kp_items SET $qty_column=$qty_column+'$qty' WHERE item_id='$item_id'");
+        mysqli_query($connection, "INSERT INTO kp_counter_items(counter_id,item_id,qty,is_active,created_at,updated_at) VALUES('$counter','$item_id','$qty',1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE qty=qty+'$qty', is_active=1, updated_at=CURRENT_TIMESTAMP");
         mysqli_query($connection, "INSERT INTO kp_stock_track(item_id,qty,user_id,trans_id,status,stock_counter,shift,dpt) VALUES('$item_id','$qty','$user_id','$trans_id','IN','$counter','$shift','$shop')");
 
         return ['ok' => true, 'message' => 'Item received.', 'status' => 200];

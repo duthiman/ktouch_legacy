@@ -56,9 +56,6 @@ if (!function_exists('inventory_repo_filter_usable_counters')) {
             if ($column === '') {
                 continue;
             }
-            if (!inventory_repo_item_column_exists($column)) {
-                continue;
-            }
             $counter['qty_column'] = $column;
             $usableCounters[] = $counter;
         }
@@ -82,8 +79,7 @@ if (!function_exists('inventory_repo_fetch_counter_stock_rows')) {
 
         foreach ($usableCounters as $counter) {
             $column = (string)$counter['qty_column'];
-            $qtyColumns[] = "COALESCE(i.`{$column}`, 0) AS `{$column}`";
-            $orParts[] = "COALESCE(i.`{$column}`, 0) <> 0";
+            $qtyColumns[] = "0 AS `{$column}`";
         }
 
         if ($selectedCounterId > 0) {
@@ -98,7 +94,7 @@ if (!function_exists('inventory_repo_fetch_counter_stock_rows')) {
             if (!$selectedExists) {
                 return [];
             }
-            $orParts = ["COALESCE(i.`{$selectedColumn}`, 0) <> 0"];
+            $orParts = ["COALESCE(i.stock,2) IN (1,2,3)", "COALESCE(i.tot_status,2)=1"];
         }
 
         $filters = [];
@@ -138,12 +134,24 @@ if (!function_exists('inventory_repo_fetch_counter_stock_rows')) {
         while ($row = mysqli_fetch_assoc($result)) {
             $counterQty = [];
             $totalQty = 0;
+            $itemId = (int)$row['item_id'];
+            $mapped = [];
+            $mappedResult = mysqli_query($connection, "SELECT counter_id, qty, reorder_level FROM kp_counter_items WHERE item_id='{$itemId}' AND is_active=1");
+            while ($mappedResult && $mappedRow = mysqli_fetch_assoc($mappedResult)) {
+                $mapped[(int)$mappedRow['counter_id']] = [
+                    'qty' => (float)($mappedRow['qty'] ?? 0),
+                    'reorder' => (float)($mappedRow['reorder_level'] ?? 0),
+                ];
+            }
+            if ($selectedCounterId > 0 && !isset($mapped[$selectedCounterId])) {
+                continue;
+            }
             foreach ($usableCounters as $counter) {
-                $column = (string)$counter['qty_column'];
-                $qty = isset($row[$column]) ? (float)$row[$column] : 0;
+                $counterId = (int)$counter['id'];
+                $qty = (float)($mapped[$counterId]['qty'] ?? 0);
                 $totalQty += $qty;
                 $counterQty[] = [
-                    'counter_id' => (int)$counter['id'],
+                    'counter_id' => $counterId,
                     'counter_name' => (string)$counter['name'],
                     'qty' => $qty,
                     'value' => $qty * (float)$row['unit_cost'],

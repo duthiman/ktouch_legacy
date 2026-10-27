@@ -3,6 +3,7 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once '../../../inc/connection.php';
 require_once '../../../inc/gen_funcs.php';
+require_once __DIR__ . '/../../../front/counter/api/counter_inventory_schema.php';
 
 $user_id = (int)($_SESSION['user_id'] ?? $_SESSION['mwene'] ?? 0);
 if ($user_id < 1) {
@@ -10,6 +11,7 @@ if ($user_id < 1) {
     echo json_encode(['ok' => false, 'message' => 'Session expired.']);
     exit;
 }
+counter_inventory_ensure_schema($connection);
 
 $action = trim((string)($_GET['action'] ?? $_POST['action'] ?? ''));
 if ($action !== 'search') {
@@ -29,18 +31,21 @@ if ($column_q) {
     }
 }
 $code_select = isset($columns['stock_code']) ? ', stock_code' : ", '' AS stock_code";
-$counter_column = 'cntr' . $counter_id . '_qty';
-$counter_select = ($counter_id > 0 && isset($columns[$counter_column])) ? ", `$counter_column` AS counter_stock" : ', 0 AS counter_stock';
-$where = "del_status=2";
+$counter_select = ', COALESCE(ci.qty,0) AS counter_stock';
+$department_id = $counter_id > 0 ? (int)get_column('kp_counters', 'dpt', "cntr_id='{$counter_id}'") : 0;
+$where = "i.del_status=2";
+if ($department_id > 0) {
+    $where .= " AND (i.dpt='{$department_id}' OR COALESCE(i.dpt,0)=0)";
+}
 if ($safe_query !== '') {
-    $where .= " AND (name LIKE '%$safe_query%'";
+    $where .= " AND (i.name LIKE '%$safe_query%'";
     if (isset($columns['stock_code'])) {
-        $where .= " OR stock_code LIKE '%$safe_query%'";
+        $where .= " OR i.stock_code LIKE '%$safe_query%'";
     }
     $where .= ")";
 }
 $items = [];
-$items_q = mysqli_query($connection, "SELECT item_id, name, store_qty $code_select $counter_select FROM kp_items WHERE $where ORDER BY name ASC LIMIT 80");
+$items_q = mysqli_query($connection, "SELECT i.item_id, i.name, i.store_qty $code_select $counter_select FROM kp_items i LEFT JOIN kp_counter_items ci ON ci.counter_id='{$counter_id}' AND ci.item_id=i.item_id AND ci.is_active=1 WHERE $where ORDER BY i.name ASC LIMIT 80");
 if ($items_q) {
     while ($row = mysqli_fetch_assoc($items_q)) {
         $items[] = [

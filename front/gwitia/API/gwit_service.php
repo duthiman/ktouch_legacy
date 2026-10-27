@@ -190,14 +190,13 @@ if (!function_exists('gwit_service_submit_request')) {
             return true;
         }
 
-        $column = 'cntr' . $counter . '_qty';
-        $columnEscaped = mysqli_real_escape_string($connection, $column);
-        $check = mysqli_query($connection, "SHOW COLUMNS FROM kp_items LIKE '{$columnEscaped}'");
-        if (!$check || mysqli_num_rows($check) < 1) {
-            mysqli_query($connection, "ALTER TABLE kp_items ADD COLUMN `{$column}` DECIMAL(14,4) NOT NULL DEFAULT 0");
+        // Automatic requisitions use the active counter inventory table. Do
+        // not recreate or write the old dynamic kp_items.cntrN_qty columns.
+        if (function_exists('counter_inventory_ensure_schema')) {
+            counter_inventory_ensure_schema();
         }
-        $checkAfter = mysqli_query($connection, "SHOW COLUMNS FROM kp_items LIKE '{$columnEscaped}'");
-        if (!$checkAfter || mysqli_num_rows($checkAfter) < 1) {
+        $counterItemsTable = mysqli_query($connection, "SHOW TABLES LIKE 'kp_counter_items'");
+        if (!$counterItemsTable || mysqli_num_rows($counterItemsTable) < 1) {
             return false;
         }
 
@@ -211,11 +210,14 @@ if (!function_exists('gwit_service_submit_request')) {
             if ($itemId < 1 || $qty <= 0) {
                 continue;
             }
-            $stockUpdate = mysqli_query($connection, "UPDATE kp_items SET `{$column}` = COALESCE(`{$column}`,0) + {$qty} WHERE item_id='{$itemId}'");
+            $stockUpdate = mysqli_query($connection, "INSERT INTO kp_counter_items
+                (counter_id, item_id, qty, is_active, created_at, updated_at)
+                VALUES ('{$counter}', '{$itemId}', '{$qty}', 1, NOW(), NOW())
+                ON DUPLICATE KEY UPDATE
+                    qty = COALESCE(qty, 0) + VALUES(qty),
+                    is_active = 1,
+                    updated_at = NOW()");
             if (!$stockUpdate) {
-                return false;
-            }
-            if (mysqli_affected_rows($connection) < 1) {
                 return false;
             }
             // Record the automatic requisition receipt as an IN movement.
@@ -287,17 +289,19 @@ if (!function_exists('gwit_service_submit_request')) {
         gwit_repo_update_print_counter($connection, $req_id, $cntr_id);
         gwit_repo_clear_req_status($connection, $req_id);
 
-        // A submitted GWITIA requisition must be posted to the destination
-        // counter immediately. The settings flag used by the old approval
-        // screen could otherwise leave the request placed but never stocked.
-        if (!gwit_auto_receive_request($connection, $req_id, $user_id, $counter)) {
+        // Respect the setting. When disabled, leave the requisition pending
+        // for the normal issue/receive workflow.
+        $autoRequest = function_exists('gwit_auto_request_enabled')
+            ? gwit_auto_request_enabled($connection)
+            : true;
+        if ($autoRequest && !gwit_auto_receive_request($connection, $req_id, $user_id, $counter)) {
             return ['ok' => false, 'message' => 'Automatic request stock update failed.', 'status' => 500];
         }
 
         if ($print_mode === 1) {
             return [
                 'ok' => true,
-                'message' => 'Requisition sent.',
+                'message' => $autoRequest ? 'Requisition sent and received automatically.' : 'Requisition sent for approval.',
                 'redirect' => '../chaba/render_req.php?auto_print=1&return_to=' . urlencode('../dash/dash.php'),
             ];
         }
@@ -317,7 +321,7 @@ if (!function_exists('gwit_service_submit_request')) {
 
         return [
             'ok' => true,
-            'message' => 'Requisition queued for printing.',
+            'message' => $autoRequest ? 'Requisition received automatically and queued for printing.' : 'Requisition queued for approval and printing.',
             'redirect' => '../dash/dash.php',
         ];
     }

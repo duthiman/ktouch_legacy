@@ -29,7 +29,7 @@ if (!function_exists('take_service_build_item_groups')) {
 
 if (!function_exists('take_service_items_payload')) {
     function take_service_items_payload($context) {
-        $items = take_repo_fetch_remaining_items($context['closing_table'], $context['take_column'], $context['dpt']);
+        $items = take_repo_fetch_remaining_items($context['closing_table'], $context['take_column'], $context['dpt'], $context['counter']);
         return [
             'items' => $items,
             'groups' => take_service_build_item_groups($items),
@@ -185,14 +185,14 @@ if (!function_exists('take_service_add_item')) {
         }
 
         $counted = round((float)$qty, 2);
-        $opening = round((float)take_repo_fetch_opening_qty($context['closing_table'], $item_id), 2);
+        $opening = round((float)take_repo_fetch_opening_qty($context['closing_table'], $item_id, $context['counter']), 2);
         $placed = take_repo_insert_take_row($context['take_table'], $item_id, $user_id, $opening, $counted, $context['shift']);
 
         if (!$placed) {
             return ['ok' => false, 'message' => 'Could not save stock take history.'];
         }
 
-        $updated = take_repo_update_item_count($context['take_column'], $context['qty_column'], $item_id, $counted);
+        $updated = take_repo_update_item_count($context['take_column'], $context['qty_column'], $item_id, $counted, $context['counter']);
         if (!$updated) {
             return ['ok' => false, 'message' => 'Could not update items.'];
         }
@@ -229,7 +229,7 @@ if (!function_exists('take_service_delete_item')) {
         }
 
         $opening = (float)$row['opening'];
-        $reset = take_repo_reset_item_after_delete($context['qty_column'], $context['take_column'], $item_id, $opening);
+        $reset = take_repo_reset_item_after_delete($context['qty_column'], $context['take_column'], $item_id, $opening, $context['counter']);
         $deleted = take_repo_delete_take_row($context['take_table'], $item_id, $context['shift']);
 
         if (!$reset || !$deleted) {

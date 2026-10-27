@@ -3,9 +3,11 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once '../../inc/connection.php';
 require_once '../../inc/gen_funcs.php';
+require_once '../../front/counter/api/counter_inventory_schema.php';
 require_once '../../front/chaba/funcs.php';
 
 $user_id = (int)($_SESSION['user_id'] ?? $_SESSION['mwene'] ?? 0);
+counter_inventory_ensure_schema();
 $request_id = (int)($_POST['request_id'] ?? 0);
 $basket = json_decode((string)($_POST['basket_json'] ?? '[]'), true);
 
@@ -29,11 +31,6 @@ if ($counter_id < 1) {
     counter_issue_json_error('The request has no destination counter.');
 }
 
-$counter_column = 'cntr' . $counter_id . '_qty';
-$counter_column_q = mysqli_query($connection, "SHOW COLUMNS FROM kp_items LIKE '$counter_column'");
-if (!$counter_column_q || mysqli_num_rows($counter_column_q) < 1) {
-    counter_issue_json_error('The selected counter does not have a stock column configured.', 500);
-}
 
 $clean_items = [];
 foreach ($basket as $item) {
@@ -66,9 +63,12 @@ try {
         }
 
         $safe_qty = (float)$qty;
-        $updated = mysqli_query($connection, "UPDATE kp_items SET store_qty=store_qty-'$safe_qty', `$counter_column`=`$counter_column`+'$safe_qty' WHERE item_id='$item_id'");
+        $updated = mysqli_query($connection, "UPDATE kp_items SET store_qty=store_qty-'$safe_qty' WHERE item_id='$item_id' AND store_qty >= '$safe_qty'");
         if (!$updated) {
             throw new RuntimeException('Could not move stock for ' . $item['name'] . '.');
+        }
+        if (!mysqli_query($connection, "INSERT INTO kp_counter_items (counter_id,item_id,qty,is_active) VALUES ('$counter_id','$item_id','$safe_qty',1) ON DUPLICATE KEY UPDATE qty=qty+VALUES(qty),is_active=1")) {
+            throw new RuntimeException('Could not update destination counter inventory.');
         }
         if (!mysqli_query($connection, "INSERT INTO kp_store_stock_track(item_id,req_id,user_id,qty,status,shift) VALUES('$item_id','$request_id','$user_id','$safe_qty','OUT',CURRENT_DATE)")) {
             throw new RuntimeException('Could not record the store stock movement.');

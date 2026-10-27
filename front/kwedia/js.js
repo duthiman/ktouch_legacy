@@ -1079,14 +1079,11 @@ function renderCurrentCart(cart) {
     var attributeHtml = attributes.length ? '<ul class="sale-item-attributes" style="margin:4px 0 0;padding-left:18px;font-size:12px;color:#1557a6;font-weight:800;">' + attributes.map(function(attribute) {
       return '<li style="color:#1557a6;">' + escapeHtml(attribute.name || '') + ' &times; ' + escapeHtml(attribute.qty || rows[i].qty) + '</li>';
     }).join('') + '</ul>' : '';
-    var attributeQtyHtml = attributes.length ? '<ul style="list-style:none;margin:4px 0 0;padding:0;font-size:12px;color:#1557a6;font-weight:800;line-height:1.15;">' + attributes.map(function(attribute) {
-      return '<li style="line-height:1.15;">' + escapeHtml(attribute.qty || 0) + '</li>';
-    }).join('') + '</ul>' : '';
     var removeAccompaniment = encodeURIComponent(rows[i].accompaniment_json || '');
 
     html += '<tr style="color: #373a3c;">'
       + '<td style="border:1px solid #b8c7d3;">' + escapeHtml(itemName) + attributeHtml + '</td>'
-      + '<td style="border:1px solid #b8c7d3;"><strong>' + rows[i].qty + '</strong>' + attributeQtyHtml + '</td>'
+      + '<td style="border:1px solid #b8c7d3;"><strong>' + rows[i].qty + '</strong></td>'
       + '<td style="border:1px solid #b8c7d3;">' + rows[i].total + '</td>'
       + '<td style="border:1px solid #b8c7d3;"><a onclick="del_item(\'' + rows[i].item_id + '\',\'1\',\'' + (rows[i].attr_id || '') + '\',\'' + removeAccompaniment + '\')" class="btn btn-outline-danger btn-sm text-red">Remove</a></td>'
       + '</tr>';
@@ -1103,14 +1100,11 @@ function renderCurrentCart(cart) {
       var happyAttributeHtml = happyAttributes.length ? '<ul class="sale-item-attributes" style="margin:4px 0 0;padding-left:18px;font-size:12px;color:#1557a6;font-weight:800;">' + happyAttributes.map(function(attribute) {
         return '<li style="color:#1557a6;">' + escapeHtml(attribute.name || '') + ' &times; ' + escapeHtml(attribute.qty || rows[i].qty) + '</li>';
       }).join('') + '</ul>' : '';
-      var happyAttributeQtyHtml = happyAttributes.length ? '<ul style="list-style:none;margin:4px 0 0;padding:0;font-size:12px;color:#1557a6;font-weight:800;line-height:1.15;">' + happyAttributes.map(function(attribute) {
-        return '<li style="line-height:1.15;">' + escapeHtml(attribute.qty || 0) + '</li>';
-      }).join('') + '</ul>' : '';
       var happyAccompaniment = encodeURIComponent(rows[i].accompaniment_json || '');
 
       html += '<tr style="color: #373a3c;">'
         + '<td>' + escapeHtml(happyName) + happyAttributeHtml + '</td>'
-        + '<td><strong>' + rows[i].qty + '</strong>' + happyAttributeQtyHtml + '</td>'
+        + '<td><strong>' + rows[i].qty + '</strong></td>'
         + '<td>' + rows[i].total + '</td>'
         + '<td><a onclick="del_item(\'' + rows[i].item_id + '\',\'2\',\'' + (rows[i].attr_id || '') + '\',\'' + happyAccompaniment + '\')" class="btn btn-danger btn-xs">DEL</a></td>'
         + '</tr>';

@@ -78,8 +78,10 @@ logs($action,"../../");
                   while ($row = mysqli_fetch_assoc($pending_orders)) { 
                     $id = $row['po_id'];
                     $sup_id = $row['sup_id'];
-                    $time = $row['day'];
-                    $user_id = $row['ord_staff'];
+                    // Purchase orders use ord_date and ord_user. The old page
+                    // referenced day/ord_staff, which are not kp_po columns.
+                    $time = $row['ord_date'] ?? '';
+                    $user_id = (int)($row['ord_user'] ?? $row['user_id'] ?? 0);
                     $rec_status = $row['rec_status'];  
                     $stock_status = $row['stock_status']; 
                     $ord_date = $row['ord_date'];
@@ -203,9 +205,8 @@ logs($action,"../../");
             $('#load').html('<i class="fa  fa-info-sign"></i> Something went wrong, Please try again...'); 
           });
         });
-    }); 
-  </script> 
+    });
+  </script>
 </body>
 </html>
-  
-        
+

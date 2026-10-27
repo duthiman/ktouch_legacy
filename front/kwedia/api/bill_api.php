@@ -7,8 +7,11 @@ include('../../../inc/connection.php');
 require_once('funcs.php');
 require_once('bill_helpers.php');
 require_once('bill_logger.php');
+require_once '../../../front/counter/api/counter_inventory_schema.php';
 require_once('bill_repository.php');
 require_once('bill_service.php');
+
+counter_inventory_ensure_schema();
 
 $action = trim((string)($_REQUEST['action'] ?? ''));
 if ($action === '' && isset($_REQUEST['counter'], $_REQUEST['st'])) {

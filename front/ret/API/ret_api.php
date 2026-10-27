@@ -14,10 +14,12 @@ require_once __DIR__ . '/../../kwedia/api/bill_service.php';
 require_once __DIR__ . '/ret_schema.php';
 require_once __DIR__ . '/ret_helper.php';
 require_once __DIR__ . '/ret_logger.php';
+require_once __DIR__ . '/../../counter/api/counter_inventory_schema.php';
 require_once __DIR__ . '/ret_repository.php';
 require_once __DIR__ . '/ret_service.php';
 
 ret_schema_boot($connection);
+counter_inventory_ensure_schema($connection);
 
 $action = ret_clean_text($_REQUEST['action'] ?? '');
 $sale_id = ret_clean_int($_REQUEST['sale_id'] ?? 0);

@@ -348,6 +348,7 @@ if (!function_exists('menu_service_create_item')) {
             if ($qty_exists && mysqli_num_rows($qty_exists) > 0) $updates[] = "`{$qty_column}`='" . (float)$qty . "'";
             if ($reorder_exists && mysqli_num_rows($reorder_exists) > 0) $updates[] = "`{$reorder_column}`='" . (float)($counter_reorder[$counter_id] ?? 10) . "'";
             if ($updates) mysqli_query($connection, "UPDATE kp_items SET " . implode(',', $updates) . " WHERE item_id='{$item_id}'");
+            mysqli_query($connection, "INSERT INTO kp_counter_items (counter_id,item_id,qty,reorder_level,is_active) VALUES ('{$counter_id}','{$item_id}','" . (float)$qty . "','" . (float)($counter_reorder[$counter_id] ?? 10) . "',1) ON DUPLICATE KEY UPDATE qty=VALUES(qty),reorder_level=VALUES(reorder_level),is_active=1");
         }
         menu_repo_insert_item_history($item_id, 'ITEM CREATED', $user_id);
         return ['ok' => true, 'message' => 'Item Added Successfully', 'refresh' => true];

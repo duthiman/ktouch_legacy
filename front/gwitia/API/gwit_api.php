@@ -8,6 +8,7 @@ header('Content-Type: application/json');
 require_once '../../../inc/connection.php';
 require_once '../../../inc/gen_funcs.php';
 require_once __DIR__ . '/gwit_schema.php';
+require_once __DIR__ . '/../../counter/api/counter_inventory_schema.php';
 require_once __DIR__ . '/gwit_helper.php';
 require_once __DIR__ . '/gwit_logger.php';
 require_once __DIR__ . '/gwit_repository.php';

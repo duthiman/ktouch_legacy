@@ -2,9 +2,14 @@
 session_start();
 include('../../inc/connection.php');
 include('funcs.php');
+require_once __DIR__ . '/../kug/funcs.php';
 
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
 $job = $_SESSION['job'];
+$purchase_settings = function_exists('kp_purchase_settings')
+  ? kp_purchase_settings($connection)
+  : ['front_purchase_enabled' => 1];
+$front_purchase_allowed = (int)($purchase_settings['front_purchase_enabled'] ?? 0) === 1;
 $shift = isset($_SESSION['shift']) ? trim((string)$_SESSION['shift']) : '';
 $get_shift = mysqli_query($connection,"SELECT * FROM kp_shift") or die("Could not get the shift");
 $gs = mysqli_fetch_assoc($get_shift);
@@ -458,8 +463,9 @@ $stock_added_total = $stock_added['purchase_qty'] + $stock_added['request_qty'] 
           <div class="col-xs-4"></div>
           <div class="col-md-3 col-sm-3 col-xs-3 cont">
             <div style="margin-left: 8px; margin-right: 8px; margin-top: 10px; margin-bottom: 20px;">
+              <?php if ($front_purchase_allowed) { ?>
               <a href="#" class="btn btn-sm btn-success btn-landing stock-buy-trigger" data-toggle="modal" data-target="#modal">BUY STOCK</a>
-              <a href="../../back/purchase/pending.php" class="btn btn-sm btn-success btn-landing">UNAPPROVED PURCHASES</a>
+              <?php } ?>
               <a data-toggle="modal" data-target="#modal" class="btn btn-sm btn-success btn-landing" id="counter-req">REQUISITION</a>
               <a data-toggle="modal" data-target="#modal" id="trans" class="btn btn-sm btn-success btn-landing">STOCK TRANSFER</a>
               <a href="#" class="btn btn-sm btn-success btn-landing stock-confirm-trigger" data-title="Receive Issued Stock" data-badge="Receive" data-message="Open the stock receive page?" data-point-one="Review stock issued to this counter before receiving" data-point-two="Continue to the receive screen" data-href="../rec/rec_pending.php">RECEIVE</a>
@@ -500,8 +506,9 @@ $stock_added_total = $stock_added['purchase_qty'] + $stock_added['request_qty'] 
       <div class="stock-menu-card">
         <p class="stock-section-title">Stock Actions</p>
         <div class="stock-grid">
+          <?php if ($front_purchase_allowed) { ?>
           <a href="#" class="stock-btn btn-buy stock-buy-trigger" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-shopping-cart"></span><span>Purchase</span><b>Buy Stock</b></a>
-          <a href="../../back/purchase/pending.php" class="stock-btn btn-po-receive"><span class="glyphicon glyphicon-check"></span><span>Approval</span><b>Unapproved Purchases</b></a>
+          <?php } ?>
           <a data-toggle="modal" data-target="#modal" id="counter-req-mobile" class="stock-btn btn-req"><span class="glyphicon glyphicon-export"></span><span>Counter</span><b>Requisition</b></a>
           <a data-toggle="modal" data-target="#modal" id="trans-mobile" class="stock-btn btn-transfer"><span class="glyphicon glyphicon-transfer"></span><span>Move</span><b>Stock Transfer</b></a>
           <a href="#" class="stock-btn btn-receive stock-confirm-trigger" data-title="Receive Issued Stock" data-badge="Receive" data-message="Open the stock receive page?" data-point-one="Review stock issued to this counter before receiving" data-point-two="Continue to the receive screen" data-href="../rec/rec_pending.php"><span class="glyphicon glyphicon-download-alt"></span><span>Receive</span><b>Issued Stock</b></a>

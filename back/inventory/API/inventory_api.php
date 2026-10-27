@@ -8,9 +8,11 @@ require_once '../../../inc/gen_funcs.php';
 require_once __DIR__ . '/inventory_helpers.php';
 require_once __DIR__ . '/inventory_repository.php';
 require_once __DIR__ . '/inventory_schema.php';
+require_once '../../../front/counter/api/counter_inventory_schema.php';
 require_once __DIR__ . '/inventory_service.php';
 
 inventory_ensure_counter_stock_schema();
+counter_inventory_ensure_schema();
 
 $action = inventory_clean_text($_REQUEST['action'] ?? '');
 
