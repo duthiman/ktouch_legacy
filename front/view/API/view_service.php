@@ -960,22 +960,12 @@ if (!function_exists('view_service_void_modal')) {
 <div class="modal-content void-shell" style="width:650px; max-width:calc(100vw - 24px); border-radius:18px; overflow:hidden;">
   <div class="modal-header void-head" style="background:linear-gradient(135deg, #7e2014 0%, #b94828 52%, #e7a33a 100%); color:#fff8ea;">
     <button type="button" class="close" data-dismiss="modal" style="color:#fff; opacity:1;">&times;</button>
-    <h3><b>AUTHORIZE VOID FOR BILL NO: <?php echo (int)$sale_id; ?></b></h3>
+    <h3><b>REQUEST VOID APPROVAL · BILL <?php echo (int)$sale_id; ?></b></h3>
   </div>
   <div class="modal-body" style="padding:10px; background:#fffdf8;">
     <div class="row void-stack">
       <div id="results" class="form-group col-md-12" style="color:red;"></div>
-      <div class="form-group col-md-6 void-left">
-        <div class="void-pass-card" style="padding:10px 12px 12px; border-radius:12px; background:#fffaf0; box-shadow:inset 0 0 0 1px rgba(120,84,42,0.12);">
-          <h3 class="void-pass-title" style="margin:0 0 8px; font-size:20px; font-weight:900; color:#6f2c16; text-transform:uppercase;"><b>Enter Password</b></h3>
-          <input type="password" name="pass" id="pass" class="form-control" style="font-size:40px; font-weight:bolder; height:62px; border-radius:12px; text-align:center;" autofocus/>
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:12px;">
-            <?php foreach ([1,2,3,4,5,6,7,8,9,'C',0,'B'] as $key) { ?>
-              <button type="button" class="btn btn-default voidpad" data-key="<?php echo view_escape((string)$key); ?>" style="height:64px; font-size:22px; font-weight:900; border-radius:12px;"><?php echo view_escape((string)$key); ?></button>
-            <?php } ?>
-          </div>
-        </div>
-      </div>
+      <div class="form-group col-md-6 void-left"><div style="padding:20px;border-radius:12px;background:#fff4df;border:1px solid #f0c98d;"><h3 style="margin-top:0;color:#7a321c;font-weight:900;">Send for approval?</h3><p style="font-size:16px;line-height:1.5;">This bill will remain unchanged until an authorized user approves the void request.</p><textarea id="void_reason" class="form-control" rows="3" placeholder="Reason (optional)" style="border-radius:10px;"></textarea></div></div>
       <div class="form-group col-md-6 void-right" style="overflow-y:scroll; height:370px; width:80mm;">
         <table class="table table-striped">
           <thead><tr><th>ITEM</th><th>QTY</th><th>PRICE</th><th>AMOUNT</th></tr></thead>
@@ -999,38 +989,40 @@ if (!function_exists('view_service_void_modal')) {
   </div>
   <div class="modal-footer void-actions" style="display:flex; justify-content:space-between; gap:10px; padding:8px 10px 10px;">
     <button type="button" class="btn btn-danger void-btn pull-left" data-dismiss="modal" style="min-width:140px; min-height:44px; border-radius:10px; font-family:'comic sans ms'; font-weight:bolder; color:#fff!important; font-size:12px; background:#b7212a; border:4px solid #ed6a70;">Close</button>
-    <button type="button" id="btn-void" class="btn btn-success void-btn pull-right" style="min-width:140px; min-height:44px; border-radius:10px; font-family:'comic sans ms'; font-weight:bolder; color:#fff!important; font-size:12px; background:#22743d; border:4px solid #59b978;">Authorize</button>
+    <button type="button" id="btn-void" class="btn btn-success void-btn pull-right" style="min-width:180px; min-height:44px; border-radius:10px; font-weight:900; color:#fff!important; background:#22743d; border:0;">SEND FOR APPROVAL</button>
   </div>
 </div>
 <script type="text/javascript">
   $(document).off('click.voidAuth').on('click.voidAuth', '#btn-void', function () {
-    var pass = $("#pass").val();
     $.ajax({
       url: 'API/view_api.php',
       type: 'POST',
-      data: { action: 'void_authorize', pass: pass, sale_id: <?php echo (int)$sale_id; ?> },
-      dataType: 'html'
+      data: { action: 'void_request', reason: $('#void_reason').val(), sale_id: <?php echo (int)$sale_id; ?> },
+      dataType: 'json'
     }).done(function(data){
-      $('#results').html(data);
+      $('#results').html('<div class="alert alert-' + (data.ok ? 'success' : 'danger') + '"><h4><b>' + (data.message || 'Request complete.') + '</b></h4></div>');
+      if (data.ok) setTimeout(function(){ location.reload(); }, 1300);
     }).fail(function(){
       $('#results').html('<div class="alert alert-danger"><h4><b>Something went wrong, please try again.</b></h4></div>');
     });
   });
 
-  $(document).off('click.voidpad').on('click.voidpad', '.voidpad', function () {
-    var key = String($(this).data('key'));
-    var pass = $('#pass');
-    if (key === 'C') {
-      pass.val('');
-    } else if (key === 'B') {
-      pass.val(pass.val().slice(0, -1));
-    } else {
-      pass.val(pass.val() + key);
-    }
-  });
 </script>
         <?php
         return ['ok' => true, 'message' => 'Void modal loaded.', 'status' => 200, 'html' => ob_get_clean()];
+    }
+}
+
+if (!function_exists('view_service_void_request')) {
+    function view_service_void_request($connection, $user_id, $sale_id, $reason = '')
+    {
+        $user_id = (int)$user_id; $sale_id = (int)$sale_id;
+        if ($user_id < 1) return ['ok'=>false,'message'=>'Session expired.','status'=>401];
+        if ($sale_id < 1) return ['ok'=>false,'message'=>'Invalid bill selected.','status'=>400];
+        $shift = (string)view_repo_scalar($connection, 'kp_shift', 'shift', '1');
+        if (!view_repo_sale_for_user_shift($connection, $sale_id, $user_id, $shift)) return ['ok'=>false,'message'=>'This bill is not available for your current shift.','status'=>403];
+        $draft_id = view_repo_create_void_draft($connection, $sale_id, $user_id, $shift, $reason);
+        return $draft_id > 0 ? ['ok'=>true,'message'=>'Void request sent for approval.','draft_id'=>$draft_id,'status'=>200] : ['ok'=>false,'message'=>'Could not save the void request.','status'=>500];
     }
 }
 
@@ -1063,5 +1055,23 @@ if (!function_exists('view_service_void_authorize')) {
         }
 
         return ['ok' => false, 'message' => 'Failed to delete.', 'status' => 500, 'html' => '<div class="alert alert-danger"><h4><b>Failed to delete.</b></h4></div>'];
+    }
+}
+
+if (!function_exists('view_service_void_approve')) {
+    function view_service_void_approve($connection, $user_id, $draft_id)
+    {
+        $user_id = (int)$user_id; $draft_id = (int)$draft_id;
+        if ($user_id < 1) return ['ok'=>false,'message'=>'Session expired.','status_code'=>401];
+        if ($draft_id < 1) return ['ok'=>false,'message'=>'Invalid void request.','status_code'=>400];
+        $role_result = mysqli_query($connection, "SELECT role_id, drole FROM kp_users WHERE user_id='$user_id' LIMIT 1");
+        $role = $role_result ? (mysqli_fetch_assoc($role_result) ?: []) : [];
+        if ((int)($role['role_id'] ?? 0) < 1 && (int)($role['drole'] ?? 0) < 1) {
+            return ['ok'=>false,'message'=>'Supervisor approval is required.','status_code'=>403];
+        }
+        $result = view_repo_approve_void_draft($connection, $draft_id, $user_id);
+        if (($result['status'] ?? '') === 'not_pending') return ['ok'=>false,'message'=>'Void request is no longer pending.','status_code'=>409];
+        if (!$result['ok']) return ['ok'=>false,'message'=>'Could not approve the void request.','status_code'=>500];
+        return ['ok'=>true,'message'=>'Void approved and recorded.','void_id'=>$result['void_id'],'status_code'=>200];
     }
 }

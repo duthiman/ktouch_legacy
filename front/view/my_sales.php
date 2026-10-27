@@ -2011,10 +2011,8 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
 
     $(document).on('click','.void-sale-mobile', function(e){
       e.preventDefault();
-      var saleId = $(this).data('id');
-      if (confirm('Are you sure you want to void bill #' + saleId + '?')) {
-        window.location.href = '../kwedia/void_sale.php?sale_id=' + encodeURIComponent(saleId);
-      }
+      var saleId = resolveSaleId($(this));
+      if (saleId > 0) $('#void').attr('data-id', saleId).trigger('click');
     });
 
     $(document).on('click','.return-sale', function(e){
@@ -2051,10 +2049,8 @@ $sales_layout = defined('MY_SALES_LAYOUT') ? MY_SALES_LAYOUT : 'responsive';
 
     $(document).on('click','.void-sale', function(e){
       e.preventDefault();
-      var saleId = $(this).data('id');
-      if (confirm('Are you sure you want to void bill #' + saleId + '?')) {
-        window.location.href = '../kwedia/void_sale.php?sale_id=' + encodeURIComponent(saleId);
-      }
+      var saleId = resolveSaleId($(this));
+      if (saleId > 0) $('#void').attr('data-id', saleId).trigger('click');
     });
 
     $(document).on('click','.search-key', function() {

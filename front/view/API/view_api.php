@@ -31,6 +31,8 @@ $pass = view_clean_text($_REQUEST['pass'] ?? '');
 $sale_ids = $_REQUEST['sale_ids'] ?? [];
 $page = view_clean_int($_REQUEST['page'] ?? 1);
 $search = view_clean_text($_REQUEST['search'] ?? '');
+$reason = view_clean_text($_REQUEST['reason'] ?? '');
+$draft_id = view_clean_int($_REQUEST['draft_id'] ?? 0);
 
 switch ($action) {
     case 'bootstrap':
@@ -164,6 +166,17 @@ switch ($action) {
         $result = view_service_void_authorize($connection, $user_id, $sale_id, $pass);
         echo $result['html'] ?? '';
         exit;
+
+    case 'void_request':
+        header('Content-Type: application/json; charset=UTF-8');
+        $result = view_service_void_request($connection, $user_id, $sale_id, $reason);
+        view_json_response($result['ok'], $result['message'], ['draft_id' => $result['draft_id'] ?? 0], $result['status'] ?? ($result['ok'] ? 200 : 400));
+        break;
+
+    case 'void_approve':
+        $result = view_service_void_approve($connection, $user_id, $draft_id);
+        view_json_response($result['ok'], $result['message'], ['draft_id' => $draft_id, 'void_id' => $result['void_id'] ?? 0], $result['status_code'] ?? ($result['ok'] ? 200 : 400));
+        break;
 
     default:
         view_json_response(false, 'Unknown action.', ['action' => $action], 400);

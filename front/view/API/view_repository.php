@@ -692,3 +692,59 @@ if (!function_exists('view_repo_void_sale')) {
         return false;
     }
 }
+
+if (!function_exists('view_repo_create_void_draft')) {
+    function view_repo_create_void_draft($connection, $sale_id, $user_id, $shift, $reason = '')
+    {
+        $sale_id = (int)$sale_id; $user_id = (int)$user_id;
+        $shift_sql = mysqli_real_escape_string($connection, (string)$shift);
+        $reason_sql = mysqli_real_escape_string($connection, (string)$reason);
+        $existing = mysqli_query($connection, "SELECT draft_id FROM voids_draf WHERE sale_id='$sale_id' AND status=1 ORDER BY draft_id DESC LIMIT 1");
+        if ($existing && ($row = mysqli_fetch_assoc($existing))) return (int)$row['draft_id'];
+        $sale = mysqli_query($connection, "SELECT sale_id, amount, counter FROM kp_sales WHERE sale_id='$sale_id' LIMIT 1");
+        $sale_row = $sale ? mysqli_fetch_assoc($sale) : null;
+        if (!$sale_row) return 0;
+        $amount = (float)($sale_row['amount'] ?? 0); $counter = (int)($sale_row['counter'] ?? 0);
+        if (!mysqli_query($connection, "INSERT INTO voids_draf (sale_id, requested_by, shift, counter_id, amount, reason) VALUES ('$sale_id','$user_id','$shift_sql','$counter','$amount','$reason_sql')")) return 0;
+        $draft_id = (int)mysqli_insert_id($connection);
+        $items = mysqli_query($connection, "SELECT si.*, COALESCE(i.name, CONCAT('Item #', si.item_id)) AS item_name FROM kp_sale_items si LEFT JOIN kp_items i ON i.item_id=si.item_id WHERE si.sale_id='$sale_id'");
+        while ($items && ($item = mysqli_fetch_assoc($items))) {
+            $item_id = (int)($item['item_id'] ?? 0); $qty = (float)($item['qty'] ?? 0); $price = (float)($item['price'] ?? 0);
+            $total = (float)($item['total'] ?? ($qty * $price)); $stock_counter = (int)($item['stock_counter'] ?? $counter);
+            $name = mysqli_real_escape_string($connection, (string)($item['item_name'] ?? ''));
+            $attrs = mysqli_real_escape_string($connection, (string)($item['accompaniment_json'] ?? ($item['attributes_json'] ?? '')));
+            mysqli_query($connection, "INSERT INTO voids_draf_items (draft_id,sale_id,item_id,qty,price,total,counter_id,stock_counter,item_name,attributes_json) VALUES ('$draft_id','$sale_id','$item_id','$qty','$price','$total','$counter','$stock_counter','$name','$attrs')");
+        }
+        return $draft_id;
+    }
+}
+
+if (!function_exists('view_repo_approve_void_draft')) {
+    function view_repo_approve_void_draft($connection, $draft_id, $approver_id)
+    {
+        $draft_id = (int)$draft_id; $approver_id = (int)$approver_id;
+        mysqli_begin_transaction($connection);
+        try {
+            $q = mysqli_query($connection, "SELECT * FROM voids_draf WHERE draft_id='$draft_id' AND status=1 FOR UPDATE");
+            $draft = $q ? mysqli_fetch_assoc($q) : null;
+            if (!$draft) { mysqli_rollback($connection); return ['ok'=>false,'status'=>'not_pending']; }
+            $sale_id = (int)$draft['sale_id'];
+            $sale_void = mysqli_query($connection, "INSERT INTO kp_sale_voids (sale_id,requested_by,approved_by,amount,shift,counter_id,reason) VALUES ('$sale_id','" . (int)$draft['requested_by'] . "','$approver_id','" . (float)$draft['amount'] . "','" . mysqli_real_escape_string($connection, (string)$draft['shift']) . "','" . (int)$draft['counter_id'] . "','" . mysqli_real_escape_string($connection, (string)$draft['reason']) . "')");
+            if (!$sale_void) throw new Exception(mysqli_error($connection));
+            $void_id = (int)mysqli_insert_id($connection);
+            $items = mysqli_query($connection, "SELECT * FROM voids_draf_items WHERE draft_id='$draft_id'");
+            while ($items && ($item = mysqli_fetch_assoc($items))) {
+                $name = mysqli_real_escape_string($connection, (string)$item['item_name']);
+                $attrs = mysqli_real_escape_string($connection, (string)$item['attributes_json']);
+                $sql = "INSERT INTO kp_sale_void_items (void_id,sale_id,item_id,qty,price,total,counter_id,stock_counter,item_name,attributes_json) VALUES ('$void_id','$sale_id','" . (int)$item['item_id'] . "','" . (float)$item['qty'] . "','" . (float)$item['price'] . "','" . (float)$item['total'] . "','" . (int)$item['counter_id'] . "','" . (int)$item['stock_counter'] . "','$name','$attrs')";
+                if (!mysqli_query($connection, $sql)) throw new Exception(mysqli_error($connection));
+            }
+            if (!mysqli_query($connection, "UPDATE voids_draf SET status=2, approved_by='$approver_id', approved_at=NOW(), updated_at=NOW() WHERE draft_id='$draft_id' AND status=1")) throw new Exception(mysqli_error($connection));
+            mysqli_commit($connection);
+            return ['ok'=>true,'status'=>'approved','void_id'=>$void_id,'sale_id'=>$sale_id];
+        } catch (Throwable $e) {
+            mysqli_rollback($connection);
+            return ['ok'=>false,'status'=>'error','message'=>$e->getMessage()];
+        }
+    }
+}
