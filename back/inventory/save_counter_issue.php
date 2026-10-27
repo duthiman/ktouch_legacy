@@ -52,7 +52,7 @@ try {
 
     $shift = mysqli_real_escape_string($connection, (string)($_POST['shift'] ?? date('Y-m-d')));
     foreach ($clean_items as $item_id => $qty) {
-        $item_q = mysqli_query($connection, "SELECT name, store_qty FROM kp_items WHERE item_id='$item_id' LIMIT 1 FOR UPDATE");
+        $item_q = mysqli_query($connection, "SELECT name, store_qty, dpt FROM kp_items WHERE item_id='$item_id' LIMIT 1 FOR UPDATE");
         $item = $item_q ? mysqli_fetch_assoc($item_q) : null;
         if (!$item) {
             throw new RuntimeException('One of the selected items no longer exists.');
@@ -64,8 +64,8 @@ try {
 
         $safe_qty = (float)$qty;
         $updated = mysqli_query($connection, "UPDATE kp_items SET store_qty=store_qty-'$safe_qty' WHERE item_id='$item_id' AND store_qty >= '$safe_qty'");
-        if (!$updated) {
-            throw new RuntimeException('Could not move stock for ' . $item['name'] . '.');
+        if (!$updated || mysqli_affected_rows($connection) !== 1) {
+            throw new RuntimeException('Store stock changed before this issue was completed for ' . $item['name'] . '. Please reload and try again.');
         }
         if (!mysqli_query($connection, "INSERT INTO kp_counter_items (counter_id,item_id,qty,is_active) VALUES ('$counter_id','$item_id','$safe_qty',1) ON DUPLICATE KEY UPDATE qty=qty+VALUES(qty),is_active=1")) {
             throw new RuntimeException('Could not update destination counter inventory.');
@@ -80,7 +80,9 @@ try {
 
         $existing_q = mysqli_query($connection, "SELECT id FROM kp_counter_req_items WHERE req_id='$request_id' AND item_id='$item_id' LIMIT 1");
         if ($existing_q && mysqli_num_rows($existing_q) > 0) {
-            mysqli_query($connection, "UPDATE kp_counter_req_items SET req_qty='$safe_qty',issue_qty='$safe_qty',rec_qty='$safe_qty',issue_user='$user_id',issue_shift=CURRENT_DATE,issue_status=1,rec_status=1 WHERE req_id='$request_id' AND item_id='$item_id'");
+            if (!mysqli_query($connection, "UPDATE kp_counter_req_items SET issue_qty='$safe_qty',rec_qty='$safe_qty',issue_user='$user_id',issue_shift=CURRENT_DATE,issue_status=1,rec_status=1 WHERE req_id='$request_id' AND item_id='$item_id'")) {
+                throw new RuntimeException('Could not update the requisition item status.');
+            }
         } else {
             $counter_value = (string)$counter_id;
             mysqli_query($connection, "INSERT INTO kp_counter_req_items(req_id,req_user,item_id,req_qty,issue_qty,rec_qty,req_shift,counter,source_counter,issue_user,issue_shift,issue_status,rec_status) VALUES('$request_id','$user_id','$item_id','$safe_qty','$safe_qty','$safe_qty','$shift','$counter_value','STORE','$user_id',CURRENT_DATE,1,1)");
@@ -107,6 +109,10 @@ try {
         WHERE req_id='$request_id'";
     if (!mysqli_query($connection, $header_update)) {
         throw new RuntimeException('Could not complete the counter issue.');
+    }
+
+    if (function_exists('logs')) {
+        logs('ISSUED|-|-|REQUISITION NO|' . $request_id . '| FOR COUNTER|' . $counter_id, '../logs');
     }
 
     if (function_exists('ensure_chaba_print_system')) {
