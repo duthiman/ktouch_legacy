@@ -10,6 +10,8 @@
       sub_id: $('#sub_id').val() || 0,
       dpt: $('#dpt').val() || 0,
       stock: $('#stock').val() || 0,
+      counter_id: $('#counter_id').val() || 0,
+      counter_assignment: window.menuCounterAssignmentMode || 'assigned',
       search: $('#menu-search').val() || ''
     };
 
@@ -36,6 +38,9 @@
     App.init();
     loadMenuBootstrap().done(function() {
       hydrateMenuQuickForm();
+      hydrateCounterFilter();
+      window.menuCounterAssignmentMode = 'assigned';
+      updateCounterAssignmentTabs();
       if ($.fn.select2) {
         $('.pickers').select2({ width: '100%' });
       }

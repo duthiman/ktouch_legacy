@@ -125,6 +125,16 @@ switch ($action) {
         menu_json_response($result['ok'], $result['message'], ['refresh' => !empty($result['refresh'])], $result['ok'] ? 200 : 400);
         break;
 
+    case 'save_counter_assignments':
+        $result = menu_service_save_counter_assignments(menu_clean_int($_REQUEST['item_id'] ?? 0), $_REQUEST['assignments'] ?? []);
+        menu_json_response($result['ok'], $result['message'], ['refresh' => !empty($result['refresh'])], $result['ok'] ? 200 : 400);
+        break;
+
+    case 'bulk_assign_counter':
+        $result = menu_service_bulk_assign_counter($_REQUEST['items'] ?? [], menu_clean_int($_REQUEST['counter_id'] ?? 0));
+        menu_json_response($result['ok'], $result['message'], ['refresh' => !empty($result['refresh'])], $result['ok'] ? 200 : 400);
+        break;
+
     case 'clear_tots':
         $result = menu_service_clear_tots(menu_clean_int($_REQUEST['item_id'] ?? 0));
         menu_json_response($result['ok'], $result['message'], ['refresh' => !empty($result['refresh'])], $result['ok'] ? 200 : 400);

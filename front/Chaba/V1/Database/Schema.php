@@ -33,7 +33,11 @@ final class Schema
         // still helps when APCu is not installed.
         static $readyCache=[];
         $database=(string)$pdo->query('SELECT DATABASE()')->fetchColumn();
-        $cacheKey='ktouch_chaba_schema_'.hash('sha256',$database);
+        // Fold the column/index definitions into the cache key so that adding or
+        // renaming a column automatically busts any previously cached "ready"
+        // state (static or APCu) instead of staying stuck until CACHE_TTL expires.
+        $schemaVersion=hash('sha256',serialize(self::COLUMNS).serialize(self::INDEXES));
+        $cacheKey='ktouch_chaba_schema_'.hash('sha256',$database.$schemaVersion);
         $now=time();
         if(isset($readyCache[$cacheKey]) && ($now-$readyCache[$cacheKey])<self::CACHE_TTL)
             return ['success'=>true,'fast'=>true,'cached'=>true];
@@ -45,7 +49,13 @@ final class Schema
             }
         }
         $ready=$pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name IN ('kp_print_queue','kp_print_queue_printed','kp_print_reprints')")->fetchColumn();
-        if((int)$ready===3) {
+        // Tables existing isn't enough: a table created before a column was added
+        // to self::COLUMNS (e.g. claimed_at/lease_until) would otherwise be
+        // reported "ready" without ever running the column-healing ALTERs below.
+        $expectedColumns=count(self::COLUMNS);
+        $queueColumns=(int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND table_name='kp_print_queue'")->fetchColumn();
+        $printedColumns=(int)$pdo->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND table_name='kp_print_queue_printed'")->fetchColumn();
+        if((int)$ready===3 && $queueColumns>=$expectedColumns && $printedColumns>=$expectedColumns) {
             $readyCache[$cacheKey]=$now;
             if(function_exists('apcu_store')) @apcu_store($cacheKey,1,self::CACHE_TTL);
             return ['success'=>true,'fast'=>true];

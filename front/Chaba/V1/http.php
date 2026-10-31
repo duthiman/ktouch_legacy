@@ -47,7 +47,8 @@ namespace {
             echo json_encode(['ok'=>true,'status'=>$status,'message'=>$message,'data'=>$data],JSON_UNESCAPED_SLASHES);
         }
     } catch(\Throwable $e) {
-        $status=$e->getCode()>=400&&$e->getCode()<600?$e->getCode():500;
+        $code=$e->getCode();
+        $status=is_int($code)&&$code>=400&&$code<600?$code:500;
         http_response_code($status);
         header('X-Chaba-Error: '.$status);
         $errorData=['queue_id'=>(int)($data['queue_id']??0)];

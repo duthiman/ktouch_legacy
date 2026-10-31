@@ -177,7 +177,7 @@ switch ($action) {
         break;
 
     case 'fetch_catalog':
-        $result = bill_service_fetch_catalog($user_id);
+        $result = bill_service_fetch_catalog($user_id, (int)($_REQUEST['counter_id'] ?? 0));
         bill_json_response($result['ok'], $result['message'], [
             'categories' => $result['categories'],
             'subcategories' => $result['subcategories'],

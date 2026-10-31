@@ -1,10 +1,49 @@
 <?php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
-require_once '../../inc/connection.php';
-require_once '../../inc/gen_funcs.php';
-require_once '../../front/counter/api/counter_inventory_schema.php';
-require_once '../../front/chaba/funcs.php';
+require_once __DIR__ . '/../../inc/connection.php';
+require_once __DIR__ . '/../../inc/gen_funcs.php';
+require_once __DIR__ . '/../../front/counter/api/counter_inventory_schema.php';
+require_once __DIR__ . '/../../front/funcs.php';
+
+// This endpoint must be able to queue a print job on its own. The older
+// front/funcs.php file does not provide kp_print_enqueue, so keep a small
+// compatible enqueue helper here instead of loading a browser endpoint.
+if (!function_exists('counter_issue_enqueue_print')) {
+    function counter_issue_enqueue_print($connection, array $data)
+    {
+        mysqli_query($connection, "CREATE TABLE IF NOT EXISTS kp_print_queue (
+            queue_id INT NOT NULL AUTO_INCREMENT, sale_id INT NOT NULL DEFAULT 0,
+            ref_id INT NOT NULL DEFAULT 0, print_type VARCHAR(55) NOT NULL DEFAULT 'bill',
+            label VARCHAR(120) NOT NULL DEFAULT '', cntr_id INT NOT NULL DEFAULT 0,
+            route_path VARCHAR(255) NOT NULL DEFAULT '', route_query TEXT NULL,
+            requested_by INT NOT NULL DEFAULT 0, reprint_of INT NOT NULL DEFAULT 0,
+            status TINYINT(1) NOT NULL DEFAULT 0, print_attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+            last_error VARCHAR(255) NOT NULL DEFAULT '', printed_at DATETIME NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (queue_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $columns = [
+            'ref_id' => "INT NOT NULL DEFAULT 0", 'label' => "VARCHAR(120) NOT NULL DEFAULT ''",
+            'route_path' => "VARCHAR(255) NOT NULL DEFAULT ''", 'route_query' => 'TEXT NULL',
+            'requested_by' => 'INT NOT NULL DEFAULT 0', 'reprint_of' => 'INT NOT NULL DEFAULT 0',
+            'print_attempts' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0', 'last_error' => "VARCHAR(255) NOT NULL DEFAULT ''",
+            'printed_at' => 'DATETIME NULL'
+        ];
+        foreach ($columns as $column => $definition) {
+            $check = mysqli_query($connection, "SHOW COLUMNS FROM kp_print_queue LIKE '{$column}'");
+            if ($check && mysqli_num_rows($check) < 1) mysqli_query($connection, "ALTER TABLE kp_print_queue ADD COLUMN `{$column}` {$definition}");
+        }
+        $sale_id = (int)($data['sale_id'] ?? 0); $ref_id = (int)($data['ref_id'] ?? 0);
+        $type = mysqli_real_escape_string($connection, (string)($data['print_type'] ?? ''));
+        $label = mysqli_real_escape_string($connection, (string)($data['label'] ?? ''));
+        $counter = (int)($data['cntr_id'] ?? 0); $path = mysqli_real_escape_string($connection, (string)($data['route_path'] ?? ''));
+        $query = mysqli_real_escape_string($connection, (string)($data['route_query'] ?? '')); $user = (int)($data['requested_by'] ?? 0);
+        $sql = "INSERT INTO kp_print_queue (sale_id,ref_id,print_type,label,cntr_id,route_path,route_query,requested_by,reprint_of,status,print_attempts,last_error)
+                VALUES ({$sale_id},{$ref_id},'{$type}','{$label}',{$counter},'{$path}','{$query}',{$user},0,0,0,'')";
+        return mysqli_query($connection, $sql) ? (int)mysqli_insert_id($connection) : 0;
+    }
+}
 
 $user_id = (int)($_SESSION['user_id'] ?? $_SESSION['mwene'] ?? 0);
 counter_inventory_ensure_schema();
@@ -115,10 +154,7 @@ try {
         logs('ISSUED|-|-|REQUISITION NO|' . $request_id . '| FOR COUNTER|' . $counter_id, '../logs');
     }
 
-    if (function_exists('ensure_chaba_print_system')) {
-        ensure_chaba_print_system($connection);
-    }
-    $queue_id = function_exists('kp_print_enqueue') ? kp_print_enqueue($connection, [
+    $queue_id = counter_issue_enqueue_print($connection, [
         'sale_id' => 0,
         'ref_id' => $request_id,
         'print_type' => 'gwitia',
@@ -127,7 +163,7 @@ try {
         'route_path' => 'render_req.php',
         'route_query' => 'id=' . $request_id . '&user_id=' . $user_id . '&cntr_id=' . $counter_id,
         'requested_by' => $user_id,
-    ]) : 0;
+    ]);
     if ($queue_id < 1) {
         throw new RuntimeException('Stock was not committed because the issue print could not be queued.');
     }

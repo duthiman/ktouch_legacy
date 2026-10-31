@@ -2,9 +2,11 @@
 include("../../inc/connection.php");
 include('../clude/funcs.php');
 if(isset($_REQUEST['id'])){
-  $id = $_REQUEST['id'];
+  $id = (int)$_REQUEST['id'];
   $name=strtoupper(get_counter($id)); 
 }
+$counter_department = (int)get_column('kp_counters', 'dpt', "cntr_id='$id'");
+$cashier_department = $counter_department === 2 ? 3 : 1;
 ?>
 <div class="modal-content assign-cashier-modal">
   <style>
@@ -70,7 +72,7 @@ if(isset($_REQUEST['id'])){
           $item = "SELECT u.user_id, u.username
                    FROM kp_users u
                    WHERE u.work_status=2
-                     AND u.drole=1
+                     AND u.drole='$cashier_department'
                      AND NOT EXISTS (
                        SELECT 1
                        FROM kp_counters assigned_counter

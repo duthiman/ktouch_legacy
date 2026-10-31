@@ -228,6 +228,7 @@ $decimal_setting = $item_id > 0 ? (int)get_column('kp_items', 'deci', "item_id='
         ?>
         <button type="button" class="deci-key deci-key-clear" id="backspace_desktop">&larr;</button>
         <button type="button" class="deci-key desktop-num" data-value="0">0</button> 
+        <?php if ($decimal_setting === 1) { ?><button type="button" class="deci-key desktop-num" data-value=".">.</button><?php } ?>
       </div>
       <div class="deci-actions">
         <button type="button" id="close" class="deci-action-btn deci-close" data-dismiss="modal">Close</button>
@@ -267,6 +268,7 @@ $decimal_setting = $item_id > 0 ? (int)get_column('kp_items', 'deci', "item_id='
         ?>
         <button type="button" class="deci-key deci-key-clear" id="backspace_mobile">&larr;</button>
         <button type="button" class="deci-key mobile-num" data-value="0">0</button> 
+        <?php if ($decimal_setting === 1) { ?><button type="button" class="deci-key mobile-num" data-value=".">.</button><?php } ?>
       </div>
       <div class="deci-actions">
         <button type="button" id="close_mobile" class="deci-action-btn deci-close" data-dismiss="modal">Close</button>

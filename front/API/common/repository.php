@@ -233,7 +233,7 @@ if (!function_exists('common_repo_fetch_items')) {
 }
 
 if (!function_exists('common_repo_fetch_catalog')) {
-    function common_repo_fetch_catalog($user_id, $dpt = '', $stock = 0, $menu = 0) {
+    function common_repo_fetch_catalog($user_id, $dpt = '', $stock = 0, $menu = 0, $requested_counter_id = 0) {
         global $connection;
 
         $user_id = (int)$user_id;
@@ -247,9 +247,12 @@ if (!function_exists('common_repo_fetch_catalog')) {
             }
         }
 
-        $base_counter_id = isset($context_row) ? (int)($context_row['counter'] ?? 0) : 0;
+        $requested_counter_id = (int)$requested_counter_id;
+        $base_counter_id = $requested_counter_id > 0
+            ? $requested_counter_id
+            : (isset($context_row) ? (int)($context_row['counter'] ?? 0) : 0);
         $kit_counter_id = 0;
-        if ($base_counter_id > 0) {
+        if ($requested_counter_id < 1 && $base_counter_id > 0) {
             $kit_query = mysqli_query($connection, "SELECT cntr_id FROM kp_counters WHERE dpt=2 AND kit_default=1 LIMIT 1");
             if ($kit_query && ($kit_row = mysqli_fetch_assoc($kit_query))) {
                 $kit_counter_id = (int)$kit_row['cntr_id'];

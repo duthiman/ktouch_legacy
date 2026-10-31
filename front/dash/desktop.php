@@ -102,7 +102,7 @@
       <section class="card orders">
         <header><h2>Recent Orders</h2><button class="view-all">View All</button></header>
         <table>
-          <thead><tr><th>Bill No.</th><th>Time</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+          <thead><tr><th>Bill No.</th><th>Time</th><th>Amount</th> <th>Action</th></tr></thead>
           <tbody></tbody>
         </table>
       </section>

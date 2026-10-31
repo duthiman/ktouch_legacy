@@ -34,7 +34,7 @@ $varianceTotal = array_reduce(
     <title>Variance</title>
     <style>
         @page {
-            size: 79mm auto;
+            size: 80mm auto;
             margin: 0 !important;
         }
 
@@ -44,8 +44,8 @@ $varianceTotal = array_reduce(
 
         html,
         body {
-            width: 79mm !important;
-            max-width: 79mm !important;
+            width: 80mm !important;
+            max-width: 80mm !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #fff;
@@ -58,15 +58,15 @@ $varianceTotal = array_reduce(
         }
 
         .receipt {
-            width: 79mm;
-            max-width: 79mm;
+            width: 80mm;
+            max-width: 80mm;
             margin: 0;
             padding: 0.5mm 0;
         }
 
         .border {
-            width: 79mm;
-            max-width: 79mm;
+            width: 80mm;
+            max-width: 80mm;
             border: 2px solid #000;
         }
 

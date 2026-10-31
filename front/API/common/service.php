@@ -71,7 +71,7 @@ if (!function_exists('common_service_fetch_item_list')) {
 
 if (!function_exists('common_service_fetch_catalog')) {
     function common_service_fetch_catalog($user_id, $filters = []) {
-        $catalog = common_repo_fetch_catalog($user_id, (string)($filters['dpt'] ?? ''), (int)($filters['stock'] ?? 0), (int)($filters['menu'] ?? 0));
+        $catalog = common_repo_fetch_catalog($user_id, (string)($filters['dpt'] ?? ''), (int)($filters['stock'] ?? 0), (int)($filters['menu'] ?? 0), (int)($filters['counter_id'] ?? 0));
         return [
             'ok' => true,
             'message' => 'Catalog loaded.',

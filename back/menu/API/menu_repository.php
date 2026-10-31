@@ -50,6 +50,13 @@ if (!function_exists('menu_repo_datatable_response')) {
                 $filters[] = "`{$column}` = {$value}";
             }
         }
+        $counter_id = isset($request['counter_id']) ? (int)$request['counter_id'] : 0;
+        if ($counter_id > 0) {
+            $assignment_mode = ($request['counter_assignment'] ?? 'assigned') === 'unassigned' ? 'unassigned' : 'assigned';
+            $filters[] = $assignment_mode === 'unassigned'
+                ? "item_id NOT IN (SELECT item_id FROM kp_counter_items WHERE counter_id = {$counter_id} AND is_active = 1)"
+                : "item_id IN (SELECT item_id FROM kp_counter_items WHERE counter_id = {$counter_id} AND is_active = 1)";
+        }
         $where = count($filters) ? implode(' AND ', $filters) : null;
         return SSP::complex($request, $sql_details, 'kp_items', 'item_id', menu_repo_datatable_columns(), $where, null);
     }
@@ -71,6 +78,13 @@ if (!function_exists('menu_repo_search_items')) {
             if ($value > 0) {
                 $where[] = "`{$field}` = {$value}";
             }
+        }
+        $counter_id = isset($filters['counter_id']) ? (int)$filters['counter_id'] : 0;
+        if ($counter_id > 0) {
+            $assignment_mode = ($filters['counter_assignment'] ?? 'assigned') === 'unassigned' ? 'unassigned' : 'assigned';
+            $where[] = $assignment_mode === 'unassigned'
+                ? "item_id NOT IN (SELECT item_id FROM kp_counter_items WHERE counter_id = {$counter_id} AND is_active = 1)"
+                : "item_id IN (SELECT item_id FROM kp_counter_items WHERE counter_id = {$counter_id} AND is_active = 1)";
         }
 
         $search = trim((string)($filters['search'] ?? ''));
@@ -312,6 +326,72 @@ if (!function_exists('menu_repo_fetch_counters')) {
             $rows[] = ['id' => (int)$row['cntr_id'], 'name' => (string)$row['name']];
         }
         return $rows;
+    }
+}
+
+if (!function_exists('menu_repo_fetch_item_counter_assignments')) {
+    function menu_repo_fetch_item_counter_assignments($item_id)
+    {
+        global $connection;
+        $item_id = (int)$item_id;
+        $rows = [];
+        $sql = "SELECT c.cntr_id, c.name, COALESCE(ci.qty, 0) AS qty,
+                       COALESCE(ci.reorder_level, 0) AS reorder_level,
+                       COALESCE(ci.is_active, 0) AS is_active
+                FROM kp_counters c
+                LEFT JOIN kp_counter_items ci
+                  ON ci.counter_id = c.cntr_id AND ci.item_id = '{$item_id}'
+                WHERE c.del_status=2
+                ORDER BY c.cntr_id ASC";
+        $result = mysqli_query($connection, $sql);
+        if (!$result) return $rows;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $rows[] = [
+                'id' => (int)$row['cntr_id'],
+                'name' => (string)$row['name'],
+                'qty' => (float)$row['qty'],
+                'reorder_level' => (float)$row['reorder_level'],
+                'is_active' => (int)$row['is_active'],
+            ];
+        }
+        return $rows;
+    }
+}
+
+if (!function_exists('menu_repo_save_item_counter_assignments')) {
+    function menu_repo_save_item_counter_assignments($item_id, $assignments)
+    {
+        global $connection;
+        $item_id = (int)$item_id;
+        mysqli_query($connection, "UPDATE kp_counter_items SET is_active=0 WHERE item_id='{$item_id}'");
+        foreach ((array)$assignments as $counter_id => $values) {
+            $counter_id = (int)$counter_id;
+            if ($counter_id < 1 || !is_array($values)) continue;
+            $qty = max(0, (float)($values['qty'] ?? 0));
+            $reorder = max(0, (float)($values['reorder_level'] ?? 0));
+            $sql = "INSERT INTO kp_counter_items (counter_id,item_id,qty,reorder_level,take_status,is_active)
+                    VALUES ('{$counter_id}','{$item_id}','{$qty}','{$reorder}',2,1)
+                    ON DUPLICATE KEY UPDATE qty=VALUES(qty), reorder_level=VALUES(reorder_level), take_status=2, is_active=1";
+            if (!mysqli_query($connection, $sql)) return false;
+        }
+        return true;
+    }
+}
+
+if (!function_exists('menu_repo_bulk_assign_counter')) {
+    function menu_repo_bulk_assign_counter($item_ids, $counter_id)
+    {
+        global $connection;
+        $counter_id = (int)$counter_id;
+        foreach ((array)$item_ids as $item_id) {
+            $item_id = (int)$item_id;
+            if ($item_id < 1) continue;
+            $sql = "INSERT INTO kp_counter_items (counter_id,item_id,qty,reorder_level,take_status,is_active)
+                    VALUES ('{$counter_id}','{$item_id}',0,0,2,1)
+                    ON DUPLICATE KEY UPDATE take_status=2, is_active=1";
+            if (!mysqli_query($connection, $sql)) return false;
+        }
+        return true;
     }
 }
 

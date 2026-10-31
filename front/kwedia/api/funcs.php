@@ -148,6 +148,9 @@ if (!function_exists('kw_ensure_sale_status_schema')) {
         kw_schema_ensure_column('kp_sale_items_live', 'session_flag', "TINYINT(1) NOT NULL DEFAULT 2 AFTER accompaniment_json");
         kw_schema_ensure_column('kp_sale_items', 'hour', "VARCHAR(20) NOT NULL DEFAULT '' AFTER counter");
         kw_schema_ensure_column('kp_sale_items_live', 'hour', "VARCHAR(20) NOT NULL DEFAULT '' AFTER counter");
+        // Older installs/restores can carry an invalid zero-date default here,
+        // which MySQL rejects on insert under NO_ZERO_DATE/STRICT_TRANS_TABLES.
+        kw_schema_fix_zero_date_default('kp_thesion_front', 'last_update', "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         $checked = true;
     }
 }
@@ -182,6 +185,27 @@ if (!function_exists('kw_schema_ensure_column')) {
         return mysqli_query(
             $connection,
             "ALTER TABLE `$table_name` ADD COLUMN `$column_name` $definition_sql"
+        ) ? true : false;
+    }
+}
+
+if (!function_exists('kw_schema_fix_zero_date_default')) {
+    function kw_schema_fix_zero_date_default($table_name, $column_name, $definition_sql) {
+        global $connection;
+
+        if (!kw_schema_table_exists($connection, $table_name)) {
+            return false;
+        }
+        $table_escaped = mysqli_real_escape_string($connection, (string)$table_name);
+        $column_escaped = mysqli_real_escape_string($connection, (string)$column_name);
+        $result = mysqli_query($connection, "SHOW COLUMNS FROM `$table_escaped` LIKE '$column_escaped'");
+        $row = $result ? mysqli_fetch_assoc($result) : null;
+        if (!$row || strpos((string)($row['Default'] ?? ''), '0000-00-00') !== 0) {
+            return true;
+        }
+        return mysqli_query(
+            $connection,
+            "ALTER TABLE `$table_escaped` MODIFY `$column_escaped` $definition_sql"
         ) ? true : false;
     }
 }

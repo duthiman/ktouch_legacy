@@ -1,5 +1,6 @@
 var menuBootstrapCache = null;
 var menuBootstrapPromise = null;
+window.menuCounterAssignmentMode = 'assigned';
 
 function loadMenuBootstrap(forceReload) {
   if (!forceReload && menuBootstrapCache) {
@@ -160,6 +161,7 @@ function renderMenuActionsCell(itemId) {
       '<i class="fa fa-ellipsis-v"></i> Actions <i class="fa fa-angle-down"></i></button>' +
     '<ul class="dropdown-menu dropdown-menu-right">' +
       '<li><a href="javascript:;" class="menu-view-stocks" data-id="' + itemId + '"><i class="fa fa-cubes"></i> View Stocks</a></li>' +
+      '<li><a href="javascript:;" class="menu-counter-assign" data-id="' + itemId + '"><i class="fa fa-building"></i> Assign Counters</a></li>' +
       '<li><a href="javascript:;" class="menu-butchery-toggle" data-id="' + itemId + '"><i class="fa fa-cutlery"></i> Butchery: toggle</a></li>' +
       '<li class="divider"></li>' +
       '<li><a href="javascript:;" class="menu-delete-item text-danger" data-id="' + itemId + '"><i class="fa fa-trash"></i> Delete Item</a></li>' +
@@ -209,6 +211,23 @@ function hydrateMenuQuickForm() {
   fillSubCategoryOptions('#sub_id', $('#cat_id').val(), 0);
 }
 
+function hydrateCounterFilter() {
+  var html = '<option value="0">--All Counters--</option>';
+  (menuBootstrapCache && menuBootstrapCache.counters || []).forEach(function(counter) {
+    html += '<option value="' + parseInt(counter.id, 10) + '">' + $('<div>').text(counter.name).html() + '</option>';
+  });
+  $('#counter_id').html(html).trigger('change.select2');
+}
+
+function updateCounterAssignmentTabs() {
+  var hasCounter = parseInt($('#counter_id').val(), 10) > 0;
+  $('.counter-assignment-tabs-wrap').toggle(hasCounter);
+  $('.counter-assignment-tab').each(function() {
+    var active = $(this).data('assignment-mode') === (window.menuCounterAssignmentMode || 'assigned');
+    $(this).toggleClass('active btn-primary', active).toggleClass('btn-default', !active);
+  });
+}
+
 function refreshBooleanCell(id, columnName, value) {
   var dt = getMenuTable();
   var cellIndexMap = { dpt: 5, menu: 9, deci: 10, stock: 11, recipe: 12, portion: 13, tots: 14 };
@@ -250,6 +269,8 @@ function showRecords() {
         d.sub_id = $('#sub_id').val() || 0;
         d.dpt = $('#dpt').val() || 0;
         d.stock = $('#stock').val() || 0;
+        d.counter_id = $('#counter_id').val() || 0;
+        d.counter_assignment = window.menuCounterAssignmentMode || 'assigned';
       }
     },
     "columns": [
@@ -278,6 +299,7 @@ function showRecords() {
     ],
     createdRow: function(row) {
       var itemId = $(row).find('td:eq(1)').html();
+      $(row).find('td:eq(0) input.bulk').val(itemId);
       var catId = $(row).find('td:eq(3)').html();
       var subId = $(row).find('td:eq(4)').html();
       var dpt = $(row).find('td:eq(5)').html();
@@ -634,6 +656,68 @@ $(document).on('click', '.menu-view-stocks', function(e) {
     $('#load').html(data);
   }).fail(function() {
     $('#load').html('<div class="modal-content"><div class="modal-body"><div class="alert alert-danger">Unable to load stock details.</div></div></div>');
+  });
+});
+
+$(document).on('click', '.menu-counter-assign', function(e) {
+  e.preventDefault();
+  var itemId = parseInt($(this).data('id'), 10) || 0;
+  $('#load').html('<div class="modal-content"><div class="modal-body text-center"><i class="fa fa-spinner fa-spin"></i> Loading counter assignments...</div></div>');
+  $('#modal').modal('show');
+  $.getJSON(menuApiUrl, { action: 'modal', view: 'counter_assign', id: itemId })
+    .done(function(res) {
+      $('#load').html((res && res.data && res.data.html) ? res.data.html : '<div class="modal-content"><div class="modal-body">Unable to load assignments.</div></div>');
+    })
+    .fail(function() {
+      $('#load').html('<div class="modal-content"><div class="modal-body"><div class="alert alert-danger">Unable to load counter assignments.</div></div></div>');
+    });
+});
+
+$(document).on('shown.bs.dropdown', '.menu-row-actions', function() {
+  var container = $(this);
+  var menu = container.find('.dropdown-menu');
+  var button = container.find('.menu-more-btn')[0];
+  if (!menu.length || !button) return;
+  menu.removeClass('menu-dropdown-below');
+  var buttonRect = button.getBoundingClientRect();
+  var menuRect = menu[0].getBoundingClientRect();
+  var header = $(this).closest('table').find('thead')[0];
+  var headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+  if (menuRect.top < Math.max(headerBottom, 0)) {
+    menu.addClass('menu-dropdown-below');
+  }
+});
+
+$(document).on('click', '#save-counter-assignments', function() {
+  var button = $(this);
+  var assignments = {};
+  $('.counter-assignment-check:checked').each(function() {
+    var counterId = $(this).val();
+    assignments[counterId] = {
+      qty: $('.counter-assignment-qty[data-counter="' + counterId + '"]').val() || 0,
+      reorder_level: $('.counter-assignment-reorder[data-counter="' + counterId + '"]').val() || 0
+    };
+  });
+  button.prop('disabled', true).text('Saving...');
+  $.ajax({
+    url: menuApiUrl,
+    type: 'POST',
+    dataType: 'json',
+    data: { action: 'save_counter_assignments', item_id: button.data('item-id'), assignments: assignments }
+  }).done(function(res) {
+    if (res && res.ok) {
+      $('#modal').modal('hide');
+      var table = getMenuTable();
+      if (table) table.ajax.reload(null, false);
+    } else {
+      $('#counter-assignment-result').html('<div class="alert alert-danger">' + ((res && res.message) || 'Could not save assignments.') + '</div>');
+    }
+  }).fail(function(xhr) {
+    var message = 'Could not save assignments.';
+    if (xhr.responseJSON && xhr.responseJSON.message) message = xhr.responseJSON.message;
+    $('#counter-assignment-result').html('<div class="alert alert-danger">' + message + '</div>');
+  }).always(function() {
+    button.prop('disabled', false).text('Save Assignments');
   });
 });
 
@@ -1121,12 +1205,24 @@ $(document).on('change', '#cat_id', function() {
   reloadMenuTable();
 });
 
-$(document).on('change', '#sub_id, #dpt, #stock', function() {
+$(document).on('change', '#sub_id, #dpt, #stock, #counter_id', function() {
+  if ($(this).is('#counter_id')) {
+    updateCounterAssignmentTabs();
+    $('#assign-selected-counter').toggle($('#data-table-combine .bulk:checked').length > 0 && parseInt($('#counter_id').val(), 10) > 0);
+  }
+  reloadMenuTable();
+});
+
+$(document).on('click', '.counter-assignment-tab', function() {
+  window.menuCounterAssignmentMode = $(this).data('assignment-mode') || 'assigned';
+  updateCounterAssignmentTabs();
   reloadMenuTable();
 });
 
 $(document).on('click', '#reset-menu-filters', function() {
-  $('#cat_id, #sub_id, #dpt, #stock').val('0').trigger('change.select2');
+  $('#cat_id, #sub_id, #dpt, #stock, #counter_id').val('0').trigger('change.select2');
+  window.menuCounterAssignmentMode = 'assigned';
+  updateCounterAssignmentTabs();
   fillSubCategoryOptions('#sub_id', 0, 0);
   reloadMenuTable();
 });
@@ -1137,6 +1233,42 @@ $(document).on('click', '#apply-menu-filters', function() {
   } else {
     reloadMenuTable();
   }
+});
+
+$(document).on('change', '#data-table-combine .bulk, #data-table-combine .checkAll', function() {
+  var hasSelected = $('#data-table-combine .bulk:checked').length > 0;
+  var hasCounter = parseInt($('#counter_id').val(), 10) > 0;
+  $('#assign-selected-counter').toggle(hasSelected && hasCounter);
+});
+
+$(document).on('click', '#assign-selected-counter', function() {
+  var counterId = parseInt($('#counter_id').val(), 10) || 0;
+  var items = $('#data-table-combine .bulk:checked').map(function() { return $(this).val(); }).get();
+  if (!counterId || !items.length) {
+    if (window.Swal) Swal.fire('Select items', 'Select a counter and at least one item.', 'warning');
+    return;
+  }
+  var counterName = $('#counter_id option:selected').text();
+  var confirmAssign = function() {
+    $.ajax({
+      url: menuApiUrl,
+      type: 'POST',
+      dataType: 'json',
+      data: { action: 'bulk_assign_counter', items: items, counter_id: counterId }
+    }).done(function(res) {
+      if (window.Swal) Swal.fire(res.ok ? 'Assigned' : 'Assignment failed', res.message || '', res.ok ? 'success' : 'error');
+      if (res && res.ok) {
+        $('.checkAll, .bulk').prop('checked', false);
+        $('#assign-selected-counter').hide();
+        reloadMenuTable();
+      }
+    }).fail(function(xhr) {
+      var message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Could not assign the selected items.';
+      if (window.Swal) Swal.fire('Assignment failed', message, 'error');
+    });
+  };
+  if (window.Swal) Swal.fire({ title: 'Assign selected items?', text: items.length + ' item(s) will be assigned to ' + counterName + '.', icon: 'question', showCancelButton: true, confirmButtonText: 'Assign' }).then(function(result) { if (result.isConfirmed) confirmAssign(); });
+  else if (window.confirm('Assign ' + items.length + ' item(s) to ' + counterName + '?')) confirmAssign();
 });
 
 function reloadMenuTable() {

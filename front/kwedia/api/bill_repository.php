@@ -1864,14 +1864,19 @@ if (!function_exists('repo_reset_thesion_front')) {
 }
 
 if (!function_exists('bill_repo_get_items')) {
-    function bill_repo_get_items($user_id, $category_id, $subcategory_id = 0) {
+    function bill_repo_get_items($user_id, $category_id, $subcategory_id = 0, $requested_counter_id = 0) {
         global $connection;
 
         $user_id = (int)$user_id;
         $category_id = (int)$category_id;
         $subcategory_id = (int)$subcategory_id;
-        $counter_id = function_exists('kw_api_user_counter_id') ? (int)kw_api_user_counter_id($user_id) : 0;
+        $counter_id = (int)$requested_counter_id > 0 ? (int)$requested_counter_id : (function_exists('kw_api_user_counter_id') ? (int)kw_api_user_counter_id($user_id) : 0);
         $department = function_exists('kw_api_counter_department') ? (int)kw_api_counter_department($counter_id) : 0;
+        $kit_counter_id = 0;
+        if ($counter_id > 0 && $department !== 2) {
+            $kit_query = mysqli_query($connection, "SELECT cntr_id FROM kp_counters WHERE dpt=2 AND kit_default=1 AND del_status=2 LIMIT 1");
+            if ($kit_query && ($kit_row = mysqli_fetch_assoc($kit_query))) $kit_counter_id = (int)$kit_row['cntr_id'];
+        }
         $items = [];
 
         if ($category_id < 1 && $subcategory_id < 1) {
@@ -1895,9 +1900,13 @@ if (!function_exists('bill_repo_get_items')) {
         }
 
         while ($row = mysqli_fetch_assoc($query)) {
-            $item_counter_id = function_exists('kw_api_item_counter_id')
-                ? (int)kw_api_item_counter_id($counter_id, isset($row['dpt']) ? (int)$row['dpt'] : 0)
-                : $counter_id;
+            if ((int)($row['dpt'] ?? 0) === 2 && $kit_counter_id > 0) {
+                $item_counter_id = $kit_counter_id;
+            } elseif (function_exists('kw_api_item_counter_id')) {
+                $item_counter_id = (int)kw_api_item_counter_id($counter_id, isset($row['dpt']) ? (int)$row['dpt'] : 0);
+            } else {
+                $item_counter_id = $counter_id;
+            }
             $stock_meta = function_exists('kw_api_item_stock_meta')
                 ? kw_api_item_stock_meta($row, $item_counter_id)
                 : ['qty' => 0, 'reorder' => 0, 'stock_color' => 'green'];
@@ -1921,11 +1930,11 @@ if (!function_exists('bill_repo_get_items')) {
 }
 
 if (!function_exists('bill_repo_get_categories')) {
-    function bill_repo_get_categories($user_id) {
+    function bill_repo_get_categories($user_id, $requested_counter_id = 0) {
         global $connection;
 
         $user_id = (int)$user_id;
-        $counter_id = function_exists('kw_api_user_counter_id') ? (int)kw_api_user_counter_id($user_id) : 0;
+        $counter_id = (int)$requested_counter_id > 0 ? (int)$requested_counter_id : (function_exists('kw_api_user_counter_id') ? (int)kw_api_user_counter_id($user_id) : 0);
         $department = function_exists('kw_api_counter_department') ? (int)kw_api_counter_department($counter_id) : 0;
         $filter = '';
         $categories = [];

@@ -143,15 +143,24 @@
 .menu-action-btn { background:#fff!important; border-width:1px!important; border-style:solid!important; }
 .menu-inline-toggle { background:#fff!important; }
 .menu-row-actions { position:relative; display:inline-block; }
+.menu-table-panel table td.actions { position:relative; z-index:9999!important; }
+.menu-table-panel, .menu-table-panel .panel-body, .menu-table-panel .dataTables_wrapper { overflow:visible!important; }
+.menu-row-actions .dropdown-menu.show,
+.menu-row-actions .dropdown-menu[x-placement] { z-index:99999!important; background-color:#fff!important; background-image:none!important; opacity:1!important; }
+.menu-row-actions .dropdown-menu.show,
+.menu-row-actions .dropdown-menu[x-placement="top-end"] { top:auto!important; left:auto!important; right:0!important; bottom:calc(100% + 6px)!important; transform:none!important; }
+.menu-row-actions .dropdown-menu.menu-dropdown-below { top:calc(100% + 6px)!important; bottom:auto!important; }
 .menu-row-actions .menu-more-btn { width:100%!important; }
 .menu-more-btn { border:1px solid #087e8b!important; background:#087e8b!important; color:#fff!important; border-radius:4px!important; padding:3px 6px!important; font-size:9px!important; font-weight:700; }
 .menu-more-btn:hover,.menu-more-btn:focus { background:#05656e!important; color:#fff!important; }
-.menu-row-actions .dropdown-menu { min-width:145px; padding:4px 0; border:1px solid #cfe4e5; box-shadow:0 5px 16px rgba(22,70,78,.16); }
+.menu-row-actions .dropdown-menu { z-index:1100; min-width:175px; padding:4px 0; border:1px solid #cfe4e5; background:#fff!important; box-shadow:0 5px 16px rgba(22,70,78,.16); }
 .menu-row-actions .dropdown-menu > li > a { padding:7px 12px; color:#23414b; font-size:11px; }
 .menu-row-actions .dropdown-menu > li > a:hover { background:#eef9f8; color:#087e8b; }
 .menu-row-actions .dropdown-menu > li > a i { width:17px; color:#087e8b; }
 .menu-row-actions .dropdown-menu > li > a.menu-view-stocks { margin:2px 5px; border-radius:4px; background:#e4f8f6; color:#087e8b; font-weight:700; }
 .menu-row-actions .dropdown-menu > li > a.menu-view-stocks:hover { background:#bcece8; color:#05656e; }
+.menu-row-actions .dropdown-menu > li > a.menu-counter-assign { margin:2px 5px; border-radius:4px; background:#fff!important; color:#23414b!important; font-weight:700; }
+.menu-row-actions .dropdown-menu > li > a.menu-counter-assign:hover { background:#eef9f8!important; color:#087e8b!important; }
 .menu-row-actions .dropdown-menu > li > a.menu-delete-item { margin:2px 5px; border-radius:4px; background:#ffe8e6; color:#c0392b; font-weight:700; }
 .menu-row-actions .dropdown-menu > li > a.menu-delete-item:hover { background:#ffc9c5; color:#992d23; }
 .menu-row-actions .dropdown-menu > li > a.menu-delete-item i { color:#c0392b; }

@@ -20,6 +20,15 @@ if ($counter < 1 || $user_id < 1) {
     exit;
 }
 
+$counter_department = (int)get_column('kp_counters', 'dpt', "cntr_id='$counter'");
+$required_department = $counter_department === 2 ? 3 : 1;
+$selected_department = (int)get_column('kp_users', 'drole', "user_id='$user_id'");
+if ($selected_department !== $required_department) {
+    http_response_code(422);
+    echo json_encode(['ok' => false, 'message' => $required_department === 3 ? 'Select a kitchen cashier for this counter.' : 'Select a bar cashier for this counter.']);
+    exit;
+}
+
 $transaction="CHANGED CASHIER FROM ".strtoupper($cashier=get_column('kp_counters','user_id',"cntr_id='$counter'"))." TO ".strtoupper(get_user($user_id));
 
 $update_waiter= mysqli_query($connection,"UPDATE kp_users SET job=1,counter_status=1,counter='$counter' WHERE user_id='$user_id'"); 

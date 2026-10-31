@@ -123,6 +123,19 @@
                         <option value="0">----Select a Type -----</option><option value="1">Inventory</option><option value="2">Non Inventory</option><option value="3">Service</option>
                       </select>
                 </div>
+                <div class="form-group col-3 filter-counter">
+                      <label for="counter_id">Counter</label>
+                      <select class="form-control" id="counter_id" name="counter_id">
+                        <option value="0">--All Counters--</option>
+                      </select>
+                </div>
+                <div class="form-group col-12 counter-assignment-tabs-wrap" style="display:none;">
+                  <label>Counter item view</label>
+                  <div class="btn-group counter-assignment-tabs" role="tablist">
+                    <button type="button" class="btn btn-primary counter-assignment-tab active" data-assignment-mode="assigned">Assigned Items</button>
+                    <button type="button" class="btn btn-default counter-assignment-tab" data-assignment-mode="unassigned">Not Assigned</button>
+                  </div>
+                </div>
                 <div class="menu-filter-actions"><button type="button" class="btn btn-primary" id="apply-menu-filters"><i class="fa fa-search"></i> Apply</button><button type="button" class="btn btn-default" id="reset-menu-filters"><i class="fa fa-undo"></i> Reset</button></div>
               </div>
             </div>
@@ -146,6 +159,7 @@
                     <a href="#modal" data-toggle="modal" id="sub_cat"  name="filter" class="act_btn btn btn-purple btn-xs  m-3 pull-right">Change Sub Category</a> 
                     <a href="#modal" data-toggle="modal" id="cat"  name="filter" class="act_btn btn btn-yellow btn-xs  m-3 pull-right">Change Category</a> 
                     <a href="#modal" data-toggle="modal" id="set"  name="filter" class="act_btn btn btn-grey btn-xs  m-3 pull-right">Change Settings</a> 
+                    <a href="javascript:;" id="assign-selected-counter" class="btn btn-primary btn-xs m-3 pull-right" style="display:none"><i class="fa fa-building"></i> Assign to Counter</a>
                   </div> 
                 </div>
               </div>

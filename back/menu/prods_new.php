@@ -15,6 +15,12 @@
     background: var(--qi-soft);
     box-shadow: 0 28px 80px rgba(1, 20, 24, .30);
   }
+  /* Keep the item form inside the visible page and centered in the modal. */
+  #modal:has(.quick-item-modal) .modal-dialog {
+    width: min(900px, calc(100vw - 24px));
+    max-width: none;
+    margin: 12px auto;
+  }
   .quick-item-modal .quick-item-header {
     display: flex;
     align-items: center;
@@ -39,6 +45,7 @@
   }
   .quick-item-modal .quick-item-close:hover { color: #fff; background: rgba(255,255,255,.12); opacity: 1; }
   .quick-item-modal .quick-item-body { display: grid; gap: 17px; padding: 22px; background: var(--qi-soft); }
+  .quick-item-modal .quick-item-body { max-height: calc(100vh - 190px); overflow-y: auto; overflow-x: hidden; }
   .quick-item-modal .quick-alerts:empty { display: none; }
   .quick-item-modal .quick-alerts { min-height: 0; margin: 0; }
   .quick-item-modal .quick-alerts .quick-validation-alert { margin: 0 0 8px; padding: 7px 10px; border-radius: 6px; font-size: 12px; line-height: 16px; }
@@ -122,9 +129,10 @@
   .quick-item-modal .quick-field .form-control[disabled] { color: #9ba7ad; background: #edf1f2; cursor: not-allowed; }
   .quick-counter-stock { margin-top: 8px; padding-top: 7px; border-top: 1px solid #d9e1e4; }
   .quick-counter-title { margin-bottom: 5px; color: var(--qi-teal-dark); font-size: 11px; font-weight: 800; }
-  .quick-counter-row { display: grid; grid-template-columns: 1fr 105px 105px; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; }
+  .quick-counter-row { display: grid; grid-template-columns: 24px 1fr 105px 105px; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; }
   .quick-counter-row label { display: flex; align-items: center; gap: 4px; margin: 0; font-size: 10px; font-weight: 700; }
   .quick-counter-row input { width: 68px; height: 26px; padding: 2px 5px; border: 1px solid #bdcbd2; border-radius: 5px; }
+  .quick-counter-row > input[type="checkbox"] { width: 18px; height: 18px; margin: 0; padding: 0; justify-self: center; accent-color: var(--qi-teal); }
   .quick-item-modal .quick-stock-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .quick-item-modal .quick-stock-controls .quick-stock-type { margin-bottom: 0; }
 
@@ -181,6 +189,7 @@
   .quick-item-modal .quick-save { height: 32px; padding: 0 14px; font-size: 12px; }
 
   @media (max-width: 767px) {
+    #modal:has(.quick-item-modal) .modal-dialog { width: calc(100vw - 16px); margin: 8px auto; }
     .quick-item-modal .quick-item-header { min-height: 82px; padding: 15px; }
     .quick-item-modal .quick-item-icon { width: 45px; height: 45px; font-size: 24px; }
     .quick-item-modal .quick-item-heading h4 { font-size: 21px; }
@@ -199,7 +208,7 @@
   }
 </style>
 
-<div class="modal-content quick-item-modal" style="width:880px;">
+<div class="modal-content quick-item-modal">
   <div class="modal-header quick-item-header">
     <div class="quick-item-heading">
       <span class="quick-item-icon"><i class="fa fa-plus"></i></span>
@@ -297,7 +306,7 @@
               <span class="quick-setting-label">Show on menu <i class="quick-info-dot">i</i></span>
               <span class="quick-choice">
                 <label><input type="radio" name="menu" value="1" id="myes" checked> Yes</label>
-                <label><input type="radio" name="menu" value="2" id="mno" checked> No</label>
+                <label><input type="radio" name="menu" value="2" id="mno"> No</label>
               </span>
             </div>
             <div class="quick-setting-row">
@@ -384,9 +393,13 @@
       var id = parseInt(counter.id, 10);
       if (!id) return;
       var label = $('<div>').text(counter.name || ('Counter ' + id)).html();
-      $target.append('<div class="quick-counter-row"><strong>' + label + '</strong>' +
-        '<label>Stock <input type="number" min="0" step="0.001" name="counter_stock[' + id + ']" value="100"></label>' +
-        '<label>Reorder <input type="number" min="0" step="0.001" name="counter_reorder[' + id + ']" value="10"></label></div>');
+      $target.append('<div class="quick-counter-row"><input type="checkbox" class="quick-counter-check" name="counter_assign[]" value="' + id + '" aria-label="Assign to ' + label + '">' +
+        '<strong>' + label + '</strong>' +
+        '<label>Stock <input type="number" min="0" step="0.001" name="counter_stock[' + id + ']" value="100" disabled></label>' +
+        '<label>Reorder <input type="number" min="0" step="0.001" name="counter_reorder[' + id + ']" value="10" disabled></label></div>');
+    });
+    $target.off('change.quickCounter').on('change.quickCounter', '.quick-counter-check', function () {
+      $(this).closest('.quick-counter-row').find('input[type="number"]').prop('disabled', !this.checked);
     });
   }
 

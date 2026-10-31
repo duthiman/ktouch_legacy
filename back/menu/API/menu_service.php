@@ -102,6 +102,7 @@ if (!function_exists('menu_service_modal_view')) {
             'clear_confirm' => __DIR__ . '/../clear_confirm.php',
             'recipe_confirm' => __DIR__ . '/../recipe_confirm.php',
             'recipe_items' => __DIR__ . '/../recipe_items_modal.php',
+            'counter_assign' => __DIR__ . '/../counter_assign.php',
         ];
 
         if (!isset($allowed[$view])) {
@@ -138,6 +139,13 @@ if (!function_exists('menu_service_modal_params')) {
             $params['item_name'] = isset($itemRow['name']) ? (string)$itemRow['name'] : '';
         }
 
+        if ($view === 'counter_assign' && $id > 0) {
+            $itemRow = menu_repo_get_item_row($id);
+            $params['item_id'] = $id;
+            $params['item_name'] = isset($itemRow['name']) ? (string)$itemRow['name'] : '';
+            $params['counter_assignments'] = menu_repo_fetch_item_counter_assignments($id);
+        }
+
         if ($view === 'prod_sub' && $id > 0 && isset($params['item_row']) && is_array($params['item_row'])) {
             $params['current_cat_id'] = isset($params['item_row']['cat_id']) ? (int)$params['item_row']['cat_id'] : 0;
         }
@@ -155,6 +163,33 @@ if (!function_exists('menu_service_modal_params')) {
         }
 
         return $params;
+    }
+}
+
+if (!function_exists('menu_service_save_counter_assignments')) {
+    function menu_service_save_counter_assignments($item_id, $assignments)
+    {
+        $item_id = (int)$item_id;
+        if ($item_id < 1 || !menu_repo_get_item_name($item_id)) {
+            return ['ok' => false, 'message' => 'Item was not found.'];
+        }
+        $ok = menu_repo_save_item_counter_assignments($item_id, is_array($assignments) ? $assignments : []);
+        return $ok
+            ? ['ok' => true, 'message' => 'Item counters assigned successfully.', 'refresh' => true]
+            : ['ok' => false, 'message' => 'Could not save counter assignments.'];
+    }
+}
+
+if (!function_exists('menu_service_bulk_assign_counter')) {
+    function menu_service_bulk_assign_counter($item_ids, $counter_id)
+    {
+        $ids = menu_service_selected_ids($item_ids);
+        $counter_id = (int)$counter_id;
+        if (!$ids || $counter_id < 1) return ['ok' => false, 'message' => 'Select items and a counter first.'];
+        $ok = menu_repo_bulk_assign_counter($ids, $counter_id);
+        return $ok
+            ? ['ok' => true, 'message' => count($ids) . ' item(s) assigned to the counter.', 'refresh' => true]
+            : ['ok' => false, 'message' => 'Could not assign the selected items.'];
     }
 }
 
@@ -337,9 +372,11 @@ if (!function_exists('menu_service_create_item')) {
         global $connection;
         $counter_stock = is_array($payload['counter_stock'] ?? null) ? $payload['counter_stock'] : [];
         $counter_reorder = is_array($payload['counter_reorder'] ?? null) ? $payload['counter_reorder'] : [];
-        foreach ($counter_stock as $counter_id => $qty) {
+        $counter_assign = is_array($payload['counter_assign'] ?? null) ? $payload['counter_assign'] : [];
+        foreach ($counter_assign as $counter_id) {
             $counter_id = (int)$counter_id;
             if ($counter_id < 1) continue;
+            $qty = $counter_stock[$counter_id] ?? 0;
             $qty_column = 'cntr' . $counter_id . '_qty';
             $reorder_column = 'cntr' . $counter_id . '_reorder';
             $qty_exists = mysqli_query($connection, "SHOW COLUMNS FROM kp_items LIKE '{$qty_column}'");
@@ -348,7 +385,7 @@ if (!function_exists('menu_service_create_item')) {
             if ($qty_exists && mysqli_num_rows($qty_exists) > 0) $updates[] = "`{$qty_column}`='" . (float)$qty . "'";
             if ($reorder_exists && mysqli_num_rows($reorder_exists) > 0) $updates[] = "`{$reorder_column}`='" . (float)($counter_reorder[$counter_id] ?? 10) . "'";
             if ($updates) mysqli_query($connection, "UPDATE kp_items SET " . implode(',', $updates) . " WHERE item_id='{$item_id}'");
-            mysqli_query($connection, "INSERT INTO kp_counter_items (counter_id,item_id,qty,reorder_level,is_active) VALUES ('{$counter_id}','{$item_id}','" . (float)$qty . "','" . (float)($counter_reorder[$counter_id] ?? 10) . "',1) ON DUPLICATE KEY UPDATE qty=VALUES(qty),reorder_level=VALUES(reorder_level),is_active=1");
+            mysqli_query($connection, "INSERT INTO kp_counter_items (counter_id,item_id,qty,reorder_level,take_status,is_active) VALUES ('{$counter_id}','{$item_id}','" . (float)$qty . "','" . (float)($counter_reorder[$counter_id] ?? 10) . "',2,1) ON DUPLICATE KEY UPDATE qty=VALUES(qty),reorder_level=VALUES(reorder_level),take_status=2,is_active=1");
         }
         menu_repo_insert_item_history($item_id, 'ITEM CREATED', $user_id);
         return ['ok' => true, 'message' => 'Item Added Successfully', 'refresh' => true];

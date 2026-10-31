@@ -5,7 +5,7 @@ require_once '../../inc/gen_funcs.php';
 $userId=(int)($_SESSION['user_id']??0);
 $counters=[];$q=mysqli_query($connection,"SELECT cntr_id,name FROM kp_counters WHERE del_status=2 AND counter_status<>1 ORDER BY cntr_id");
 while($q&&($r=mysqli_fetch_assoc($q)))$counters[]=$r;
-$users=[];$q=mysqli_query($connection,"SELECT user_id,username FROM kp_users WHERE (drole=1 AND counter=0) OR user_id={$userId} ORDER BY username");
+$users=[];$q=mysqli_query($connection,"SELECT user_id,username FROM kp_users WHERE counter=0 AND (drole IN (1,3) OR user_id={$userId}) ORDER BY username");
 while($q&&($r=mysqli_fetch_assoc($q)))$users[]=$r;
 $open=[];$q=mysqli_query($connection,"SELECT cntr_id,name,user_id,take_status FROM kp_counters WHERE del_status=2 AND counter_status=1 ORDER BY cntr_id");
 while($q&&($r=mysqli_fetch_assoc($q)))$open[]=$r;

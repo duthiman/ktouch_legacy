@@ -3356,8 +3356,8 @@ if (!function_exists('bill_service_get_categories')) {
 }
 
 if (!function_exists('bill_service_fetch_catalog')) {
-    function bill_service_fetch_catalog($user_id) {
-        $categories = bill_repo_get_categories($user_id);
+    function bill_service_fetch_catalog($user_id, $counter_id = 0) {
+        $categories = bill_repo_get_categories($user_id, (int)$counter_id);
         $subcategories = [];
         $items = [];
         foreach ($categories as $category) {
@@ -3368,7 +3368,7 @@ if (!function_exists('bill_service_fetch_catalog')) {
                 $subcategory['cat_id'] = $category_id;
                 $subcategories[] = $subcategory;
             }
-            foreach (bill_repo_get_items($user_id, $category_id, 0) as $item) {
+            foreach (bill_repo_get_items($user_id, $category_id, 0, (int)$counter_id) as $item) {
                 $items[] = $item;
             }
         }
